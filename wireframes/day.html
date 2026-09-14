@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>S04 Day 워크스페이스 — 도쿄 Day 2</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="logo">여행플래너 MVP</div>
+    <nav class="nav-tabs" aria-label="화면 네비게이션">
+      <a href="index.html">S01 목록</a>
+      <a href="create.html">S02 생성</a>
+      <a href="hub.html">S03 허브</a>
+      <a href="day.html" class="active">S04 Day</a>
+      <a href="spot.html">S05 스팟</a>
+      <a href="candidates.html">S06 후보지</a>
+    </nav>
+  </header>
+
+  <main class="main" style="max-width:1280px;">
+    <div class="wf-label">S04 · Day 워크스페이스 (CORE)</div>
+    <div class="breadcrumb">
+      <a href="index.html">여행 목록</a> /
+      <a href="hub.html">도쿄 단풍 여행</a> /
+      Day 2 · 2026-10-11
+    </div>
+    <h1>Day 2 · 아사쿠사·우에노</h1>
+    <p class="muted">MAP(번호 핀) + BOARD(순서·라벨·스티커). 핀↔카드 번호 정렬. 카드 클릭 → 스팟 상세.</p>
+
+    <div class="day-tabs" role="tablist">
+      <a href="day.html">Day 1</a>
+      <span class="active">Day 2</span>
+      <a href="day.html">Day 3</a>
+      <a href="day.html">Day 4</a>
+      <a href="day.html">Day 5</a>
+      <a class="btn btn-sm" href="candidates.html" style="margin-left:auto;">후보지에서 추가</a>
+    </div>
+
+    <!--
+      Responsive (see styles.css):
+      ≥900px: MAP 60% | splitter | BOARD 40%
+      <900px: segment tabs 맵|보드 — default BOARD (not stacked)
+    -->
+    <input class="seg-input" type="radio" name="workspace-seg" id="seg-map" />
+    <input class="seg-input" type="radio" name="workspace-seg" id="seg-board" checked />
+
+    <div class="workspace-segments" role="tablist" aria-label="맵/보드 전환">
+      <label for="seg-map">맵</label>
+      <label for="seg-board">보드</label>
+    </div>
+
+    <div class="workspace">
+      <!-- MAP 60% desktop -->
+      <section class="map-panel" aria-label="지도">
+        <div class="panel-header">
+          <span>MAP · 일자 루트</span>
+          <span class="muted" style="font-weight:normal;">(타일 없음 · 와이어프레임)</span>
+        </div>
+        <div class="fake-map">
+          <div class="map-grid-lines"></div>
+          <div class="map-label">도쿄 · 가짜 지도 영역</div>
+          <svg style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;" aria-hidden="true">
+            <line x1="22%" y1="70%" x2="45%" y2="35%" stroke="#666" stroke-width="2" stroke-dasharray="4 3"/>
+            <line x1="45%" y1="35%" x2="62%" y2="28%" stroke="#666" stroke-width="2" stroke-dasharray="4 3"/>
+            <line x1="62%" y1="28%" x2="78%" y2="55%" stroke="#666" stroke-width="2" stroke-dasharray="4 3"/>
+          </svg>
+          <!-- Pins — order aligned with board cards; pin 3 demo-selected with card 3 -->
+          <div class="pin" style="left:18%; top:65%;" title="1. 센소지"><span>1</span></div>
+          <div class="pin" style="left:41%; top:30%;" title="2. 나카미세"><span>2</span></div>
+          <div class="pin is-selected" style="left:58%; top:23%;" title="3. 우에노 공원"><span>3</span></div>
+          <div class="pin" style="left:74%; top:50%;" title="4. 아메요코"><span>4</span></div>
+        </div>
+        <div class="legend" style="padding:0 12px 12px;">
+          <span>①~④ 방문 순서</span>
+          <span>--- 이동 경로(개념)</span>
+          <span>핀 선택 ↔ 카드 .is-selected</span>
+        </div>
+      </section>
+
+      <div class="panel-splitter" aria-hidden="true" title="패널 구분"></div>
+
+      <!-- BOARD 40% desktop -->
+      <section class="board-panel" aria-label="보드">
+        <div class="panel-header">
+          <span>BOARD · 스팟 순서</span>
+          <span class="muted" style="font-weight:normal;">핸들·▲▼로 순서 변경(개념)</span>
+        </div>
+        <div class="board">
+          <article class="spot-card">
+            <div class="drag-handle" title="드래그" aria-hidden="true">⋮⋮</div>
+            <div class="order">1</div>
+            <div class="spot-thumb">[img]</div>
+            <div class="body">
+              <div class="name"><a href="spot.html">센소지 (浅草寺)</a></div>
+              <div class="meta">오전 09:00 · 약 90분</div>
+              <div class="tags">
+                <span class="tag">라벨: 관광</span>
+                <span class="sticker">★ 필수</span>
+              </div>
+            </div>
+            <div class="reorder-btns">
+              <button type="button" class="btn-reorder" aria-label="위로">▲</button>
+              <button type="button" class="btn-reorder" aria-label="아래로">▼</button>
+            </div>
+            <div class="actions">
+              <a class="btn btn-sm" href="spot.html">상세</a>
+            </div>
+          </article>
+
+          <article class="spot-card">
+            <div class="drag-handle" title="드래그" aria-hidden="true">⋮⋮</div>
+            <div class="order">2</div>
+            <div class="spot-thumb">[img]</div>
+            <div class="body">
+              <div class="name"><a href="spot.html">나카미세 거리</a></div>
+              <div class="meta">오전 10:30 · 약 45분</div>
+              <div class="tags">
+                <span class="tag">라벨: 쇼핑</span>
+                <span class="sticker">간식</span>
+              </div>
+            </div>
+            <div class="reorder-btns">
+              <button type="button" class="btn-reorder" aria-label="위로">▲</button>
+              <button type="button" class="btn-reorder" aria-label="아래로">▼</button>
+            </div>
+            <div class="actions">
+              <a class="btn btn-sm" href="spot.html">상세</a>
+            </div>
+          </article>
+
+          <article class="spot-card is-selected">
+            <div class="drag-handle" title="드래그" aria-hidden="true">⋮⋮</div>
+            <div class="order">3</div>
+            <div class="spot-thumb">[img]</div>
+            <div class="body">
+              <div class="name"><a href="spot.html">우에노 공원 · 단풍</a></div>
+              <div class="meta">오후 13:00 · 약 2시간</div>
+              <div class="tags">
+                <span class="tag">라벨: 자연</span>
+                <span class="sticker">📷 포토</span>
+                <span class="sticker">단풍</span>
+              </div>
+            </div>
+            <div class="reorder-btns">
+              <button type="button" class="btn-reorder" aria-label="위로">▲</button>
+              <button type="button" class="btn-reorder" aria-label="아래로">▼</button>
+            </div>
+            <div class="actions">
+              <a class="btn btn-sm" href="spot.html">상세</a>
+            </div>
+          </article>
+
+          <article class="spot-card">
+            <div class="drag-handle" title="드래그" aria-hidden="true">⋮⋮</div>
+            <div class="order">4</div>
+            <div class="spot-thumb">[img]</div>
+            <div class="body">
+              <div class="name"><a href="spot.html">아메요코 시장</a></div>
+              <div class="meta">오후 16:00 · 약 60분</div>
+              <div class="tags">
+                <span class="tag">라벨: 먹거리</span>
+                <span class="sticker">여유</span>
+              </div>
+            </div>
+            <div class="reorder-btns">
+              <button type="button" class="btn-reorder" aria-label="위로">▲</button>
+              <button type="button" class="btn-reorder" aria-label="아래로">▼</button>
+            </div>
+            <div class="actions">
+              <a class="btn btn-sm" href="spot.html">상세</a>
+            </div>
+          </article>
+
+          <div class="board-hint">
+            + 스팟 추가 · 또는 <a href="candidates.html">후보지 풀</a>에서 「추가」/「대체」
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="page-footer">해외여행 플래너 MVP · Low-fi Wireframe · F1 MAP+BOARD</footer>
+</body>
+</html>

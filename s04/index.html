@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>S04 Day 맵+보드 — 퍼블 프로토타입</title>
+  <link rel="stylesheet" as="style" crossorigin
+    href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+    <!-- Top bar -->
+    <header class="topbar">
+      <a class="topbar__back" href="#" aria-label="여행 허브로 돌아가기" title="허브">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M15 6L9 12l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+      <div class="topbar__titles">
+        <div class="topbar__trip">도쿄 단풍 여행 · 2026-10-10~14</div>
+        <h1 class="topbar__day">Day 2 · 아사쿠사·우에노</h1>
+      </div>
+      <span class="viewport-note" aria-hidden="true"></span>
+    </header>
+
+    <!-- Day chips (shared) -->
+    <nav class="day-chips" aria-label="일자 선택">
+      <a class="day-chip" href="#">Day 1</a>
+      <button type="button" class="day-chip is-active" aria-current="true">Day 2</button>
+      <a class="day-chip" href="#">Day 3</a>
+      <a class="day-chip" href="#">Day 4</a>
+      <a class="day-chip" href="#">Day 5</a>
+      <button type="button" class="day-chip day-chip--add" aria-label="Day 추가">+ Day</button>
+    </nav>
+
+    <!-- Mobile segment: default 보드 -->
+    <div class="segment" role="tablist" aria-label="맵과 보드 전환">
+      <button type="button" class="segment__btn" role="tab" id="tab-map" aria-selected="false" data-view="map">맵</button>
+      <button type="button" class="segment__btn is-active" role="tab" id="tab-board" aria-selected="true" data-view="board">보드</button>
+    </div>
+
+    <!-- Workspace: desktop split 60/40 · mobile segment -->
+    <div class="workspace is-board-view" id="workspace">
+      <!-- MAP 60% -->
+      <section class="pane map-pane" aria-label="지도" id="map-pane">
+        <div class="pane-header">
+          <span class="pane-header__title">맵 · 일자 루트</span>
+          <span class="pane-header__meta">핀 = 보드 순서</span>
+        </div>
+        <div class="map-stage" id="map-stage">
+          <div class="map-stage__grid" aria-hidden="true"></div>
+          <div class="map-stage__badge">도쿄 · 플레이스홀더 맵</div>
+
+          <svg class="map-route" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+            <polyline
+              points="22,70 42,32 60,26 78,55"
+              fill="none"
+              stroke="#0F6B6B"
+              stroke-width="0.8"
+              stroke-dasharray="2 1.5"
+              stroke-linecap="round"
+              opacity="0.55"
+            />
+          </svg>
+
+          <button type="button" class="spot-pin" style="left:22%; top:70%;" data-spot="1"
+            aria-label="1번 센소지" title="1. 센소지">1</button>
+          <button type="button" class="spot-pin" style="left:42%; top:32%;" data-spot="2"
+            aria-label="2번 나카미세 거리" title="2. 나카미세 거리">2</button>
+          <button type="button" class="spot-pin is-selected" style="left:60%; top:26%;" data-spot="3"
+            aria-label="3번 우에노 공원" title="3. 우에노 공원" aria-pressed="true">3</button>
+          <button type="button" class="spot-pin" style="left:78%; top:55%;" data-spot="4"
+            aria-label="4번 아메요코 시장" title="4. 아메요코 시장">4</button>
+
+          <!-- Mobile peak sheet (hidden ≥900px via CSS) -->
+          <div class="peak-sheet" id="peak-sheet" role="region" aria-label="선택 스팟 요약">
+            <div class="peak-sheet__handle" aria-hidden="true"></div>
+            <div class="peak-sheet__row">
+              <span class="peak-sheet__num" id="peak-num">3</span>
+              <div class="peak-sheet__name" id="peak-name">우에노 공원 · 단풍</div>
+              <button type="button" class="btn btn--ghost" style="min-height:36px;padding:0 12px;font-size:13px;">상세</button>
+            </div>
+            <p class="peak-sheet__hint">위로 끌면 스팟 상세(S05) · 정적 데모</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Visual splitter (desktop) -->
+      <div class="splitter" aria-hidden="true" title="스플리터(시각)">
+        <div class="splitter__grip"></div>
+      </div>
+
+      <!-- BOARD 40% -->
+      <section class="pane board-pane" aria-label="보드" id="board-pane">
+        <div class="pane-header">
+          <div>
+            <span class="pane-header__title">보드 · 스팟 순서</span>
+            <span class="pane-header__meta"> 4곳</span>
+          </div>
+          <button type="button" class="btn btn--ghost" aria-label="후보지 열기">후보</button>
+        </div>
+
+        <div class="board-scroll" id="board-list">
+          <!-- Card 1 -->
+          <article class="spot-card" data-spot="1" id="card-1">
+            <span class="spot-card__handle" title="드래그(시각)" aria-hidden="true">⋮⋮</span>
+            <span class="spot-card__order" aria-hidden="true">1</span>
+            <div class="spot-card__thumb" aria-hidden="true">寺</div>
+            <div class="spot-card__body">
+              <div class="spot-card__name"><a href="#">센소지 (浅草寺)</a></div>
+              <div class="spot-card__meta-row">
+                <span class="label-chip label-chip--sight">관광</span>
+                <span class="sticker">★ 필수</span>
+              </div>
+            </div>
+            <div class="spot-card__moves">
+              <button type="button" class="btn btn--icon" disabled aria-label="센소지 위로">▲</button>
+              <button type="button" class="btn btn--icon" aria-label="센소지 아래로">▼</button>
+            </div>
+          </article>
+
+          <!-- Card 2 -->
+          <article class="spot-card" data-spot="2" id="card-2">
+            <span class="spot-card__handle" title="드래그(시각)" aria-hidden="true">⋮⋮</span>
+            <span class="spot-card__order" aria-hidden="true">2</span>
+            <div class="spot-card__thumb" aria-hidden="true">街</div>
+            <div class="spot-card__body">
+              <div class="spot-card__name"><a href="#">나카미세 거리</a></div>
+              <div class="spot-card__meta-row">
+                <span class="label-chip label-chip--shop">쇼핑</span>
+                <span class="sticker">간식</span>
+              </div>
+            </div>
+            <div class="spot-card__moves">
+              <button type="button" class="btn btn--icon" aria-label="나카미세 위로">▲</button>
+              <button type="button" class="btn btn--icon" aria-label="나카미세 아래로">▼</button>
+            </div>
+          </article>
+
+          <!-- Card 3 — selected, sync with pin -->
+          <article class="spot-card is-selected" data-spot="3" id="card-3" aria-current="true">
+            <span class="spot-card__handle" title="드래그(시각)" aria-hidden="true">⋮⋮</span>
+            <span class="spot-card__order" aria-hidden="true">3</span>
+            <div class="spot-card__thumb" aria-hidden="true">園</div>
+            <div class="spot-card__body">
+              <div class="spot-card__name"><a href="#">우에노 공원 · 단풍</a></div>
+              <div class="spot-card__meta-row">
+                <span class="label-chip label-chip--nature">자연</span>
+                <span class="sticker">📷 포토</span>
+                <span class="sticker">단풍</span>
+                <span class="sticker sticker--more">+1</span>
+              </div>
+            </div>
+            <div class="spot-card__moves">
+              <button type="button" class="btn btn--icon" aria-label="우에노 공원 위로">▲</button>
+              <button type="button" class="btn btn--icon" aria-label="우에노 공원 아래로">▼</button>
+            </div>
+          </article>
+
+          <!-- Card 4 -->
+          <article class="spot-card" data-spot="4" id="card-4">
+            <span class="spot-card__handle" title="드래그(시각)" aria-hidden="true">⋮⋮</span>
+            <span class="spot-card__order" aria-hidden="true">4</span>
+            <div class="spot-card__thumb" aria-hidden="true">市</div>
+            <div class="spot-card__body">
+              <div class="spot-card__name"><a href="#">아메요코 시장</a></div>
+              <div class="spot-card__meta-row">
+                <span class="label-chip label-chip--food">먹거리</span>
+                <span class="sticker">여유</span>
+              </div>
+            </div>
+            <div class="spot-card__moves">
+              <button type="button" class="btn btn--icon" aria-label="아메요코 위로">▲</button>
+              <button type="button" class="btn btn--icon" disabled aria-label="아메요코 아래로">▼</button>
+            </div>
+          </article>
+
+          <div class="board-hint">
+            + 스팟 추가 · 또는 <a href="#">후보지</a>에서 「이 Day에 추가」
+          </div>
+        </div>
+
+        <!-- Fixed label/sticker palette (MVP) -->
+        <aside class="palette" aria-label="고정 라벨·스티커 팔레트">
+          <div class="palette__label">라벨 팔레트 (고정)</div>
+          <div class="palette__row">
+            <span class="label-chip label-chip--sight">관광</span>
+            <span class="label-chip label-chip--shop">쇼핑</span>
+            <span class="label-chip label-chip--nature">자연</span>
+            <span class="label-chip label-chip--food">먹거리</span>
+            <span class="label-chip">문화</span>
+            <span class="label-chip">휴식</span>
+          </div>
+          <div class="palette__label" style="margin-top:10px;">스티커 팔레트 (고정 · 카드당 최대 3 +N)</div>
+          <div class="palette__row">
+            <span class="sticker">★ 필수</span>
+            <span class="sticker">📷 포토</span>
+            <span class="sticker">간식</span>
+            <span class="sticker">여유</span>
+            <span class="sticker">비 대비</span>
+            <span class="sticker">단풍</span>
+          </div>
+        </aside>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      var workspace = document.getElementById("workspace");
+      var tabs = document.querySelectorAll(".segment__btn");
+      var pins = document.querySelectorAll(".spot-pin");
+      var cards = document.querySelectorAll(".spot-card");
+      var peakNum = document.getElementById("peak-num");
+      var peakName = document.getElementById("peak-name");
+      var names = {
+        "1": "센소지 (浅草寺)",
+        "2": "나카미세 거리",
+        "3": "우에노 공원 · 단풍",
+        "4": "아메요코 시장"
+      };
+
+      function setView(view) {
+        workspace.classList.toggle("is-map-view", view === "map");
+        workspace.classList.toggle("is-board-view", view === "board");
+        tabs.forEach(function (t) {
+          var on = t.getAttribute("data-view") === view;
+          t.classList.toggle("is-active", on);
+          t.setAttribute("aria-selected", on ? "true" : "false");
+        });
+      }
+
+      tabs.forEach(function (t) {
+        t.addEventListener("click", function () {
+          setView(t.getAttribute("data-view"));
+        });
+      });
+
+      function selectSpot(id) {
+        pins.forEach(function (p) {
+          var on = p.getAttribute("data-spot") === id;
+          p.classList.toggle("is-selected", on);
+          p.setAttribute("aria-pressed", on ? "true" : "false");
+        });
+        cards.forEach(function (c) {
+          var on = c.getAttribute("data-spot") === id;
+          c.classList.toggle("is-selected", on);
+          if (on) {
+            c.setAttribute("aria-current", "true");
+            c.scrollIntoView({ block: "nearest", behavior: "smooth" });
+          } else {
+            c.removeAttribute("aria-current");
+          }
+        });
+        if (peakNum) peakNum.textContent = id;
+        if (peakName) peakName.textContent = names[id] || "";
+      }
+
+      pins.forEach(function (p) {
+        p.addEventListener("click", function () {
+          selectSpot(p.getAttribute("data-spot"));
+        });
+      });
+      cards.forEach(function (c) {
+        c.addEventListener("click", function (e) {
+          if (e.target.closest(".spot-card__moves") || e.target.closest("a")) return;
+          selectSpot(c.getAttribute("data-spot"));
+        });
+      });
+
+      /* Visual-only drag affordance on handle */
+      document.querySelectorAll(".spot-card__handle").forEach(function (h) {
+        h.addEventListener("mousedown", function () {
+          h.closest(".spot-card").classList.add("is-dragging");
+        });
+        h.addEventListener("mouseup", function () {
+          h.closest(".spot-card").classList.remove("is-dragging");
+        });
+        h.addEventListener("mouseleave", function () {
+          h.closest(".spot-card").classList.remove("is-dragging");
+        });
+      });
+    })();
+  </script>
+</body>
+</html>

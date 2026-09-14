@@ -1,0 +1,609 @@
+/* Low-fidelity wireframe styles — grayscale only (no teal/coral) */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+  background: #f0f0f0;
+  color: #222;
+  line-height: 1.5;
+  font-size: 14px;
+}
+a { color: #222; text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* Wireframe chrome */
+.wf-label {
+  display: inline-block;
+  background: #333;
+  color: #fff;
+  font-size: 11px;
+  font-weight: bold;
+  padding: 2px 8px;
+  letter-spacing: 0.5px;
+  margin-bottom: 8px;
+}
+.site-header {
+  background: #fff;
+  border-bottom: 2px solid #333;
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.logo {
+  font-weight: bold;
+  font-size: 18px;
+  border: 2px solid #333;
+  padding: 4px 12px;
+}
+.nav-tabs {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+.nav-tabs a {
+  border: 1px solid #999;
+  padding: 4px 10px;
+  background: #e8e8e8;
+  font-size: 12px;
+}
+.nav-tabs a.active {
+  background: #333;
+  color: #fff;
+  border-color: #333;
+}
+.main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+.box {
+  background: #fff;
+  border: 2px solid #333;
+  padding: 16px;
+}
+.box-dashed {
+  border: 2px dashed #999;
+  background: #fafafa;
+  padding: 16px;
+}
+.btn {
+  display: inline-block;
+  border: 2px solid #333;
+  background: #e0e0e0;
+  padding: 8px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  font-family: inherit;
+  text-align: center;
+}
+.btn-primary {
+  background: #333;
+  color: #fff;
+}
+.btn-sm {
+  padding: 4px 10px;
+  font-size: 12px;
+}
+.btn:hover { background: #ccc; }
+.btn-primary:hover { background: #555; color: #fff; }
+
+h1 { font-size: 22px; margin-bottom: 8px; }
+h2 { font-size: 18px; margin-bottom: 12px; border-bottom: 1px solid #ccc; padding-bottom: 6px; }
+h3 { font-size: 15px; margin-bottom: 8px; }
+.muted { color: #666; font-size: 13px; }
+.meta { color: #555; font-size: 12px; margin-top: 4px; }
+
+/* Forms */
+.form-group { margin-bottom: 16px; }
+.form-group label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%;
+  max-width: 400px;
+  border: 2px solid #333;
+  padding: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  background: #fff;
+}
+.form-row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.form-row .form-group { flex: 1; min-width: 180px; }
+
+/* Trip list cards */
+.page-title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+.page-title-row h1 { margin-bottom: 0; }
+.trip-list { display: flex; flex-direction: column; gap: 12px; margin-top: 16px; }
+.trip-card {
+  border: 2px solid #333;
+  background: #fff;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+.trip-card .thumb {
+  width: 80px;
+  height: 60px;
+  border: 2px solid #999;
+  background: #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: #666;
+  flex-shrink: 0;
+}
+.trip-card .info { flex: 1; }
+.cta-row { margin-top: 20px; }
+.empty-state {
+  border: 2px dashed #999;
+  background: #fafafa;
+  padding: 28px 16px;
+  text-align: center;
+  margin-top: 16px;
+  color: #666;
+}
+
+/* S03 Hub — day chips + summary */
+.day-chips {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 4px 0 12px;
+  margin-top: 16px;
+  -webkit-overflow-scrolling: touch;
+}
+.day-chip {
+  flex-shrink: 0;
+  border: 2px solid #333;
+  background: #e8e8e8;
+  padding: 10px 16px;
+  min-width: 110px;
+  text-align: center;
+  font-size: 13px;
+  cursor: pointer;
+}
+.day-chip .chip-day { font-weight: bold; display: block; }
+.day-chip .chip-date { font-size: 11px; color: #555; }
+.day-chip.is-selected,
+.day-chip.active {
+  background: #333;
+  color: #fff;
+}
+.day-chip.is-selected .chip-date,
+.day-chip.active .chip-date { color: #ccc; }
+.day-summary {
+  border: 2px solid #333;
+  background: #fff;
+  padding: 16px;
+  margin-top: 4px;
+}
+.day-summary .summary-stats {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin: 12px 0;
+}
+.day-summary .stat {
+  border: 1px solid #999;
+  background: #eee;
+  padding: 8px 14px;
+  font-size: 13px;
+}
+.hub-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+/* ============================================================
+   S04 Day workspace — responsive MAP/BOARD
+   Desktop (≥900px): side-by-side MAP 60% / BOARD 40% + splitter
+   Mobile  (<900px): segment tabs 맵|보드; default = BOARD only
+   (Do NOT stack both panels vertically below breakpoint.)
+   ============================================================ */
+.day-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.day-tabs a, .day-tabs span {
+  border: 2px solid #333;
+  padding: 6px 14px;
+  background: #e8e8e8;
+  font-size: 13px;
+}
+.day-tabs .active {
+  background: #333;
+  color: #fff;
+}
+
+/* Hidden radios drive mobile segment (no JS) */
+.seg-input { position: absolute; opacity: 0; pointer-events: none; }
+
+.workspace-segments {
+  display: flex;
+  gap: 0;
+  margin-bottom: 12px;
+  border: 2px solid #333;
+  width: fit-content;
+}
+.workspace-segments label {
+  padding: 8px 20px;
+  background: #e8e8e8;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: bold;
+  border-right: 2px solid #333;
+  min-width: 72px;
+  text-align: center;
+}
+.workspace-segments label:last-child { border-right: none; }
+
+/* Default mobile: board selected */
+#seg-board:checked ~ .workspace-segments label[for="seg-board"],
+#seg-map:checked ~ .workspace-segments label[for="seg-map"] {
+  background: #333;
+  color: #fff;
+}
+
+.workspace {
+  display: block;
+  min-height: 480px;
+  position: relative;
+}
+
+/* Mobile (<900px): only one panel visible; default BOARD */
+.map-panel,
+.board-panel {
+  border: 2px solid #333;
+  background: #fff;
+  display: none;
+  flex-direction: column;
+  min-height: 480px;
+}
+#seg-board:checked ~ .workspace .board-panel { display: flex; }
+#seg-map:checked ~ .workspace .map-panel { display: flex; }
+
+.panel-splitter {
+  display: none; /* only on desktop */
+  width: 10px;
+  background: repeating-linear-gradient(
+    180deg,
+    #ccc 0 4px,
+    #999 4px 6px
+  );
+  border-left: 2px solid #333;
+  border-right: 2px solid #333;
+  cursor: col-resize;
+  flex-shrink: 0;
+  align-self: stretch;
+}
+
+@media (min-width: 900px) {
+  /* Desktop: hide segment tabs; show both panels 60/40 */
+  .workspace-segments { display: none; }
+  .workspace {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    gap: 0;
+    min-height: 520px;
+  }
+  .map-panel {
+    display: flex !important;
+    flex: 0 0 60%;
+    max-width: 60%;
+  }
+  .panel-splitter { display: block; }
+  .board-panel {
+    display: flex !important;
+    flex: 1 1 40%;
+    min-width: 0;
+  }
+}
+
+.panel-header {
+  border-bottom: 2px solid #333;
+  padding: 10px 14px;
+  font-weight: bold;
+  background: #e8e8e8;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.fake-map {
+  flex: 1;
+  background: #d8d8d8;
+  position: relative;
+  min-height: 400px;
+  border: 1px solid #999;
+  margin: 12px;
+}
+.map-grid-lines {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(#bbb 1px, transparent 1px),
+    linear-gradient(90deg, #bbb 1px, transparent 1px);
+  background-size: 40px 40px;
+  opacity: 0.5;
+}
+.map-label {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: #fff;
+  border: 1px solid #666;
+  padding: 2px 8px;
+  font-size: 11px;
+  color: #666;
+}
+.pin {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  border: 2px solid #333;
+  background: #fff;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+.pin span {
+  transform: rotate(45deg);
+  font-weight: bold;
+  font-size: 12px;
+}
+.pin.is-selected {
+  background: #333;
+  box-shadow: 0 0 0 3px #fff, 0 0 0 5px #333;
+}
+.pin.is-selected span { color: #fff; }
+
+.board {
+  padding: 12px;
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.spot-card {
+  border: 2px solid #333;
+  background: #fafafa;
+  padding: 8px 10px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.spot-card.is-selected {
+  background: #e8e8e8;
+  outline: 3px solid #333;
+  outline-offset: -1px;
+}
+.drag-handle {
+  width: 28px;
+  flex-shrink: 0;
+  color: #888;
+  font-size: 16px;
+  line-height: 1.1;
+  text-align: center;
+  cursor: grab;
+  user-select: none;
+  letter-spacing: -2px;
+}
+.spot-card .order {
+  width: 28px;
+  height: 28px;
+  border: 2px solid #333;
+  background: #333;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+.spot-thumb {
+  width: 44px;
+  height: 44px;
+  border: 2px solid #999;
+  background: #ddd;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: #666;
+}
+.spot-card .body { flex: 1; min-width: 0; }
+.spot-card .name { font-weight: bold; margin-bottom: 2px; }
+.tags { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 4px; }
+.tag {
+  border: 1px solid #666;
+  padding: 1px 6px;
+  font-size: 11px;
+  background: #eee;
+}
+.sticker {
+  border: 2px solid #333;
+  padding: 1px 6px;
+  font-size: 11px;
+  background: #ccc;
+  font-weight: bold;
+}
+.spot-card .actions {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex-shrink: 0;
+}
+.reorder-btns {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex-shrink: 0;
+}
+.btn-reorder {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  border: 2px solid #333;
+  background: #e0e0e0;
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn-reorder:hover { background: #ccc; }
+.board-hint {
+  font-size: 11px;
+  color: #888;
+  text-align: center;
+  padding: 8px;
+  border: 1px dashed #aaa;
+}
+
+/* Spot detail */
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin: 12px 0;
+}
+.photo-ph {
+  aspect-ratio: 4/3;
+  border: 2px solid #999;
+  background: #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: #666;
+}
+.memo-box {
+  border: 2px solid #333;
+  padding: 12px;
+  background: #fafafa;
+  min-height: 100px;
+  margin-top: 8px;
+}
+.detail-meta {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin: 12px 0;
+}
+.detail-meta .item {
+  border: 1px solid #999;
+  padding: 6px 12px;
+  background: #eee;
+}
+
+/* Candidates — 미배정 / 라벨 filter axes */
+.filter-axes { margin-top: 16px; }
+.filter-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 10px;
+}
+.filter-row .axis-label {
+  font-size: 12px;
+  font-weight: bold;
+  color: #555;
+  min-width: 56px;
+}
+.filter-row .btn.is-on {
+  background: #333;
+  color: #fff;
+}
+.candidate-actions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+.candidate-list { display: flex; flex-direction: column; gap: 10px; margin-top: 16px; }
+.candidate-item {
+  border: 2px solid #333;
+  background: #fff;
+  padding: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+.candidate-item .left { flex: 1; }
+.breadcrumb {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 12px;
+}
+.breadcrumb a { color: #666; text-decoration: underline; }
+.page-footer {
+  text-align: center;
+  padding: 24px;
+  color: #888;
+  font-size: 12px;
+  border-top: 1px solid #ccc;
+  margin-top: 40px;
+}
+.legend {
+  display: flex;
+  gap: 12px;
+  font-size: 11px;
+  color: #555;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+.legend span { border: 1px solid #999; padding: 2px 6px; background: #eee; }
+
+/* S02 sticky bottom primary CTA */
+.create-page { padding-bottom: 88px; }
+.sticky-cta {
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border-top: 2px solid #333;
+  padding: 12px 24px;
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  z-index: 10;
+  margin-top: 24px;
+}
+.sticky-cta .btn-primary { min-width: 200px; }

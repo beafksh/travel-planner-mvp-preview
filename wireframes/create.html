@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>S02 여행 생성 — 해외여행 플래너</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="logo">여행플래너 MVP</div>
+    <nav class="nav-tabs" aria-label="화면 네비게이션">
+      <a href="index.html">S01 목록</a>
+      <a href="create.html" class="active">S02 생성</a>
+      <a href="hub.html">S03 허브</a>
+      <a href="day.html">S04 Day</a>
+      <a href="spot.html">S05 스팟</a>
+      <a href="candidates.html">S06 후보지</a>
+    </nav>
+  </header>
+
+  <main class="main create-page">
+    <div class="wf-label">S02 · 여행 생성</div>
+    <div class="breadcrumb"><a href="index.html">여행 목록</a> / 새 여행</div>
+    <h1>새 여행 만들기</h1>
+    <p class="muted">제목·일정·목적지만 먼저 입력합니다. 상세 루트는 허브에서 구성합니다.</p>
+
+    <div class="box" style="margin-top:16px; max-width:560px;">
+      <div class="form-group">
+        <label for="title">여행 제목</label>
+        <input id="title" type="text" value="도쿄 단풍 여행" placeholder="예: 도쿄 단풍 여행" />
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="start">출발일</label>
+          <input id="start" type="text" value="2026-10-10" placeholder="YYYY-MM-DD" />
+        </div>
+        <div class="form-group">
+          <label for="end">귀국일</label>
+          <input id="end" type="text" value="2026-10-14" placeholder="YYYY-MM-DD" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="dest">목적지</label>
+        <!-- Manual destination only — no autocomplete -->
+        <input id="dest" type="text" value="일본 도쿄" placeholder="국가 / 도시" autocomplete="off" />
+      </div>
+      <div class="form-group">
+        <label for="note">한줄 메모 (선택)</label>
+        <textarea id="note" rows="2" placeholder="예: 시부야·아사쿠사·우에노 단풍 위주">단풍 시즌, 시부야·아사쿠사 중심</textarea>
+      </div>
+    </div>
+  </main>
+
+  <div class="sticky-cta">
+    <a class="btn btn-primary" href="hub.html">여행 생성 → 허브로</a>
+    <a class="btn" href="index.html">취소</a>
+  </div>
+
+  <footer class="page-footer">해외여행 플래너 MVP · Low-fi Wireframe</footer>
+</body>
+</html>

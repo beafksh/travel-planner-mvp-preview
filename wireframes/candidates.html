@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>S06 대안·후보지 풀 — 도쿄 단풍 여행</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="logo">여행플래너 MVP</div>
+    <nav class="nav-tabs" aria-label="화면 네비게이션">
+      <a href="index.html">S01 목록</a>
+      <a href="create.html">S02 생성</a>
+      <a href="hub.html">S03 허브</a>
+      <a href="day.html">S04 Day</a>
+      <a href="spot.html">S05 스팟</a>
+      <a href="candidates.html" class="active">S06 후보지</a>
+    </nav>
+  </header>
+
+  <main class="main">
+    <div class="wf-label">S06 · 대안·후보지 풀</div>
+    <div class="breadcrumb">
+      <a href="index.html">여행 목록</a> /
+      <a href="hub.html">도쿄 단풍 여행</a> /
+      후보지
+    </div>
+    <h1>대안·후보지 풀</h1>
+    <p class="muted">일정이 깨질 때 넣을 예비 스팟. 「추가」로 Day에 붙이거나 「대체」로 기존 스팟을 바꿉니다. (F3)</p>
+
+    <div class="filter-axes">
+      <div class="filter-row">
+        <span class="axis-label">배정</span>
+        <button type="button" class="btn btn-sm is-on">미배정</button>
+        <button type="button" class="btn btn-sm">배정됨</button>
+        <button type="button" class="btn btn-sm">전체</button>
+      </div>
+      <div class="filter-row">
+        <span class="axis-label">라벨</span>
+        <button type="button" class="btn btn-sm is-on">전체</button>
+        <button type="button" class="btn btn-sm">문화</button>
+        <button type="button" class="btn btn-sm">쇼핑</button>
+        <button type="button" class="btn btn-sm">전망</button>
+        <button type="button" class="btn btn-sm">휴식</button>
+        <button type="button" class="btn btn-primary btn-sm" style="margin-left:auto;">+ 후보지 추가</button>
+      </div>
+    </div>
+
+    <div class="candidate-list">
+      <div class="candidate-item">
+        <div class="left">
+          <strong>도쿄 국립박물관</strong>
+          <div class="meta">미배정 · 실내 · 우에노 · Day 2 근처</div>
+          <div class="tags" style="margin-top:6px;">
+            <span class="tag">라벨: 문화</span>
+            <span class="sticker">비 대비</span>
+          </div>
+        </div>
+        <div class="candidate-actions">
+          <a class="btn btn-primary btn-sm" href="day.html">추가</a>
+          <a class="btn btn-sm" href="day.html">대체</a>
+        </div>
+      </div>
+
+      <div class="candidate-item">
+        <div class="left">
+          <strong>키디랜드 하라주쿠</strong>
+          <div class="meta">미배정 · 실내 · 쇼핑 · Day 3</div>
+          <div class="tags" style="margin-top:6px;">
+            <span class="tag">라벨: 쇼핑</span>
+            <span class="sticker">여유</span>
+          </div>
+        </div>
+        <div class="candidate-actions">
+          <a class="btn btn-primary btn-sm" href="day.html">추가</a>
+          <a class="btn btn-sm" href="day.html">대체</a>
+        </div>
+      </div>
+
+      <div class="candidate-item">
+        <div class="left">
+          <strong>시부야 스카이</strong>
+          <div class="meta">미배정 · 전망 · 티켓 필요 · Day 1 백업</div>
+          <div class="tags" style="margin-top:6px;">
+            <span class="tag">라벨: 전망</span>
+            <span class="sticker">★ 후보</span>
+          </div>
+        </div>
+        <div class="candidate-actions">
+          <a class="btn btn-primary btn-sm" href="day.html">추가</a>
+          <a class="btn btn-sm" href="day.html">대체</a>
+        </div>
+      </div>
+
+      <div class="candidate-item">
+        <div class="left">
+          <strong>돈키호테 시부야</strong>
+          <div class="meta">미배정 · 쇼핑 · 심야 가능</div>
+          <div class="tags" style="margin-top:6px;">
+            <span class="tag">라벨: 쇼핑</span>
+            <span class="sticker">막판</span>
+          </div>
+        </div>
+        <div class="candidate-actions">
+          <a class="btn btn-primary btn-sm" href="day.html">추가</a>
+          <a class="btn btn-sm" href="day.html">대체</a>
+        </div>
+      </div>
+
+      <div class="candidate-item">
+        <div class="left">
+          <strong>카페 · 시노바즈노이케 근처</strong>
+          <div class="meta">미배정 · 실내 휴식 · 우에노 비 올 때</div>
+          <div class="tags" style="margin-top:6px;">
+            <span class="tag">라벨: 휴식</span>
+            <span class="sticker">비 대비</span>
+          </div>
+        </div>
+        <div class="candidate-actions">
+          <a class="btn btn-primary btn-sm" href="day.html">추가</a>
+          <a class="btn btn-sm" href="day.html">대체</a>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:24px;">
+      <a class="btn" href="hub.html">← 여행 허브</a>
+      <a class="btn" href="day.html">맵+보드 열기</a>
+    </div>
+  </main>
+
+  <footer class="page-footer">해외여행 플래너 MVP · Low-fi Wireframe · F3 후보지</footer>
+</body>
+</html>
