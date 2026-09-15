@@ -56,8 +56,10 @@ https://beafksh.github.io/travel-planner-mvp-preview/maps-poc/
 1. B) 지도에서 원하는 위치를 **클릭**
 2. 빨간 `+` 임시 마커와 우측 패널 표시
    - 좌표 자동 표시
-   - 이름: Nominatim 역지오코딩 결과 (수정 가능)
-   - 조회 실패 시 `클릭 지점 (lat, lng)` 폴백 — 이름 없이도 등록 가능
+   - 이름: 역지오코딩 결과 (수정 가능). 우선순위:
+     1. `VITE_RESOLVE_API_BASE` 설정 시 `GET {base}/api/maps/reverse-geocode?lat=&lng=` (백엔드 Nominatim 프록시)
+     2. 없으면 Nominatim 직접 호출
+     3. 실패 시 `클릭 지점 (lat, lng)` 폴백 — 좌표만으로도 등록 가능
 3. **Day 동선에 스팟 추가** — 번호 마커·OSRM/직선 동선에 merge
 4. **후보스팟으로 추가** — 지도에 ★ 마커, 하단 후보 리스트에 표시
 5. 후보 리스트에서 **동선에 추가** → Day 스팟으로 이동 · **삭제**로 제거
@@ -72,7 +74,7 @@ https://beafksh.github.io/travel-planner-mvp-preview/maps-poc/
 | **CORS 프록시** | 제3자 서비스(allorigins, corsproxy.io). 가용성·정책 변경 가능 |
 | **Place ID** | URL에 없으면 확정 불가 (Google Places API 미사용) |
 | **목록 getlist API** | Google 비공식 내부 엔드포인트. 변경·차단·ToS 위반 가능성. 비공개 목록 실패 |
-| **Nominatim 역지오코딩** | **Experimental** · [사용 정책](https://operations.osmfoundation.org/policies/nominatim/) 준수: 약 1 req/sec, 인메모리 캐시. 브라우저에서는 User-Agent 헤더 설정 불가. 이름 부정확·POI 미매칭(빈 땅 클릭) 가능. 쿼터·429 시 좌표만으로 등록 |
+| **역지오코딩** | 백엔드 프록시(`GET /api/maps/reverse-geocode`) 우선 · 없으면 Nominatim 직접 (**Experimental**) · [Nominatim 정책](https://operations.osmfoundation.org/policies/nominatim/): 약 1 req/sec, 인메모리 캐시. 브라우저 직접 호출 시 User-Agent 헤더 설정 불가. 이름 부정확·POI 미매칭 가능. 실패 시 좌표만으로 등록 |
 | **맵 클릭 지점** | 클릭 위치가 POI가 아닐 수 있음 (도로·공원 한가운데 등). 역지오코딩 이름은 참고용 |
 | **프로덕션** | 자체 OSRM/백엔드 프록시 또는 Nominatim 등 검토 필요 |
 

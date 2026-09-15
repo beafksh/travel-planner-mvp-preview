@@ -1,29 +1,29 @@
 /**
- * Nominatim reverse geocoding (free, no API key).
- * Policy: https://operations.osmfoundation.org/policies/nominatim/
- * - ~1 request/sec
- * - In-memory cache by rounded coordinates
- * - Browser fetch cannot set User-Agent header; the browser default is sent.
+ * Reverse geocoding for map-click spot registration.
+ *
+ * Priority:
+ * 1. GET {VITE_RESOLVE_API_BASE}/api/maps/reverse-geocode?lat=&lng= (backend Nominatim proxy)
+ * 2. Direct Nominatim (free, no API key) — ~1 req/sec, in-memory cache
+ * 3. Fallback to coordinate-only name on any failure
+ *
+ * Nominatim policy: https://operations.osmfoundation.org/policies/nominatim/
  */
 
 const NOMINATIM_REVERSE = 'https://nominatim.openstreetmap.org/reverse';
 const MIN_INTERVAL_MS = 1100;
+const REQUEST_TIMEOUT_MS = 10_000;
 
-interface NominatimAddress {
-  tourism?: string;
-  amenity?: string;
-  building?: string;
-  road?: string;
-  neighbourhood?: string;
-  suburb?: string;
-  city?: string;
-  town?: string;
+interface ReverseGeocodeApiResponse {
+  lat: number;
+  lng: number;
+  displayName?: string;
+  address?: string | Record<string, string | undefined>;
 }
 
 interface NominatimResponse {
   name?: string;
   display_name?: string;
-  address?: NominatimAddress;
+  address?: Record<string, string | undefined>;
 }
 
 interface CacheEntry {
@@ -32,8 +32,12 @@ interface CacheEntry {
 }
 
 const cache = new Map<string, CacheEntry>();
-let lastRequestAt = 0;
-let queueTail: Promise<void> = Promise.resolve();
+let lastNominatimRequestAt = 0;
+let nominatimQueueTail: Promise<void> = Promise.resolve();
+
+function resolveApiBase(): string | undefined {
+  return import.meta.env.VITE_RESOLVE_API_BASE?.replace(/\/$/, '');
+}
 
 function cacheKey(lat: number, lng: number): string {
   return `${lat.toFixed(5)},${lng.toFixed(5)}`;
@@ -43,42 +47,77 @@ function fallbackName(lat: number, lng: number): string {
   return `클릭 지점 (${lat.toFixed(5)}, ${lng.toFixed(5)})`;
 }
 
-function extractName(data: NominatimResponse, lat: number, lng: number): string {
-  if (data.name?.trim()) return data.name.trim();
+function firstSegment(text: string): string {
+  const first = text.split(',')[0]?.trim();
+  return first || text.trim();
+}
 
-  const addr = data.address;
-  if (addr) {
-    const parts = [
-      addr.tourism,
-      addr.amenity,
-      addr.building,
-      addr.road,
-      addr.neighbourhood,
-      addr.suburb,
-    ].filter(Boolean);
-    if (parts.length > 0) return parts[0]!;
+function extractNameFromDisplayName(displayName: string, lat: number, lng: number): string {
+  const trimmed = displayName.trim();
+  if (!trimmed) return fallbackName(lat, lng);
+  return firstSegment(trimmed);
+}
+
+function extractNameFromAddressField(
+  address: string | Record<string, string | undefined> | undefined,
+): string | null {
+  if (!address) return null;
+
+  if (typeof address === 'string') {
+    const trimmed = address.trim();
+    return trimmed ? firstSegment(trimmed) : null;
   }
 
-  if (data.display_name) {
-    const first = data.display_name.split(',')[0]?.trim();
-    if (first) return first;
+  const parts = [
+    address.tourism,
+    address.amenity,
+    address.building,
+    address.road,
+    address.neighbourhood,
+    address.suburb,
+    address.city,
+    address.town,
+  ].filter(Boolean);
+
+  return parts.length > 0 ? String(parts[0]) : null;
+}
+
+function extractNameFromApi(data: ReverseGeocodeApiResponse, lat: number, lng: number): string {
+  if (data.displayName?.trim()) {
+    return extractNameFromDisplayName(data.displayName, lat, lng);
+  }
+
+  const fromAddress = extractNameFromAddressField(data.address);
+  if (fromAddress) return fromAddress;
+
+  return fallbackName(lat, lng);
+}
+
+function extractNameFromNominatim(data: NominatimResponse, lat: number, lng: number): string {
+  if (data.name?.trim()) return data.name.trim();
+
+  const fromAddress = extractNameFromAddressField(data.address);
+  if (fromAddress) return fromAddress;
+
+  if (data.display_name?.trim()) {
+    return extractNameFromDisplayName(data.display_name, lat, lng);
   }
 
   return fallbackName(lat, lng);
 }
 
-function scheduleRequest<T>(fn: () => Promise<T>): Promise<T> {
-  const run = queueTail.then(async () => {
+function scheduleNominatimRequest<T>(fn: () => Promise<T>): Promise<T> {
+  const run = nominatimQueueTail.then(async () => {
     const now = Date.now();
-    const wait = MIN_INTERVAL_MS - (now - lastRequestAt);
+    const wait = MIN_INTERVAL_MS - (now - lastNominatimRequestAt);
     if (wait > 0) {
       await new Promise((resolve) => setTimeout(resolve, wait));
     }
-    lastRequestAt = Date.now();
+    lastNominatimRequestAt = Date.now();
     return fn();
   });
 
-  queueTail = run.then(
+  nominatimQueueTail = run.then(
     () => undefined,
     () => undefined,
   );
@@ -93,6 +132,64 @@ export interface ReverseGeocodeResult {
   error?: string;
 }
 
+async function reverseGeocodeViaApi(lat: number, lng: number): Promise<ReverseGeocodeResult | null> {
+  const base = resolveApiBase();
+  if (!base) return null;
+
+  try {
+    const params = new URLSearchParams({
+      lat: String(lat),
+      lng: String(lng),
+    });
+
+    const response = await fetch(`${base}/api/maps/reverse-geocode?${params}`, {
+      headers: { Accept: 'application/json' },
+      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+    });
+
+    if (!response.ok) return null;
+
+    const data = (await response.json()) as ReverseGeocodeApiResponse;
+    const name = extractNameFromApi(data, lat, lng);
+    const displayName =
+      data.displayName?.trim() ||
+      (typeof data.address === 'string' ? data.address.trim() : undefined);
+
+    return { name, displayName, fromCache: false };
+  } catch {
+    return null;
+  }
+}
+
+async function reverseGeocodeViaNominatim(lat: number, lng: number): Promise<ReverseGeocodeResult> {
+  const data = await scheduleNominatimRequest(async () => {
+    const params = new URLSearchParams({
+      lat: String(lat),
+      lon: String(lng),
+      format: 'json',
+      zoom: '18',
+      addressdetails: '1',
+    });
+
+    const response = await fetch(`${NOMINATIM_REVERSE}?${params}`, {
+      headers: {
+        Accept: 'application/json',
+        'Accept-Language': 'ko,en',
+      },
+      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Nominatim HTTP ${response.status}`);
+    }
+
+    return (await response.json()) as NominatimResponse;
+  });
+
+  const name = extractNameFromNominatim(data, lat, lng);
+  return { name, displayName: data.display_name, fromCache: false };
+}
+
 export async function reverseGeocode(lat: number, lng: number): Promise<ReverseGeocodeResult> {
   const key = cacheKey(lat, lng);
   const cached = cache.get(key);
@@ -100,35 +197,16 @@ export async function reverseGeocode(lat: number, lng: number): Promise<ReverseG
     return { name: cached.name, displayName: cached.displayName, fromCache: true };
   }
 
+  const apiResult = await reverseGeocodeViaApi(lat, lng);
+  if (apiResult) {
+    cache.set(key, { name: apiResult.name, displayName: apiResult.displayName });
+    return apiResult;
+  }
+
   try {
-    const data = await scheduleRequest(async () => {
-      const params = new URLSearchParams({
-        lat: String(lat),
-        lon: String(lng),
-        format: 'json',
-        zoom: '18',
-        addressdetails: '1',
-      });
-
-      const response = await fetch(`${NOMINATIM_REVERSE}?${params}`, {
-        headers: {
-          Accept: 'application/json',
-          'Accept-Language': 'ko,en',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error(`Nominatim HTTP ${response.status}`);
-      }
-
-      return (await response.json()) as NominatimResponse;
-    });
-
-    const name = extractName(data, lat, lng);
-    const entry: CacheEntry = { name, displayName: data.display_name };
-    cache.set(key, entry);
-
-    return { name, displayName: data.display_name, fromCache: false };
+    const nominatimResult = await reverseGeocodeViaNominatim(lat, lng);
+    cache.set(key, { name: nominatimResult.name, displayName: nominatimResult.displayName });
+    return nominatimResult;
   } catch (err) {
     const name = fallbackName(lat, lng);
     return {
