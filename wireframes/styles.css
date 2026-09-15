@@ -642,7 +642,7 @@ button.day-chip {
   font-size: 12px;
 }
 
-/* S04: 후보지에서 추가 popup (details) */
+/* S04: 후보스팟에서 추가 popup (details) */
 .popup-panel {
   margin: 0 0 14px;
   border: 2px solid #333;
@@ -888,7 +888,7 @@ button.day-chip {
   background: #f5f5f5;
 }
 
-/* v0.6: S04 예약연결 카드 노출 · 스팟 추가 + 후보지에서 추가 병행 CTA */
+/* v0.6: S04 예약연결 카드 노출 · 스팟 추가 + 후보스팟에서 추가 병행 CTA */
 .day-add-bar {
   display: flex;
   flex-wrap: wrap;

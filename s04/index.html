@@ -104,7 +104,7 @@
               스팟 추가
             </button>
             <button type="button" class="btn btn--primary btn--sm" id="btn-open-candidates" aria-haspopup="dialog" aria-controls="modal-candidates">
-              후보지에서 추가
+              후보스팟에서 추가
             </button>
           </div>
         </div>
@@ -130,7 +130,7 @@
               <button type="button" class="btn btn--icon" disabled aria-label="센소지 위로">▲</button>
               <button type="button" class="btn btn--icon" aria-label="센소지 아래로">▼</button>
             </div>
-            <button type="button" class="btn btn--revert" data-revert="1" title="후보지로 되돌리기">되돌리기</button>
+            <button type="button" class="btn btn--revert" data-revert="1" title="후보스팟로 되돌리기">되돌리기</button>
           </article>
 
           <!-- Card 2 -->
@@ -153,7 +153,7 @@
               <button type="button" class="btn btn--icon" aria-label="나카미세 위로">▲</button>
               <button type="button" class="btn btn--icon" aria-label="나카미세 아래로">▼</button>
             </div>
-            <button type="button" class="btn btn--revert" data-revert="2" title="후보지로 되돌리기">되돌리기</button>
+            <button type="button" class="btn btn--revert" data-revert="2" title="후보스팟로 되돌리기">되돌리기</button>
           </article>
 
           <!-- Card 3 — selected, sync with pin -->
@@ -177,7 +177,7 @@
               <button type="button" class="btn btn--icon" aria-label="우에노 공원 위로">▲</button>
               <button type="button" class="btn btn--icon" aria-label="우에노 공원 아래로">▼</button>
             </div>
-            <button type="button" class="btn btn--revert" data-revert="3" title="후보지로 되돌리기">되돌리기</button>
+            <button type="button" class="btn btn--revert" data-revert="3" title="후보스팟로 되돌리기">되돌리기</button>
           </article>
 
           <!-- Card 4 -->
@@ -199,13 +199,13 @@
               <button type="button" class="btn btn--icon" aria-label="아메요코 위로">▲</button>
               <button type="button" class="btn btn--icon" disabled aria-label="아메요코 아래로">▼</button>
             </div>
-            <button type="button" class="btn btn--revert" data-revert="4" title="후보지로 되돌리기">되돌리기</button>
+            <button type="button" class="btn btn--revert" data-revert="4" title="후보스팟로 되돌리기">되돌리기</button>
           </article>
 
           <div class="board-hint">
             <button type="button" class="link-btn" id="btn-open-add-spot-hint">스팟 추가</button>
             ·
-            <button type="button" class="link-btn" id="btn-open-candidates-hint">후보지에서 추가</button>
+            <button type="button" class="link-btn" id="btn-open-candidates-hint">후보스팟에서 추가</button>
             로 Day에 붙이기
           </div>
         </div>
@@ -276,16 +276,16 @@
     </div>
   </div>
 
-  <!-- Modal: 후보지 추가 -->
+  <!-- Modal: 후보스팟 추가 -->
   <div class="modal" id="modal-candidates" hidden aria-hidden="true">
     <div class="modal__backdrop" data-close-modal></div>
     <div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="modal-candidates-title">
       <header class="modal__header">
-        <h2 id="modal-candidates-title">후보지에서 추가</h2>
+        <h2 id="modal-candidates-title">후보스팟에서 추가</h2>
         <button type="button" class="modal__close" data-close-modal aria-label="닫기">×</button>
       </header>
       <div class="modal__body">
-        <p class="modal__hint">기존 후보지에서 Day 2 보드로 추가합니다. (정적 팝업 · S07 페이지 자체는 변경 없음)</p>
+        <p class="modal__hint">기존 후보스팟에서 Day 2 보드로 추가합니다. (정적 팝업 · S07 페이지 자체는 변경 없음)</p>
         <p class="modal__hint modal__hint--dim">딤 배경 + 중앙 모달 · 뒤 화면 클릭 시 닫힘</p>
         <ul class="candidate-pick-list">
           <li class="candidate-pick">
@@ -594,7 +594,7 @@
 
       document.querySelectorAll("[data-add-candidate]").forEach(function (btn) {
         btn.addEventListener("click", function () {
-          showToast("후보지 → Day 스팟으로 추가됨 (데모)");
+          showToast("후보스팟 → Day 스팟으로 추가됨 (데모)");
           closeModal(btn);
         });
       });
@@ -649,7 +649,7 @@
         });
       }
 
-      /* Spot → 후보지 되돌리기 */
+      /* Spot → 후보스팟 되돌리기 */
       document.querySelectorAll("[data-revert]").forEach(function (btn) {
         btn.addEventListener("click", function (e) {
           e.stopPropagation();
@@ -665,7 +665,7 @@
           }
           var pin = document.querySelector('.spot-pin[data-spot="' + id + '"]');
           if (pin) pin.style.display = "none";
-          showToast(name + " → 후보지로 되돌림 (데모)");
+          showToast(name + " → 후보스팟로 되돌림 (데모)");
         });
       });
 
