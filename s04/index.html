@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>S04 Day 맵+보드 — 퍼블 프로토타입</title>
+  <title>S04 맵보드 — 퍼블 프로토타입</title>
   <link rel="stylesheet" as="style" crossorigin
     href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   <link rel="stylesheet" href="styles.css" />
@@ -12,13 +12,13 @@
   <div class="app">
     <!-- Top bar -->
     <header class="topbar">
-      <a class="topbar__back" href="#" aria-label="여행 허브로 돌아가기" title="허브">
+      <a class="topbar__back" href="#" aria-label="여행상세로 돌아가기" title="여행상세">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
           <path d="M15 6L9 12l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </a>
       <div class="topbar__titles">
-        <div class="topbar__trip">도쿄 단풍 여행 · 2026-10-10~14</div>
+        <div class="topbar__trip">S04 맵보드 · 도쿄 단풍 여행 · 2026-10-10~14</div>
         <h1 class="topbar__day">Day 2 · 아사쿠사·우에노</h1>
       </div>
       <span class="viewport-note" aria-hidden="true"></span>
@@ -81,7 +81,7 @@
               <div class="peak-sheet__name" id="peak-name">우에노 공원 · 단풍</div>
               <button type="button" class="btn btn--ghost" style="min-height:36px;padding:0 12px;font-size:13px;">상세</button>
             </div>
-            <p class="peak-sheet__hint">위로 끌면 스팟 상세(S05) · 정적 데모</p>
+            <p class="peak-sheet__hint">위로 끌면 스팟상세(S05) · 정적 데모</p>
           </div>
         </div>
       </section>
@@ -98,7 +98,9 @@
             <span class="pane-header__title">보드 · 스팟 순서</span>
             <span class="pane-header__meta"> 4곳</span>
           </div>
-          <button type="button" class="btn btn--ghost" aria-label="후보지 열기">후보</button>
+          <button type="button" class="btn btn--ghost" id="btn-open-candidates" aria-haspopup="dialog" aria-controls="modal-candidates">
+            후보지 추가
+          </button>
         </div>
 
         <div class="board-scroll" id="board-list">
@@ -106,7 +108,7 @@
           <article class="spot-card" data-spot="1" id="card-1">
             <span class="spot-card__handle" title="드래그(시각)" aria-hidden="true">⋮⋮</span>
             <span class="spot-card__order" aria-hidden="true">1</span>
-            <div class="spot-card__thumb" aria-hidden="true">寺</div>
+            <button type="button" class="spot-card__thumb" data-icon-pick="1" aria-label="센소지 아이콘/이미지 선택" title="아이콘/이미지 선택">寺</button>
             <div class="spot-card__body">
               <div class="spot-card__name"><a href="#">센소지 (浅草寺)</a></div>
               <div class="spot-card__meta-row">
@@ -118,13 +120,14 @@
               <button type="button" class="btn btn--icon" disabled aria-label="센소지 위로">▲</button>
               <button type="button" class="btn btn--icon" aria-label="센소지 아래로">▼</button>
             </div>
+            <button type="button" class="btn btn--revert" data-revert="1" title="후보지로 되돌리기">되돌리기</button>
           </article>
 
           <!-- Card 2 -->
           <article class="spot-card" data-spot="2" id="card-2">
             <span class="spot-card__handle" title="드래그(시각)" aria-hidden="true">⋮⋮</span>
             <span class="spot-card__order" aria-hidden="true">2</span>
-            <div class="spot-card__thumb" aria-hidden="true">街</div>
+            <button type="button" class="spot-card__thumb" data-icon-pick="2" aria-label="나카미세 아이콘/이미지 선택" title="아이콘/이미지 선택">街</button>
             <div class="spot-card__body">
               <div class="spot-card__name"><a href="#">나카미세 거리</a></div>
               <div class="spot-card__meta-row">
@@ -136,13 +139,14 @@
               <button type="button" class="btn btn--icon" aria-label="나카미세 위로">▲</button>
               <button type="button" class="btn btn--icon" aria-label="나카미세 아래로">▼</button>
             </div>
+            <button type="button" class="btn btn--revert" data-revert="2" title="후보지로 되돌리기">되돌리기</button>
           </article>
 
           <!-- Card 3 — selected, sync with pin -->
           <article class="spot-card is-selected" data-spot="3" id="card-3" aria-current="true">
             <span class="spot-card__handle" title="드래그(시각)" aria-hidden="true">⋮⋮</span>
             <span class="spot-card__order" aria-hidden="true">3</span>
-            <div class="spot-card__thumb" aria-hidden="true">園</div>
+            <button type="button" class="spot-card__thumb" data-icon-pick="3" aria-label="우에노 공원 아이콘/이미지 선택" title="아이콘/이미지 선택">園</button>
             <div class="spot-card__body">
               <div class="spot-card__name"><a href="#">우에노 공원 · 단풍</a></div>
               <div class="spot-card__meta-row">
@@ -156,13 +160,14 @@
               <button type="button" class="btn btn--icon" aria-label="우에노 공원 위로">▲</button>
               <button type="button" class="btn btn--icon" aria-label="우에노 공원 아래로">▼</button>
             </div>
+            <button type="button" class="btn btn--revert" data-revert="3" title="후보지로 되돌리기">되돌리기</button>
           </article>
 
           <!-- Card 4 -->
           <article class="spot-card" data-spot="4" id="card-4">
             <span class="spot-card__handle" title="드래그(시각)" aria-hidden="true">⋮⋮</span>
             <span class="spot-card__order" aria-hidden="true">4</span>
-            <div class="spot-card__thumb" aria-hidden="true">市</div>
+            <button type="button" class="spot-card__thumb" data-icon-pick="4" aria-label="아메요코 아이콘/이미지 선택" title="아이콘/이미지 선택">市</button>
             <div class="spot-card__body">
               <div class="spot-card__name"><a href="#">아메요코 시장</a></div>
               <div class="spot-card__meta-row">
@@ -174,10 +179,13 @@
               <button type="button" class="btn btn--icon" aria-label="아메요코 위로">▲</button>
               <button type="button" class="btn btn--icon" disabled aria-label="아메요코 아래로">▼</button>
             </div>
+            <button type="button" class="btn btn--revert" data-revert="4" title="후보지로 되돌리기">되돌리기</button>
           </article>
 
           <div class="board-hint">
-            + 스팟 추가 · 또는 <a href="#">후보지</a>에서 「이 Day에 추가」
+            + 스팟 추가 · 또는
+            <button type="button" class="link-btn" id="btn-open-candidates-hint">후보지 추가</button>
+            팝업에서 Day에 붙이기
           </div>
         </div>
 
@@ -206,6 +214,82 @@
     </div>
   </div>
 
+  <!-- Modal: 후보지 추가 -->
+  <div class="modal" id="modal-candidates" hidden aria-hidden="true">
+    <div class="modal__backdrop" data-close-modal></div>
+    <div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="modal-candidates-title">
+      <header class="modal__header">
+        <h2 id="modal-candidates-title">후보지 추가</h2>
+        <button type="button" class="modal__close" data-close-modal aria-label="닫기">×</button>
+      </header>
+      <div class="modal__body">
+        <p class="modal__hint">S07 후보지에서 Day 2 보드로 추가합니다. (정적 팝업)</p>
+        <ul class="candidate-pick-list">
+          <li class="candidate-pick">
+            <div>
+              <strong>도쿄 국립박물관</strong>
+              <div class="candidate-pick__meta">라벨: 문화 · 체류 약 90분 · 비 대비</div>
+            </div>
+            <button type="button" class="btn btn--primary btn--sm" data-add-candidate="museum">이 Day에 추가</button>
+          </li>
+          <li class="candidate-pick">
+            <div>
+              <strong>시노바즈노이케 카페</strong>
+              <div class="candidate-pick__meta">라벨: 휴식 · 체류 미정 · 실내</div>
+            </div>
+            <button type="button" class="btn btn--primary btn--sm" data-add-candidate="cafe">이 Day에 추가</button>
+          </li>
+          <li class="candidate-pick">
+            <div>
+              <strong>시부야 스카이</strong>
+              <div class="candidate-pick__meta">라벨: 전망 · 체류 약 60분 · ★ 후보</div>
+            </div>
+            <button type="button" class="btn btn--primary btn--sm" data-add-candidate="sky">이 Day에 추가</button>
+          </li>
+        </ul>
+      </div>
+      <footer class="modal__footer">
+        <button type="button" class="btn btn--ghost" data-close-modal>닫기</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Modal: 아이콘/이미지 선택 -->
+  <div class="modal" id="modal-icon" hidden aria-hidden="true">
+    <div class="modal__backdrop" data-close-modal></div>
+    <div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="modal-icon-title">
+      <header class="modal__header">
+        <h2 id="modal-icon-title">아이콘/이미지 선택</h2>
+        <button type="button" class="modal__close" data-close-modal aria-label="닫기">×</button>
+      </header>
+      <div class="modal__body">
+        <p class="modal__hint">스팟 썸네일용 아이콘 또는 이미지를 고릅니다. (정적 팝업)</p>
+        <div class="icon-grid" role="listbox" aria-label="아이콘 선택">
+          <button type="button" class="icon-option is-selected" data-icon="寺" role="option" aria-selected="true">寺</button>
+          <button type="button" class="icon-option" data-icon="街" role="option">街</button>
+          <button type="button" class="icon-option" data-icon="園" role="option">園</button>
+          <button type="button" class="icon-option" data-icon="市" role="option">市</button>
+          <button type="button" class="icon-option" data-icon="🏛" role="option">🏛</button>
+          <button type="button" class="icon-option" data-icon="☕" role="option">☕</button>
+          <button type="button" class="icon-option" data-icon="📷" role="option">📷</button>
+          <button type="button" class="icon-option" data-icon="🍜" role="option">🍜</button>
+        </div>
+        <div class="upload-dropzone" aria-label="이미지 업로드 영역">
+          <span class="upload-dropzone__label">또는 이미지 업로드</span>
+          <span class="upload-dropzone__hint">클릭 · 드래그앤드롭 (와이어/정적)</span>
+          <input type="file" accept="image/*" aria-label="이미지 파일 선택" />
+        </div>
+      </div>
+      <footer class="modal__footer">
+        <button type="button" class="btn btn--ghost" data-close-modal>취소</button>
+        <button type="button" class="btn btn--primary" id="btn-apply-icon">적용</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Toast for 되돌리기 -->
+  <div class="toast" id="toast" hidden role="status" aria-live="polite"></div>
+
   <script>
     (function () {
       var workspace = document.getElementById("workspace");
@@ -220,6 +304,8 @@
         "3": "우에노 공원 · 단풍",
         "4": "아메요코 시장"
       };
+      var iconTargetId = null;
+      var selectedIcon = "寺";
 
       function setView(view) {
         workspace.classList.toggle("is-map-view", view === "map");
@@ -264,7 +350,12 @@
       });
       cards.forEach(function (c) {
         c.addEventListener("click", function (e) {
-          if (e.target.closest(".spot-card__moves") || e.target.closest("a")) return;
+          if (
+            e.target.closest(".spot-card__moves") ||
+            e.target.closest("a") ||
+            e.target.closest("[data-icon-pick]") ||
+            e.target.closest("[data-revert]")
+          ) return;
           selectSpot(c.getAttribute("data-spot"));
         });
       });
@@ -281,6 +372,124 @@
           h.closest(".spot-card").classList.remove("is-dragging");
         });
       });
+
+      /* —— Modals —— */
+      function openModal(id) {
+        var m = document.getElementById(id);
+        if (!m) return;
+        m.hidden = false;
+        m.setAttribute("aria-hidden", "false");
+        document.body.classList.add("modal-open");
+      }
+      function closeModal(el) {
+        var m = el.closest ? el.closest(".modal") : el;
+        if (!m || !m.classList.contains("modal")) {
+          document.querySelectorAll(".modal:not([hidden])").forEach(function (x) {
+            x.hidden = true;
+            x.setAttribute("aria-hidden", "true");
+          });
+        } else {
+          m.hidden = true;
+          m.setAttribute("aria-hidden", "true");
+        }
+        if (!document.querySelector(".modal:not([hidden])")) {
+          document.body.classList.remove("modal-open");
+        }
+      }
+
+      document.querySelectorAll("[data-close-modal]").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          closeModal(btn);
+        });
+      });
+
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") closeModal(document);
+      });
+
+      function openCandidates() {
+        openModal("modal-candidates");
+      }
+      var btnCand = document.getElementById("btn-open-candidates");
+      var btnCandHint = document.getElementById("btn-open-candidates-hint");
+      if (btnCand) btnCand.addEventListener("click", openCandidates);
+      if (btnCandHint) btnCandHint.addEventListener("click", openCandidates);
+
+      document.querySelectorAll("[data-add-candidate]").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          showToast("후보지 → Day 스팟으로 추가됨 (데모)");
+          closeModal(btn);
+        });
+      });
+
+      /* Icon / image picker */
+      document.querySelectorAll("[data-icon-pick]").forEach(function (thumb) {
+        thumb.addEventListener("click", function (e) {
+          e.stopPropagation();
+          iconTargetId = thumb.getAttribute("data-icon-pick");
+          selectedIcon = (thumb.textContent || "").trim() || "寺";
+          document.querySelectorAll(".icon-option").forEach(function (opt) {
+            var on = opt.getAttribute("data-icon") === selectedIcon;
+            opt.classList.toggle("is-selected", on);
+            opt.setAttribute("aria-selected", on ? "true" : "false");
+          });
+          openModal("modal-icon");
+        });
+      });
+
+      document.querySelectorAll(".icon-option").forEach(function (opt) {
+        opt.addEventListener("click", function () {
+          selectedIcon = opt.getAttribute("data-icon");
+          document.querySelectorAll(".icon-option").forEach(function (o) {
+            var on = o === opt;
+            o.classList.toggle("is-selected", on);
+            o.setAttribute("aria-selected", on ? "true" : "false");
+          });
+        });
+      });
+
+      var applyIcon = document.getElementById("btn-apply-icon");
+      if (applyIcon) {
+        applyIcon.addEventListener("click", function () {
+          if (iconTargetId) {
+            var thumb = document.querySelector('[data-icon-pick="' + iconTargetId + '"]');
+            if (thumb) thumb.textContent = selectedIcon;
+          }
+          showToast("아이콘/이미지 적용됨 (데모)");
+          closeModal(applyIcon);
+        });
+      }
+
+      /* Spot → 후보지 되돌리기 */
+      document.querySelectorAll("[data-revert]").forEach(function (btn) {
+        btn.addEventListener("click", function (e) {
+          e.stopPropagation();
+          var id = btn.getAttribute("data-revert");
+          var name = names[id] || ("스팟 " + id);
+          var card = document.getElementById("card-" + id);
+          if (card) {
+            card.classList.add("is-reverted");
+            card.setAttribute("aria-hidden", "true");
+            setTimeout(function () {
+              card.style.display = "none";
+            }, 280);
+          }
+          var pin = document.querySelector('.spot-pin[data-spot="' + id + '"]');
+          if (pin) pin.style.display = "none";
+          showToast(name + " → 후보지로 되돌림 (데모)");
+        });
+      });
+
+      function showToast(msg) {
+        var t = document.getElementById("toast");
+        if (!t) return;
+        t.textContent = msg;
+        t.hidden = false;
+        clearTimeout(showToast._timer);
+        showToast._timer = setTimeout(function () {
+          t.hidden = true;
+        }, 2200);
+      }
     })();
   </script>
 </body>
