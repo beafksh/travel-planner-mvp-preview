@@ -32,12 +32,13 @@
         <h1>예약관리</h1>
         <p class="muted">스팟에 연결된 예약 정보·메모·증빙 이미지. 샘플: 도쿄 단풍 여행</p>
         <p class="muted concept-note">개념: S06 = 예약 내역 관리 · 예약연결 = 스팟에 예약건 연결</p>
+        <p class="muted">맵보드(S04)에서 예약됨 스팟 → 해당 카드(#sensoji-hotel 등) · 미연결 → 목록에서 선택</p>
       </div>
       <a class="btn" href="hub.html">← 여행상세 (S03)</a>
     </div>
 
-    <div class="booking-list">
-      <article class="booking-card">
+    <div class="booking-list" id="booking-list">
+      <article class="booking-card" id="sensoji-hotel">
         <div class="booking-head">
           <strong>센소지 주변 · 호텔 예약</strong>
           <span class="tag">숙소</span>
@@ -62,7 +63,7 @@
         </div>
       </article>
 
-      <article class="booking-card">
+      <article class="booking-card" id="shibuya-sky">
         <div class="booking-head">
           <strong>시부야 스카이 입장권</strong>
           <span class="tag">티켓</span>
@@ -87,7 +88,7 @@
         </div>
       </article>
 
-      <article class="booking-card">
+      <article class="booking-card" id="flight-ke001">
         <div class="booking-head">
           <strong>출국 항공 KE001</strong>
           <span class="tag">교통</span>

@@ -33,33 +33,33 @@
     </div>
 
     <h2 style="margin-top:28px;">일자 선택</h2>
-    <p class="muted">Day 칩을 눌러 맵보드(S04)로 이동합니다.</p>
+    <p class="muted">Day 칩으로 이 화면의 일자 요약만 전환합니다. 맵보드(S04)는 아래 버튼으로 이동합니다.</p>
     <div class="day-chips" role="listbox" aria-label="일자 칩">
-      <a class="day-chip" href="day.html" role="option">
+      <button type="button" class="day-chip" role="option">
         <span class="chip-day">Day 1</span>
         <span class="chip-date">10/10 · 금</span>
-      </a>
-      <a class="day-chip is-selected" href="day.html" role="option" aria-selected="true">
+      </button>
+      <button type="button" class="day-chip is-selected" role="option" aria-selected="true">
         <span class="chip-day">Day 2</span>
         <span class="chip-date">10/11 · 토</span>
-      </a>
-      <a class="day-chip" href="day.html" role="option">
+      </button>
+      <button type="button" class="day-chip" role="option">
         <span class="chip-day">Day 3</span>
         <span class="chip-date">10/12 · 일</span>
-      </a>
-      <a class="day-chip" href="day.html" role="option">
+      </button>
+      <button type="button" class="day-chip" role="option">
         <span class="chip-day">Day 4</span>
         <span class="chip-date">10/13 · 월</span>
-      </a>
-      <a class="day-chip" href="day.html" role="option">
+      </button>
+      <button type="button" class="day-chip" role="option">
         <span class="chip-day">Day 5</span>
         <span class="chip-date">10/14 · 화</span>
-      </a>
+      </button>
     </div>
 
     <div class="day-summary">
       <h3>Day 2 · 아사쿠사·우에노</h3>
-      <p class="muted">토 · 2026-10-11 · 칩으로 맵보드 진입</p>
+      <p class="muted">토 · 2026-10-11 · 텍스트 루트 요약</p>
       <div class="summary-stats">
         <div class="stat"><strong>스팟 4</strong> · 센소지 → 아메요코</div>
         <div class="stat"><strong>후보지 힌트</strong> · 근처 대체 2 (국립박물관 등)</div>
@@ -72,10 +72,15 @@
       </ul>
     </div>
 
+    <div class="hub-mapboard-cta">
+      <a class="btn btn-primary" href="day.html">맵보드</a>
+      <p class="muted" style="margin-top:8px;">선택한 Day의 MAP+BOARD(S04)로 이동합니다.</p>
+    </div>
+
     <div class="box-dashed" style="margin-top:24px;">
       <strong>기능 요약</strong>
       <p class="muted" style="margin-top:6px;">
-        F1 일자별 MAP+BOARD 루트 · F2 스팟 사진·메모 · F3 일정 깨질 때 후보지 교체 · 예약은 S06
+        S03 = 텍스트 루트 요약 · 예약관리·후보지·맵보드 진입 · F1 일자별 MAP+BOARD · F2 스팟 사진·메모 · F3 후보지 교체
       </p>
     </div>
   </main>

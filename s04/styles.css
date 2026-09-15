@@ -1023,6 +1023,89 @@ body.modal-open {
   filter: brightness(0.9);
 }
 
+/* —— v0.5: 연결됨 → 예약 상세 / 미연결 → 목록 선택 —— */
+.label-chip--clickable {
+  cursor: pointer;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.2;
+  border: none;
+  appearance: none;
+  -webkit-appearance: none;
+}
+.label-chip--clickable:hover {
+  filter: brightness(0.95);
+  box-shadow: 0 0 0 2px rgba(15, 107, 107, 0.25);
+}
+.label-chip--clickable:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.booking-link--linked {
+  color: var(--color-primary);
+}
+
+.booking-detail-card {
+  margin-top: 8px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--color-border, #e5e7eb);
+  background: var(--color-surface-2, #f8faf9);
+}
+.booking-detail-card__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+  margin-bottom: 6px;
+}
+.booking-detail-card__head strong {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-ink, #111);
+}
+.booking-detail-card__meta {
+  margin: 0 0 12px;
+  font-size: 12px;
+  color: var(--color-ink-muted, #6b7280);
+}
+.booking-detail-dl {
+  margin: 0;
+  display: grid;
+  gap: 8px;
+}
+.booking-detail-dl > div {
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  gap: 8px;
+  font-size: 13px;
+  line-height: 1.45;
+}
+.booking-detail-dl dt {
+  margin: 0;
+  font-weight: 600;
+  color: var(--color-ink-muted, #6b7280);
+}
+.booking-detail-dl dd {
+  margin: 0;
+  color: var(--color-ink, #111);
+}
+.booking-detail-s06 {
+  display: inline-block;
+  margin-top: 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.booking-detail-s06:hover {
+  filter: brightness(0.9);
+}
+
+
 .spot-pin--booked {
   position: absolute;
 }
