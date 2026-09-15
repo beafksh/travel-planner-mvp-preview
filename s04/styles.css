@@ -1143,3 +1143,37 @@ body.modal-open {
     min-height: auto;
   }
 }
+
+/* —— v0.6: 스팟 추가 폼 · 보드 이중 추가 액션 —— */
+.add-spot-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 8px;
+}
+.add-spot-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-ink, #111);
+}
+.add-spot-form__field input,
+.add-spot-form__field select {
+  min-height: 40px;
+  padding: 8px 12px;
+  border: 1px solid var(--color-border, #e5e7eb);
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-ink, #111);
+  background: #fff;
+}
+.add-spot-form__field input:focus,
+.add-spot-form__field select:focus {
+  outline: 2px solid rgba(15, 107, 107, 0.35);
+  outline-offset: 1px;
+  border-color: var(--color-primary);
+}

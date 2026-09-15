@@ -887,3 +887,46 @@ button.day-chip {
   outline-offset: 2px;
   background: #f5f5f5;
 }
+
+/* v0.6: S04 예약연결 카드 노출 · 스팟 추가 + 후보지에서 추가 병행 CTA */
+.day-add-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0 0 14px;
+}
+.day-add-bar > .btn {
+  flex-shrink: 0;
+}
+.day-add-bar .popup-panel {
+  margin: 0;
+  flex: 1;
+  min-width: 260px;
+  max-width: 480px;
+}
+.booking-link-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+.booking-link-row .booking-link-note {
+  margin: 0;
+}
+.board-add-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 2px dashed #999;
+  background: #fafafa;
+  padding: 10px;
+  color: #333;
+  font-size: 12px;
+}
+.board-add-footer .btn {
+  text-decoration: none;
+}

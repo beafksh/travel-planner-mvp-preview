@@ -100,11 +100,11 @@
           </div>
           <div class="pane-header__actions">
             <a class="board-link-muted" href="#" title="S06 예약관리(내역)">예약관리(내역) →</a>
-            <button type="button" class="btn btn--ghost btn--sm" id="btn-open-booking-link" aria-haspopup="dialog" aria-controls="modal-booking-link">
-              예약연결
+            <button type="button" class="btn btn--ghost btn--sm" id="btn-open-add-spot" aria-haspopup="dialog" aria-controls="modal-add-spot">
+              스팟 추가
             </button>
-            <button type="button" class="btn btn--ghost" id="btn-open-candidates" aria-haspopup="dialog" aria-controls="modal-candidates">
-              후보지 추가
+            <button type="button" class="btn btn--primary btn--sm" id="btn-open-candidates" aria-haspopup="dialog" aria-controls="modal-candidates">
+              후보지에서 추가
             </button>
           </div>
         </div>
@@ -123,7 +123,7 @@
                 <span class="sticker">★ 필수</span>
               </div>
               <div class="spot-card__booking">
-                <button type="button" class="booking-link booking-link--linked" id="btn-card-booking-1" data-booking-detail="HT-88421" aria-haspopup="dialog" aria-controls="modal-booking-detail" title="연결됨 → 예약 상세 (S06)">연결됨 → 예약 상세: HT-88421</button>
+                <button type="button" class="booking-link booking-link--linked" id="btn-card-booking-1" data-booking-detail="HT-88421" aria-haspopup="dialog" aria-controls="modal-booking-detail" title="연결됨 → 예약 상세 (S06)">예약연결 · 연결됨 → HT-88421</button>
               </div>
             </div>
             <div class="spot-card__moves">
@@ -169,6 +169,9 @@
                 <span class="sticker">단풍</span>
                 <span class="sticker sticker--more">+1</span>
               </div>
+              <div class="spot-card__booking">
+                <button type="button" class="booking-link booking-link--action" id="btn-card-booking-3" data-booking-pick aria-haspopup="dialog" aria-controls="modal-booking-link" title="미연결 → 목록 선택">예약연결 · 미연결</button>
+              </div>
             </div>
             <div class="spot-card__moves">
               <button type="button" class="btn btn--icon" aria-label="우에노 공원 위로">▲</button>
@@ -188,6 +191,9 @@
                 <span class="label-chip label-chip--food">먹거리</span>
                 <span class="sticker">여유</span>
               </div>
+              <div class="spot-card__booking">
+                <button type="button" class="booking-link booking-link--action" id="btn-card-booking-4" data-booking-pick aria-haspopup="dialog" aria-controls="modal-booking-link" title="미연결 → 목록 선택">예약연결 · 미연결</button>
+              </div>
             </div>
             <div class="spot-card__moves">
               <button type="button" class="btn btn--icon" aria-label="아메요코 위로">▲</button>
@@ -197,9 +203,10 @@
           </article>
 
           <div class="board-hint">
-            + 스팟 추가 · 또는
-            <button type="button" class="link-btn" id="btn-open-candidates-hint">후보지 추가</button>
-            팝업에서 Day에 붙이기
+            <button type="button" class="link-btn" id="btn-open-add-spot-hint">스팟 추가</button>
+            ·
+            <button type="button" class="link-btn" id="btn-open-candidates-hint">후보지에서 추가</button>
+            로 Day에 붙이기
           </div>
         </div>
 
@@ -230,16 +237,55 @@
     </div>
   </div>
 
+  <!-- Modal: 스팟 추가 (신규) -->
+  <div class="modal" id="modal-add-spot" hidden aria-hidden="true">
+    <div class="modal__backdrop" data-close-modal></div>
+    <div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="modal-add-spot-title">
+      <header class="modal__header">
+        <h2 id="modal-add-spot-title">스팟 추가</h2>
+        <button type="button" class="modal__close" data-close-modal aria-label="닫기">×</button>
+      </header>
+      <div class="modal__body">
+        <p class="modal__hint">새 스팟을 Day 2 보드에 직접 추가합니다. (정적 폼 · 플레이스홀더)</p>
+        <form class="add-spot-form" id="form-add-spot" onsubmit="return false;">
+          <label class="add-spot-form__field">
+            <span>스팟 이름</span>
+            <input type="text" name="name" placeholder="예: 도쿄 스카이트리" autocomplete="off" />
+          </label>
+          <label class="add-spot-form__field">
+            <span>라벨</span>
+            <select name="label">
+              <option>관광</option>
+              <option>쇼핑</option>
+              <option>자연</option>
+              <option>먹거리</option>
+              <option>문화</option>
+              <option>휴식</option>
+            </select>
+          </label>
+          <label class="add-spot-form__field">
+            <span>메모 (선택)</span>
+            <input type="text" name="memo" placeholder="짧은 메모" autocomplete="off" />
+          </label>
+        </form>
+      </div>
+      <footer class="modal__footer">
+        <button type="button" class="btn btn--ghost" data-close-modal>취소</button>
+        <button type="button" class="btn btn--primary" id="btn-submit-add-spot">추가</button>
+      </footer>
+    </div>
+  </div>
+
   <!-- Modal: 후보지 추가 -->
   <div class="modal" id="modal-candidates" hidden aria-hidden="true">
     <div class="modal__backdrop" data-close-modal></div>
     <div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="modal-candidates-title">
       <header class="modal__header">
-        <h2 id="modal-candidates-title">후보지 추가</h2>
+        <h2 id="modal-candidates-title">후보지에서 추가</h2>
         <button type="button" class="modal__close" data-close-modal aria-label="닫기">×</button>
       </header>
       <div class="modal__body">
-        <p class="modal__hint">S07 후보지에서 Day 2 보드로 추가합니다. (정적 팝업)</p>
+        <p class="modal__hint">기존 후보지에서 Day 2 보드로 추가합니다. (정적 팝업 · S07 페이지 자체는 변경 없음)</p>
         <p class="modal__hint modal__hint--dim">딤 배경 + 중앙 모달 · 뒤 화면 클릭 시 닫힘</p>
         <ul class="candidate-pick-list">
           <li class="candidate-pick">
@@ -450,7 +496,7 @@
             e.target.closest("[data-revert]") ||
             e.target.closest(".booking-link") ||
             e.target.closest("[data-booking-detail]") ||
-            e.target.closest("#btn-open-booking-link")
+            e.target.closest("[data-booking-pick]")
           ) return;
           selectSpot(c.getAttribute("data-spot"));
         });
@@ -506,10 +552,17 @@
       function openCandidates() {
         openModal("modal-candidates");
       }
+      function openAddSpot() {
+        openModal("modal-add-spot");
+      }
       var btnCand = document.getElementById("btn-open-candidates");
       var btnCandHint = document.getElementById("btn-open-candidates-hint");
       if (btnCand) btnCand.addEventListener("click", openCandidates);
       if (btnCandHint) btnCandHint.addEventListener("click", openCandidates);
+      var btnAddSpot = document.getElementById("btn-open-add-spot");
+      var btnAddSpotHint = document.getElementById("btn-open-add-spot-hint");
+      if (btnAddSpot) btnAddSpot.addEventListener("click", openAddSpot);
+      if (btnAddSpotHint) btnAddSpotHint.addEventListener("click", openAddSpot);
 
       function openBookingPicker() {
         openModal("modal-booking-link");
@@ -519,8 +572,6 @@
         var title = document.getElementById("modal-booking-detail-title");
         if (title && id) title.textContent = "예약 상세 · " + id;
       }
-      var btnBookLink = document.getElementById("btn-open-booking-link");
-      if (btnBookLink) btnBookLink.addEventListener("click", openBookingPicker);
       /* 연결됨 → 예약 상세 / 미연결 → 목록 선택 */
       document.querySelectorAll("[data-booking-detail]").forEach(function (btn) {
         btn.addEventListener("click", function (e) {
@@ -547,6 +598,18 @@
           closeModal(btn);
         });
       });
+
+      var btnSubmitAddSpot = document.getElementById("btn-submit-add-spot");
+      if (btnSubmitAddSpot) {
+        btnSubmitAddSpot.addEventListener("click", function () {
+          var form = document.getElementById("form-add-spot");
+          var nameInput = form ? form.querySelector('[name="name"]') : null;
+          var name = nameInput && nameInput.value.trim() ? nameInput.value.trim() : "새 스팟";
+          showToast(name + " 스팟 추가됨 (데모)");
+          closeModal(btnSubmitAddSpot);
+          if (nameInput) nameInput.value = "";
+        });
+      }
 
       /* Icon / image picker */
       document.querySelectorAll("[data-icon-pick]").forEach(function (thumb) {

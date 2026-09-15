@@ -38,29 +38,32 @@
       <a href="day.html">Day 5</a>
     </div>
 
-    <!-- CSS-only popup: 후보지에서 추가 -->
-    <details class="popup-panel" open>
-      <summary class="btn btn-sm">후보지에서 추가 ▾</summary>
-      <div class="popup-body">
-        <strong>후보지에서 이 Day에 추가</strong>
-        <p class="muted" style="margin:6px 0 10px;">일정에 넣을 후보를 고릅니다. (전체 풀은 S07)</p>
-        <ul class="popup-list">
-          <li>
-            <span>도쿄 국립박물관 <span class="tag">문화</span></span>
-            <button type="button" class="btn btn-primary btn-sm">추가</button>
-          </li>
-          <li>
-            <span>카페 · 시노바즈노이케 근처 <span class="tag">휴식</span></span>
-            <button type="button" class="btn btn-primary btn-sm">추가</button>
-          </li>
-          <li>
-            <span>시부야 스카이 <span class="tag">전망</span></span>
-            <button type="button" class="btn btn-primary btn-sm">추가</button>
-          </li>
-        </ul>
-        <a class="btn btn-sm" href="candidates.html" style="margin-top:8px;">전체 후보지(S07) →</a>
-      </div>
-    </details>
+    <!-- v0.6: 스팟 추가 + 후보지에서 추가 (둘 다 노출) -->
+    <div class="day-add-bar" aria-label="스팟 추가 액션">
+      <button type="button" class="btn btn-sm">+ 스팟 추가</button>
+      <details class="popup-panel" id="cand-add-panel" open>
+        <summary class="btn btn-sm">후보지에서 추가 ▾</summary>
+        <div class="popup-body">
+          <strong>후보지에서 이 Day에 추가</strong>
+          <p class="muted" style="margin:6px 0 10px;">일정에 넣을 후보를 고릅니다. (전체 풀은 S07)</p>
+          <ul class="popup-list">
+            <li>
+              <span>도쿄 국립박물관 <span class="tag">문화</span></span>
+              <button type="button" class="btn btn-primary btn-sm">추가</button>
+            </li>
+            <li>
+              <span>카페 · 시노바즈노이케 근처 <span class="tag">휴식</span></span>
+              <button type="button" class="btn btn-primary btn-sm">추가</button>
+            </li>
+            <li>
+              <span>시부야 스카이 <span class="tag">전망</span></span>
+              <button type="button" class="btn btn-primary btn-sm">추가</button>
+            </li>
+          </ul>
+          <a class="btn btn-sm" href="candidates.html" style="margin-top:8px;">전체 후보지(S07) →</a>
+        </div>
+      </details>
+    </div>
 
     <p class="muted wf-impl-note">와이어는 인라인 표기 · 구현 시 모달/오버레이 분리</p>
 
@@ -127,7 +130,10 @@
                 <span class="sticker">★ 필수</span>
                 <span class="tag tag-booked">예약됨</span>
               </div>
-              <p class="muted booking-link-note">예약됨 → 해당 예약 상세 (센소지 호텔)</p>
+              <div class="booking-link-row">
+                <a class="btn btn-sm btn-primary" href="booking.html#sensoji-hotel">예약연결</a>
+                <span class="muted booking-link-note">연결됨 → S06 예약 상세</span>
+              </div>
             </div>
             <div class="reorder-btns">
               <button type="button" class="btn-reorder" aria-label="위로">▲</button>
@@ -135,7 +141,6 @@
             </div>
             <div class="actions">
               <a class="btn btn-sm" href="spot.html">상세</a>
-              <a class="btn btn-sm" href="booking.html#sensoji-hotel">예약연결</a>
               <button type="button" class="btn btn-sm">후보지로 보내기</button>
             </div>
           </article>
@@ -159,7 +164,10 @@
                 <span class="tag">라벨: 쇼핑</span>
                 <span class="sticker">간식</span>
               </div>
-              <p class="muted booking-link-note">미연결 → 예약 목록에서 선택</p>
+              <div class="booking-link-row">
+                <a class="btn btn-sm btn-primary" href="booking.html#booking-list">예약연결</a>
+                <span class="muted booking-link-note">미연결 → S06 예약 목록에서 선택</span>
+              </div>
             </div>
             <div class="reorder-btns">
               <button type="button" class="btn-reorder" aria-label="위로">▲</button>
@@ -167,7 +175,6 @@
             </div>
             <div class="actions">
               <a class="btn btn-sm" href="spot.html">상세</a>
-              <a class="btn btn-sm" href="booking.html#booking-list">예약연결</a>
               <button type="button" class="btn btn-sm">후보지로 보내기</button>
             </div>
           </article>
@@ -192,7 +199,10 @@
                 <span class="sticker">📷 포토</span>
                 <span class="sticker">단풍</span>
               </div>
-              <p class="muted booking-link-note">미연결 → 예약 목록에서 선택</p>
+              <div class="booking-link-row">
+                <a class="btn btn-sm btn-primary" href="booking.html#booking-list">예약연결</a>
+                <span class="muted booking-link-note">미연결 → S06 예약 목록에서 선택</span>
+              </div>
             </div>
             <div class="reorder-btns">
               <button type="button" class="btn-reorder" aria-label="위로">▲</button>
@@ -200,7 +210,6 @@
             </div>
             <div class="actions">
               <a class="btn btn-sm" href="spot.html">상세</a>
-              <a class="btn btn-sm" href="booking.html#booking-list">예약연결</a>
               <button type="button" class="btn btn-sm">후보지로 보내기</button>
             </div>
           </article>
@@ -225,7 +234,10 @@
                 <span class="tag">라벨: 예약필요</span>
                 <span class="sticker">여유</span>
               </div>
-              <p class="muted booking-link-note">미연결 → 예약 목록에서 선택</p>
+              <div class="booking-link-row">
+                <a class="btn btn-sm btn-primary" href="booking.html#booking-list">예약연결</a>
+                <span class="muted booking-link-note">미연결 → S06 예약 목록에서 선택</span>
+              </div>
             </div>
             <div class="reorder-btns">
               <button type="button" class="btn-reorder" aria-label="위로">▲</button>
@@ -233,13 +245,15 @@
             </div>
             <div class="actions">
               <a class="btn btn-sm" href="spot.html">상세</a>
-              <a class="btn btn-sm" href="booking.html#booking-list">예약연결</a>
               <button type="button" class="btn btn-sm">후보지로 보내기</button>
             </div>
           </article>
 
-          <div class="board-hint">
-            + 스팟 추가 · 또는 위 「후보지에서 추가」패널 / <a href="candidates.html">S07 후보지</a>
+          <div class="board-hint board-add-footer">
+            <button type="button" class="btn btn-sm">+ 스팟 추가</button>
+            <a class="btn btn-sm" href="#cand-add-panel">후보지에서 추가</a>
+            <span class="muted">·</span>
+            <a href="candidates.html">S07 후보지</a>
           </div>
         </div>
       </section>
