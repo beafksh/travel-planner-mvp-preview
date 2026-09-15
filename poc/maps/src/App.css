@@ -285,3 +285,26 @@ code {
   padding: 1px 5px;
   border-radius: 4px;
 }
+
+.list-result-fields {
+  margin-bottom: 8px;
+}
+
+.list-preview {
+  margin: 12px 0;
+  font-size: 0.88rem;
+}
+
+.list-preview summary {
+  cursor: pointer;
+  color: #1a73e8;
+  font-weight: 600;
+}
+
+.list-preview-items {
+  margin: 8px 0 0;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
