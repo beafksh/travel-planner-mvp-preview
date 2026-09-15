@@ -21,6 +21,7 @@ https://beafksh.github.io/travel-planner-mvp-preview/maps-poc/
 | **목록 링크 import** | ⚠️ 제한적 | 비공식 `entitylist/getlist` · CORS 프록시 · 예제 URL은 fixture 폴백 |
 | **B) 일자별 마커 + 동선** | ✅ 가능 | Leaflet + OSM 타일 + OSRM public |
 | **B) OSRM 실패 시** | ✅ 직선 Polyline 폴백 | 쿼터·가용성 이슈 시 자동 전환 |
+| **등록 경로 4) 맵 클릭 스팟** | ✅ 가능 (Experimental) | Nominatim 역지오코딩 · 후보스팟 지원 |
 | **Google API 키** | ❌ 불필요 | 완전 제거 |
 
 ## 사용법
@@ -50,6 +51,18 @@ https://beafksh.github.io/travel-planner-mvp-preview/maps-poc/
 - 번호 마커 + OSRM 도보 경로 (실패 시 점선 직선)
 - A)에서 추가한 스팟도 목록·지도에 반영
 
+### 등록 경로 4) 맵 클릭으로 스팟 등록 (Experimental)
+
+1. B) 지도에서 원하는 위치를 **클릭**
+2. 빨간 `+` 임시 마커와 우측 패널 표시
+   - 좌표 자동 표시
+   - 이름: Nominatim 역지오코딩 결과 (수정 가능)
+   - 조회 실패 시 `클릭 지점 (lat, lng)` 폴백 — 이름 없이도 등록 가능
+3. **Day 동선에 스팟 추가** — 번호 마커·OSRM/직선 동선에 merge
+4. **후보스팟으로 추가** — 지도에 ★ 마커, 하단 후보 리스트에 표시
+5. 후보 리스트에서 **동선에 추가** → Day 스팟으로 이동 · **삭제**로 제거
+6. A) 링크 resolve · 목록 import UI는 기존과 동일하게 유지
+
 ## 한계
 
 | 항목 | 설명 |
@@ -59,6 +72,8 @@ https://beafksh.github.io/travel-planner-mvp-preview/maps-poc/
 | **CORS 프록시** | 제3자 서비스(allorigins, corsproxy.io). 가용성·정책 변경 가능 |
 | **Place ID** | URL에 없으면 확정 불가 (Google Places API 미사용) |
 | **목록 getlist API** | Google 비공식 내부 엔드포인트. 변경·차단·ToS 위반 가능성. 비공개 목록 실패 |
+| **Nominatim 역지오코딩** | **Experimental** · [사용 정책](https://operations.osmfoundation.org/policies/nominatim/) 준수: 약 1 req/sec, 인메모리 캐시. 브라우저에서는 User-Agent 헤더 설정 불가. 이름 부정확·POI 미매칭(빈 땅 클릭) 가능. 쿼터·429 시 좌표만으로 등록 |
+| **맵 클릭 지점** | 클릭 위치가 POI가 아닐 수 있음 (도로·공원 한가운데 등). 역지오코딩 이름은 참고용 |
 | **프로덕션** | 자체 OSRM/백엔드 프록시 또는 Nominatim 등 검토 필요 |
 
 ## 로컬 실행
@@ -86,9 +101,9 @@ npm run build
 ```
 poc/maps/
 ├── src/
-│   ├── components/     # LinkResolver, ListLinkImporter, DayRouteMap (Leaflet)
+│   ├── components/     # LinkResolver, ListLinkImporter, DayRouteMap, CandidateSpotList
 │   ├── data/           # Day 2 샘플 스팟, 삿포로 목록 fixture
-│   └── lib/            # URL 파서, resolve, 목록 resolve, OSRM
+│   └── lib/            # URL 파서, resolve, 목록 resolve, OSRM, reverseGeocode (Nominatim)
 ├── vite.config.ts      # base + outDir → ../../maps-poc
 └── README.md
 
