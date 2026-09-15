@@ -609,6 +609,7 @@ h3 { font-size: 15px; margin-bottom: 8px; }
 .sticky-cta .btn-primary { min-width: 200px; }
 
 /* ---- Feedback updates: flag, transport, popups, booking, inline edit ---- */
+/* v0.4: 예약됨 chip · 예약필요 label · S06 개념 노트(예약 내역 관리 / 예약연결) */
 /* v0.3 transport: 비행기간(단일) → 출발시간·도착시간; 수단별 필드
    항공: 편명+출발+도착 | 기차/배: 편명·노선명+출발+도착
    자차/도보: 소요시간+(선택)출발시각 | 대중교통: 노선/수단명+출발(+도착)
@@ -823,4 +824,39 @@ h3 { font-size: 15px; margin-bottom: 8px; }
   padding: 8px 10px;
   border: 1px dashed #999;
   background: #f5f5f5;
+}
+
+
+/* v0.4 reservation chips (grayscale) */
+.tag-booked {
+  border-color: #333;
+  background: #333;
+  color: #fff;
+  font-weight: bold;
+}
+.pin-chip {
+  position: absolute;
+  z-index: 3;
+  border: 1px solid #333;
+  background: #333;
+  color: #fff;
+  font-size: 9px;
+  font-weight: bold;
+  padding: 1px 5px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.pin.has-booking {
+  outline: 2px solid #666;
+  outline-offset: 2px;
+}
+.concept-note {
+  margin-top: 6px;
+}
+.booking-link-box {
+  margin: 12px 0 16px;
+}
+.spot-preview .tag {
+  margin-left: 4px;
+  vertical-align: middle;
 }

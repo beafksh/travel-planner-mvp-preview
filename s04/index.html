@@ -64,8 +64,8 @@
             />
           </svg>
 
-          <button type="button" class="spot-pin" style="left:22%; top:70%;" data-spot="1"
-            aria-label="1번 센소지" title="1. 센소지">1</button>
+          <button type="button" class="spot-pin spot-pin--booked" style="left:22%; top:70%;" data-spot="1"
+            aria-label="1번 센소지 · 예약됨" title="1. 센소지 · 예약됨">1<span class="spot-pin__badge" aria-hidden="true">예</span></button>
           <button type="button" class="spot-pin" style="left:42%; top:32%;" data-spot="2"
             aria-label="2번 나카미세 거리" title="2. 나카미세 거리">2</button>
           <button type="button" class="spot-pin is-selected" style="left:60%; top:26%;" data-spot="3"
@@ -98,9 +98,15 @@
             <span class="pane-header__title">보드 · 스팟 순서</span>
             <span class="pane-header__meta"> 4곳</span>
           </div>
-          <button type="button" class="btn btn--ghost" id="btn-open-candidates" aria-haspopup="dialog" aria-controls="modal-candidates">
-            후보지 추가
-          </button>
+          <div class="pane-header__actions">
+            <a class="board-link-muted" href="#" title="S06 예약관리(내역)">예약관리(내역) →</a>
+            <button type="button" class="btn btn--ghost btn--sm" id="btn-open-booking-link" aria-haspopup="dialog" aria-controls="modal-booking-link">
+              예약연결
+            </button>
+            <button type="button" class="btn btn--ghost" id="btn-open-candidates" aria-haspopup="dialog" aria-controls="modal-candidates">
+              후보지 추가
+            </button>
+          </div>
         </div>
 
         <div class="board-scroll" id="board-list">
@@ -113,7 +119,11 @@
               <div class="spot-card__name"><a href="#">센소지 (浅草寺)</a></div>
               <div class="spot-card__meta-row">
                 <span class="label-chip label-chip--sight">관광</span>
+                <span class="label-chip label-chip--booked">예약됨</span>
                 <span class="sticker">★ 필수</span>
+              </div>
+              <div class="spot-card__booking">
+                <button type="button" class="booking-link" id="btn-card-booking-1" aria-haspopup="dialog" aria-controls="modal-booking-link">예약연결: HT-88421</button>
               </div>
             </div>
             <div class="spot-card__moves">
@@ -132,7 +142,11 @@
               <div class="spot-card__name"><a href="#">나카미세 거리</a></div>
               <div class="spot-card__meta-row">
                 <span class="label-chip label-chip--shop">쇼핑</span>
+                <span class="label-chip label-chip--need-book">예약필요</span>
                 <span class="sticker">간식</span>
+              </div>
+              <div class="spot-card__booking">
+                <button type="button" class="booking-link booking-link--action" id="btn-card-booking-2" aria-haspopup="dialog" aria-controls="modal-booking-link">예약연결</button>
               </div>
             </div>
             <div class="spot-card__moves">
@@ -199,6 +213,8 @@
             <span class="label-chip label-chip--food">먹거리</span>
             <span class="label-chip">문화</span>
             <span class="label-chip">휴식</span>
+            <span class="label-chip label-chip--booked">예약됨</span>
+            <span class="label-chip label-chip--need-book">예약필요</span>
           </div>
           <div class="palette__label" style="margin-top:10px;">스티커 팔레트 (고정 · 카드당 최대 3 +N)</div>
           <div class="palette__row">
@@ -289,6 +305,48 @@
     </div>
   </div>
 
+  <!-- Modal: 예약연결 (스팟 ↔ 예약 연결) -->
+  <div class="modal" id="modal-booking-link" hidden aria-hidden="true">
+    <div class="modal__backdrop" data-close-modal></div>
+    <div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="modal-booking-link-title">
+      <header class="modal__header">
+        <h2 id="modal-booking-link-title">예약연결</h2>
+        <button type="button" class="modal__close" data-close-modal aria-label="닫기">×</button>
+      </header>
+      <div class="modal__body">
+        <p class="modal__hint">스팟에 붙일 예약을 고릅니다. (정적 · 스팟↔예약 연결 액션)</p>
+        <p class="modal__hint modal__hint--dim">예약관리(내역)는 S06 목록 · 여기서는 연결만</p>
+        <ul class="candidate-pick-list">
+          <li class="candidate-pick">
+            <div>
+              <strong>HT-88421 · 아사쿠사 호텔</strong>
+              <div class="candidate-pick__meta">숙소 · 10/11 체크인 · 이미 연결됨</div>
+            </div>
+            <button type="button" class="btn btn--ghost btn--sm" disabled>연결됨</button>
+          </li>
+          <li class="candidate-pick">
+            <div>
+              <strong>FL-22091 · 나리타→하네다</strong>
+              <div class="candidate-pick__meta">항공 · 10/10 · 미연결</div>
+            </div>
+            <button type="button" class="btn btn--primary btn--sm" data-attach-booking="FL-22091">연결</button>
+          </li>
+          <li class="candidate-pick">
+            <div>
+              <strong>TK-55102 · 도쿄 스카이트리 입장</strong>
+              <div class="candidate-pick__meta">티켓 · 10/12 · 미연결</div>
+            </div>
+            <button type="button" class="btn btn--primary btn--sm" data-attach-booking="TK-55102">연결</button>
+          </li>
+        </ul>
+      </div>
+      <footer class="modal__footer">
+        <a class="board-link-muted" href="#" style="margin-right:auto;">예약관리(내역) →</a>
+        <button type="button" class="btn btn--ghost" data-close-modal>닫기</button>
+      </footer>
+    </div>
+  </div>
+
   <!-- Toast for 되돌리기 -->
   <div class="toast" id="toast" hidden role="status" aria-live="polite"></div>
 
@@ -356,7 +414,9 @@
             e.target.closest(".spot-card__moves") ||
             e.target.closest("a") ||
             e.target.closest("[data-icon-pick]") ||
-            e.target.closest("[data-revert]")
+            e.target.closest("[data-revert]") ||
+            e.target.closest(".booking-link") ||
+            e.target.closest("#btn-open-booking-link")
           ) return;
           selectSpot(c.getAttribute("data-spot"));
         });
@@ -416,6 +476,24 @@
       var btnCandHint = document.getElementById("btn-open-candidates-hint");
       if (btnCand) btnCand.addEventListener("click", openCandidates);
       if (btnCandHint) btnCandHint.addEventListener("click", openCandidates);
+
+      function openBookingLink() {
+        openModal("modal-booking-link");
+      }
+      var btnBookLink = document.getElementById("btn-open-booking-link");
+      if (btnBookLink) btnBookLink.addEventListener("click", openBookingLink);
+      document.querySelectorAll(".booking-link").forEach(function (btn) {
+        btn.addEventListener("click", function (e) {
+          e.stopPropagation();
+          openBookingLink();
+        });
+      });
+      document.querySelectorAll("[data-attach-booking]").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          showToast("예약 연결됨: " + btn.getAttribute("data-attach-booking") + " (데모)");
+          closeModal(btn);
+        });
+      });
 
       document.querySelectorAll("[data-add-candidate]").forEach(function (btn) {
         btn.addEventListener("click", function () {

@@ -564,6 +564,16 @@ button {
 .label-chip--nature { background: #E8F5E9; color: #2E7D32; }
 .label-chip--food { background: #FFF8E1; color: #F57C00; }
 .label-chip--sight { background: var(--color-primary-soft); color: var(--color-primary); }
+.label-chip--booked {
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
+  border: 1px solid rgba(15, 107, 107, 0.35);
+}
+.label-chip--need-book {
+  background: #FFF8E1;
+  color: #B45309;
+  border: 1px solid rgba(180, 83, 9, 0.3);
+}
 
 .sticker {
   display: inline-flex;
@@ -963,5 +973,90 @@ body.modal-open {
   .btn--revert {
     width: 100%;
     margin-top: 4px;
+  }
+}
+
+
+/* —— v0.4: 예약됨 / 예약필요 · 예약연결 vs 예약관리 —— */
+.pane-header__actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.board-link-muted {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-ink-muted);
+  text-decoration: none;
+  white-space: nowrap;
+  padding: 4px 2px;
+}
+.board-link-muted:hover {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+.spot-card__booking {
+  margin-top: 2px;
+}
+
+.booking-link {
+  display: inline;
+  padding: 0;
+  border: none;
+  background: none;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-primary);
+  text-decoration: underline;
+  cursor: pointer;
+  text-underline-offset: 2px;
+}
+.booking-link--action {
+  color: #B45309;
+}
+.booking-link:hover {
+  filter: brightness(0.9);
+}
+
+.spot-pin--booked {
+  position: absolute;
+}
+.spot-pin__badge {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 3px;
+  border-radius: 999px;
+  background: var(--color-primary);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 800;
+  line-height: 16px;
+  text-align: center;
+  border: 1.5px solid #fff;
+  box-shadow: 0 1px 3px rgba(15, 107, 107, 0.35);
+  pointer-events: none;
+}
+.spot-pin.is-selected .spot-pin__badge {
+  background: var(--color-primary);
+}
+
+@media (max-width: 520px) {
+  .pane-header__actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+  .pane-header {
+    flex-wrap: wrap;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    min-height: auto;
   }
 }
