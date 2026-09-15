@@ -26,7 +26,7 @@
     <h1>새 여행 만들기</h1>
     <p class="muted">제목·일정·목적지·국기·교통을 입력합니다. 상세 루트는 여행상세에서 구성합니다.</p>
 
-    <div class="box" style="margin-top:16px; max-width:560px;">
+    <div class="box" style="margin-top:16px; max-width:640px;">
       <div class="form-group">
         <label for="title">여행 제목</label>
         <input id="title" type="text" value="도쿄 단풍 여행" placeholder="예: 도쿄 단풍 여행" />
@@ -56,6 +56,14 @@
         </select>
       </div>
 
+      <p class="muted mode-fields-hint">
+        수단별 입력: 항공 = 편명 + 출발시간 · 도착시간 /
+        기차·배 = 편명(또는 노선명) + 출발 · 도착 /
+        자차·도보 = 소요시간 + (선택) 출발시각 /
+        대중교통 = 노선/수단명 + 출발 (+ 도착).
+        아래는 샘플 항공(KE001) 표기.
+      </p>
+
       <h3 style="margin:8px 0 12px; border-bottom:1px solid #ccc; padding-bottom:6px;">출국 교통</h3>
       <div class="form-row">
         <div class="form-group">
@@ -63,19 +71,36 @@
           <select id="out-mode">
             <option selected>항공</option>
             <option>기차</option>
-            <option>버스</option>
-            <option>선박</option>
-            <option>기타</option>
+            <option>배</option>
+            <option>자차</option>
+            <option>도보</option>
+            <option>대중교통</option>
           </select>
         </div>
         <div class="form-group">
-          <label for="out-name">편명 / 노선명</label>
+          <label for="out-name">편명</label>
           <input id="out-name" type="text" value="KE001" placeholder="예: KE001" />
         </div>
+      </div>
+      <div class="form-row">
         <div class="form-group">
-          <label for="out-time">시간</label>
-          <input id="out-time" type="text" value="10:30" placeholder="HH:MM" />
+          <label for="out-dep">출발시간</label>
+          <input id="out-dep" type="text" value="10:30" placeholder="HH:MM" />
         </div>
+        <div class="form-group">
+          <label for="out-arr">도착시간</label>
+          <input id="out-arr" type="text" value="12:45" placeholder="HH:MM" />
+        </div>
+      </div>
+
+      <!-- 와이어: 수단 전환 시 필드 예시 (항공 외) -->
+      <div class="box-dashed mode-alt-fields" style="margin:4px 0 16px;">
+        <strong class="muted" style="font-size:12px;">(수단 변경 시 필드 예시 · 와이어)</strong>
+        <p class="muted" style="margin-top:6px; font-size:12px;">
+          기차/배: 편명(또는 노선명) · 출발시간 · 도착시간<br />
+          자차/도보: 소요시간 · 출발시각(선택)<br />
+          대중교통: 노선/수단명 · 출발시간 · 도착시간(선택)
+        </p>
       </div>
 
       <h3 style="margin:8px 0 12px; border-bottom:1px solid #ccc; padding-bottom:6px;">귀국 교통</h3>
@@ -85,18 +110,25 @@
           <select id="in-mode">
             <option selected>항공</option>
             <option>기차</option>
-            <option>버스</option>
-            <option>선박</option>
-            <option>기타</option>
+            <option>배</option>
+            <option>자차</option>
+            <option>도보</option>
+            <option>대중교통</option>
           </select>
         </div>
         <div class="form-group">
-          <label for="in-name">편명 / 노선명</label>
+          <label for="in-name">편명</label>
           <input id="in-name" type="text" value="KE002" placeholder="예: KE002" />
         </div>
+      </div>
+      <div class="form-row">
         <div class="form-group">
-          <label for="in-time">시간</label>
-          <input id="in-time" type="text" value="18:00" placeholder="HH:MM" />
+          <label for="in-dep">출발시간</label>
+          <input id="in-dep" type="text" value="18:00" placeholder="HH:MM" />
+        </div>
+        <div class="form-group">
+          <label for="in-arr">도착시간</label>
+          <input id="in-arr" type="text" value="21:15" placeholder="HH:MM" />
         </div>
       </div>
 

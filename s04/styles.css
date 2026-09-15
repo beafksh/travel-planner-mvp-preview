@@ -782,7 +782,8 @@ body.modal-open {
 .modal__backdrop {
   position: absolute;
   inset: 0;
-  background: rgba(26, 26, 26, 0.45);
+  background: rgba(26, 26, 26, 0.58);
+  /* 딤 배경 — 모달 열림 시 뒤 화면 확실히 가림 */
 }
 .modal__dialog {
   position: relative;
@@ -793,8 +794,9 @@ body.modal-open {
   display: flex;
   flex-direction: column;
   background: var(--color-white);
+  border: 1px solid rgba(26, 26, 26, 0.12);
   border-radius: var(--radius-sheet);
-  box-shadow: 0 12px 40px rgba(26, 26, 26, 0.22);
+  box-shadow: 0 16px 48px rgba(26, 26, 26, 0.32);
   overflow: hidden;
 }
 .modal__header {
@@ -832,6 +834,12 @@ body.modal-open {
   font-size: var(--fs-caption);
   color: var(--color-ink-muted);
   margin-bottom: var(--space-3);
+}
+.modal__hint--dim {
+  margin-top: calc(var(--space-2) * -1);
+  margin-bottom: var(--space-3);
+  font-size: 12px;
+  opacity: 0.85;
 }
 .modal__footer {
   display: flex;

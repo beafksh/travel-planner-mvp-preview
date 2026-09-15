@@ -609,6 +609,11 @@ h3 { font-size: 15px; margin-bottom: 8px; }
 .sticky-cta .btn-primary { min-width: 200px; }
 
 /* ---- Feedback updates: flag, transport, popups, booking, inline edit ---- */
+/* v0.3 transport: 비행기간(단일) → 출발시간·도착시간; 수단별 필드
+   항공: 편명+출발+도착 | 기차/배: 편명·노선명+출발+도착
+   자차/도보: 소요시간+(선택)출발시각 | 대중교통: 노선/수단명+출발(+도착)
+   팝업 전제: 와이어는 인라인 표기 · 구현 시 모달/오버레이 분리 */
+
 
 .trip-card .thumb.flag-ph {
   font-size: 28px;
@@ -805,4 +810,17 @@ h3 { font-size: 15px; margin-bottom: 8px; }
     align-items: flex-start;
     gap: 10px;
   }
+}
+
+.wf-impl-note {
+  font-size: 12px;
+  margin: 0 0 12px;
+  color: #666;
+}
+.mode-fields-hint {
+  font-size: 12px;
+  margin: 0 0 12px;
+  padding: 8px 10px;
+  border: 1px dashed #999;
+  background: #f5f5f5;
 }
