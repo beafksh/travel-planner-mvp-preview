@@ -1,71 +1,74 @@
 import { useState } from 'react';
-import {
-  isExpandedLink,
-  isShortLink,
-  parseExpandedGoogleMapsUrl,
-} from '../lib/parseGoogleMapsUrl';
-import type { ResolveApiResult } from '../lib/types';
+import { createManualPlace, resolveMapsLink } from '../lib/resolveLink';
+import type { DaySpot, ResolvedPlace, ResolveResult } from '../lib/types';
 
 const SAMPLE_EXPANDED =
   'https://www.google.com/maps/place/%E6%B5%85%E8%8D%89%E5%AF%BA/@35.7147651,139.7966553,17z';
 
-const SAMPLE_SHORT = 'https://maps.app.goo.gl/sensoji-demo';
+interface LinkResolverProps {
+  onAddSpot: (spot: Omit<DaySpot, 'id' | 'order'>) => void;
+}
 
-export function LinkResolver() {
+export function LinkResolver({ onAddSpot }: LinkResolverProps) {
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<ResolveApiResult | null>(null);
+  const [result, setResult] = useState<ResolveResult | null>(null);
+  const [showManual, setShowManual] = useState(false);
+  const [manualName, setManualName] = useState('');
+  const [manualLat, setManualLat] = useState('');
+  const [manualLng, setManualLng] = useState('');
 
   async function handleResolve() {
     setLoading(true);
     setResult(null);
 
     try {
-      const trimmed = url.trim();
-      if (!trimmed) {
-        setResult({ ok: false, error: 'URL을 입력하세요.' });
-        return;
+      const data = await resolveMapsLink(url);
+      setResult(data);
+      if (!data.ok) {
+        setShowManual(true);
       }
-
-      if (isExpandedLink(trimmed)) {
-        const parsed = parseExpandedGoogleMapsUrl(trimmed);
-        if (parsed) {
-          setResult({ ok: true, source: 'client-parser', place: parsed });
-          return;
-        }
-        setResult({
-          ok: false,
-          error: '클라이언트 파서가 좌표를 추출하지 못했습니다.',
-          hint: 'place/@lat,lng 형식의 펼쳐진 URL을 사용하세요.',
-        });
-        return;
-      }
-
-      if (isShortLink(trimmed) || trimmed.includes('google.com/maps')) {
-        const response = await fetch('/api/maps/resolve-link', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ url: trimmed }),
-        });
-        const data = (await response.json()) as ResolveApiResult;
-        setResult(data);
-        return;
-      }
-
-      setResult({
-        ok: false,
-        error: '지원하지 않는 URL 형식입니다.',
-        hint: 'maps.app.goo.gl 또는 google.com/maps 링크를 입력하세요.',
-      });
     } catch (err) {
       setResult({
         ok: false,
         error: '요청 중 오류가 발생했습니다.',
         hint: err instanceof Error ? err.message : undefined,
       });
+      setShowManual(true);
     } finally {
       setLoading(false);
     }
+  }
+
+  function addPlaceToSpots(place: ResolvedPlace) {
+    onAddSpot({
+      name: place.name ?? '알 수 없는 장소',
+      lat: place.lat,
+      lng: place.lng,
+      label: place.resolveMethod === 'manual' ? '수동' : '링크',
+      sourceUrl: place.sourceUrl,
+      resolveMethod: place.resolveMethod,
+    });
+  }
+
+  function handleManualAdd() {
+    const lat = parseFloat(manualLat);
+    const lng = parseFloat(manualLng);
+    if (Number.isNaN(lat) || Number.isNaN(lng) || lat < -90 || lat > 90 || lng < -180 || lng > 180) {
+      setResult({
+        ok: false,
+        error: '유효한 위도·경도를 입력하세요.',
+        hint: '예: lat 35.7148, lng 139.7967',
+      });
+      return;
+    }
+
+    const place = createManualPlace(url.trim() || '(수동 입력)', lat, lng, manualName);
+    setResult({ ok: true, place });
+    addPlaceToSpots(place);
+    setManualLat('');
+    setManualLng('');
+    setManualName('');
   }
 
   return (
@@ -73,8 +76,8 @@ export function LinkResolver() {
       <h2 id="resolver-heading">A) Google Maps 공유 링크 → 위치</h2>
       <p className="muted">
         펼쳐진 <code>google.com/maps/place/…/@lat,lng</code> URL은 브라우저에서 즉시 파싱합니다.
-        short link(<code>maps.app.goo.gl</code>)는 CORS 제한으로 서버 스텁{' '}
-        <code>POST /api/maps/resolve-link</code>을 사용합니다.
+        short link(<code>maps.app.goo.gl</code>)는 CORS 프록시로 시도하며, 실패 시 수동 좌표 입력 폼을
+        사용합니다. <strong>Google Maps API 키·빌링 불필요.</strong>
       </p>
 
       <div className="resolver-form">
@@ -97,8 +100,8 @@ export function LinkResolver() {
         <button type="button" className="link-btn" onClick={() => setUrl(SAMPLE_EXPANDED)}>
           펼쳐진 URL (센소지)
         </button>
-        <button type="button" className="link-btn" onClick={() => setUrl(SAMPLE_SHORT)}>
-          short link 스텁 (sensoji-demo)
+        <button type="button" className="link-btn" onClick={() => setShowManual(true)}>
+          수동 좌표 입력
         </button>
       </div>
 
@@ -106,14 +109,25 @@ export function LinkResolver() {
         <div className={`result-box ${result.ok ? 'success' : 'error'}`} role="alert">
           {result.ok ? (
             <>
-              <p className="result-source">출처: <strong>{result.source}</strong></p>
+              <p className="result-source">
+                resolveMethod: <strong>{result.place.resolveMethod}</strong>
+              </p>
               <dl className="result-fields">
-                <div><dt>name</dt><dd>{result.place.name}</dd></div>
+                <div><dt>name</dt><dd>{result.place.name ?? '(없음)'}</dd></div>
                 <div><dt>lat</dt><dd>{result.place.lat}</dd></div>
                 <div><dt>lng</dt><dd>{result.place.lng}</dd></div>
-                <div><dt>placeId</dt><dd>{result.place.placeId ?? '(없음 — URL에 미포함)'}</dd></div>
+                <div><dt>placeId</dt><dd>{result.place.placeId ?? '(없음)'}</dd></div>
                 <div><dt>formattedAddress</dt><dd>{result.place.formattedAddress ?? '(없음)'}</dd></div>
+                <div><dt>sourceUrl</dt><dd>{result.place.sourceUrl}</dd></div>
+                <div><dt>resolvedUrl</dt><dd>{result.place.resolvedUrl ?? '(없음)'}</dd></div>
               </dl>
+              <button
+                type="button"
+                className="btn-secondary"
+                onClick={() => addPlaceToSpots(result.place)}
+              >
+                스팟 목록에 추가
+              </button>
             </>
           ) : (
             <>
@@ -121,6 +135,43 @@ export function LinkResolver() {
               {result.hint && <p className="muted">{result.hint}</p>}
             </>
           )}
+        </div>
+      )}
+
+      {(showManual || (result && !result.ok)) && (
+        <div className="manual-form">
+          <h3>수동 좌표 입력 (폴백)</h3>
+          <p className="muted">
+            short link 해석 실패 시 Google Maps에서 좌표를 확인해 직접 입력하세요.
+          </p>
+          <div className="manual-fields">
+            <input
+              type="text"
+              placeholder="장소 이름 (선택)"
+              value={manualName}
+              onChange={(e) => setManualName(e.target.value)}
+              className="url-input"
+            />
+            <input
+              type="number"
+              step="any"
+              placeholder="위도 (lat)"
+              value={manualLat}
+              onChange={(e) => setManualLat(e.target.value)}
+              className="coord-input"
+            />
+            <input
+              type="number"
+              step="any"
+              placeholder="경도 (lng)"
+              value={manualLng}
+              onChange={(e) => setManualLng(e.target.value)}
+              className="coord-input"
+            />
+            <button type="button" className="btn-primary" onClick={handleManualAdd}>
+              스팟 목록에 추가
+            </button>
+          </div>
         </div>
       )}
     </section>

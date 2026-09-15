@@ -6,35 +6,43 @@ import type { DaySpot } from '../lib/types';
  */
 export const TOKYO_DAY2_SPOTS: DaySpot[] = [
   {
+    id: 'sample-1',
     order: 1,
     name: '센소지 (浅草寺)',
     lat: 35.7147651,
     lng: 139.7966553,
     time: '09:00',
     label: '관광',
+    resolveMethod: 'client-parser-expanded',
   },
   {
+    id: 'sample-2',
     order: 2,
     name: '나카미세 거리',
     lat: 35.712064,
     lng: 139.795774,
     time: '10:30',
     label: '쇼핑',
+    resolveMethod: 'client-parser-expanded',
   },
   {
+    id: 'sample-3',
     order: 3,
     name: '우에노 공원 · 단풍',
     lat: 35.714755,
     lng: 139.773431,
     time: '13:00',
     label: '자연',
+    resolveMethod: 'client-parser-expanded',
   },
   {
+    id: 'sample-4',
     order: 4,
     name: '아메요코 (アメ横)',
     lat: 35.710062,
     lng: 139.774473,
     time: '15:30',
     label: '쇼핑',
+    resolveMethod: 'client-parser-expanded',
   },
 ];

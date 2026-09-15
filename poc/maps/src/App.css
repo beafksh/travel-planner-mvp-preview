@@ -43,6 +43,11 @@ body {
   font-size: 1.15rem;
 }
 
+.panel h3 {
+  margin: 16px 0 8px;
+  font-size: 1rem;
+}
+
 .muted {
   color: #5f6368;
   font-size: 0.9rem;
@@ -56,7 +61,15 @@ body {
 }
 
 .url-input {
-  flex: 1 1 280px;
+  flex: 1 1 200px;
+  padding: 10px 12px;
+  border: 1px solid #c4c9d0;
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+
+.coord-input {
+  flex: 0 1 140px;
   padding: 10px 12px;
   border: 1px solid #c4c9d0;
   border-radius: 8px;
@@ -78,6 +91,17 @@ body {
   cursor: not-allowed;
 }
 
+.btn-secondary {
+  margin-top: 12px;
+  padding: 8px 16px;
+  background: #fff;
+  color: #1a73e8;
+  border: 1px solid #1a73e8;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
 .sample-links {
   display: flex;
   flex-wrap: wrap;
@@ -95,6 +119,19 @@ body {
   text-decoration: underline;
   padding: 0;
   font-size: inherit;
+}
+
+.manual-form {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #e8eaed;
+}
+
+.manual-fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
 }
 
 .result-box {
@@ -140,38 +177,35 @@ body {
   word-break: break-all;
 }
 
-.map-placeholder {
-  min-height: 280px;
-  background: repeating-linear-gradient(
-    -45deg,
-    #e8eaed,
-    #e8eaed 8px,
-    #f1f3f4 8px,
-    #f1f3f4 16px
-  );
-  border: 2px dashed #9aa0a6;
+.leaflet-map-wrap {
   border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid #dde2e8;
+}
+
+.leaflet-map {
+  height: 420px;
+  width: 100%;
+}
+
+.numbered-marker {
+  background: none !important;
+  border: none !important;
+}
+
+.numbered-marker span {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px;
-}
-
-.map-placeholder-inner {
-  max-width: 480px;
-  text-align: left;
-}
-
-.map-placeholder-inner h3 {
-  margin: 0 0 8px;
-}
-
-.code-block {
-  background: #f1f3f4;
-  padding: 8px 12px;
-  border-radius: 6px;
-  font-size: 0.85rem;
-  overflow-x: auto;
+  width: 28px;
+  height: 28px;
+  background: #1a73e8;
+  color: #fff;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  font-size: 0.75rem;
+  font-weight: 700;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
 .spot-list {
@@ -222,6 +256,10 @@ body {
   grid-row: 1 / span 2;
   font-size: 0.75rem;
   text-align: right;
+}
+
+.spot-empty {
+  margin: 16px 0 0;
 }
 
 .app-footer {

@@ -1,30 +1,40 @@
+export type ResolveMethod =
+  | 'client-parser-expanded'
+  | 'cors-proxy-redirect'
+  | 'manual';
+
 export interface ResolvedPlace {
   placeId?: string;
-  name: string;
+  name?: string;
   lat: number;
   lng: number;
   formattedAddress?: string;
+  sourceUrl: string;
+  resolvedUrl?: string;
+  resolveMethod: ResolveMethod;
 }
 
-export interface ResolveApiSuccess {
+export interface ResolveSuccess {
   ok: true;
-  source: 'parser' | 'stub-redirect' | 'stub-mock' | 'client-parser';
   place: ResolvedPlace;
 }
 
-export interface ResolveApiFailure {
+export interface ResolveFailure {
   ok: false;
   error: string;
   hint?: string;
 }
 
-export type ResolveApiResult = ResolveApiSuccess | ResolveApiFailure;
+export type ResolveResult = ResolveSuccess | ResolveFailure;
 
 export interface DaySpot {
+  id: string;
   order: number;
   name: string;
   lat: number;
   lng: number;
   time?: string;
   label?: string;
+  sourceUrl?: string;
+  resolveMethod?: ResolveMethod;
 }
