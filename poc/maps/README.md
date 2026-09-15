@@ -18,6 +18,7 @@ https://beafksh.github.io/travel-planner-mvp-preview/maps-poc/
 | **A) 펼쳐진 Maps URL → 좌표·이름** | ✅ 가능 | 브라우저 정규식 파서 (`client-parser-expanded`) |
 | **A) short link (`maps.app.goo.gl`)** | ⚠️ 제한적 | CORS 프록시 시도, **실패율 높음** → 수동 좌표 폴백 필수 |
 | **A) Place ID 확정** | ⚠️ URL에 포함된 경우만 | 유료 Google API 미사용 |
+| **목록 링크 import** | ⚠️ 제한적 | 비공식 `entitylist/getlist` · CORS 프록시 · 예제 URL은 fixture 폴백 |
 | **B) 일자별 마커 + 동선** | ✅ 가능 | Leaflet + OSM 타일 + OSRM public |
 | **B) OSRM 실패 시** | ✅ 직선 Polyline 폴백 | 쿼터·가용성 이슈 시 자동 전환 |
 | **Google API 키** | ❌ 불필요 | 완전 제거 |
@@ -34,6 +35,15 @@ https://beafksh.github.io/travel-planner-mvp-preview/maps-poc/
 3. **수동 폴백** — 장소명(선택) + lat/lng 입력 → **스팟 목록에 추가**
 4. resolve 성공 후 **스팟 목록에 추가** 버튼으로 B) 지도에 반영
 
+### 목록 링크 import
+
+1. Google Maps **공유 목록** short link (`maps.app.goo.gl/...`) 입력 → **Import**
+2. resolve 우선순위:
+   - `VITE_RESOLVE_API_BASE` 설정 시 `POST {base}/api/maps/resolve-list-link`
+   - 없으면 CORS 프록시로 redirect + `entitylist/getlist` 시도
+   - 예제 URL(`maps.app.goo.gl/ZKGW1AaMWT2eePtd6`) 또는 listId `wkR0T1lyzscvuOSJnXq3qg`는 **fixture 폴백** (삿포로 65곳)
+3. 제목 + N곳 확인 후 **지도에 추가** → 기존 스팟에 merge
+
 ### B) S04형 지도 · 동선
 
 - 초기: Day 2 도쿄 4스팟 (센소지 → 나카미세 → 우에노 → 아메요코)
@@ -48,6 +58,7 @@ https://beafksh.github.io/travel-planner-mvp-preview/maps-poc/
 | **OSRM public** | `router.project-osrm.org`는 데모 서버. 쿼터·속도 제한·간헐적 429/5xx. 실패 시 직선 Polyline |
 | **CORS 프록시** | 제3자 서비스(allorigins, corsproxy.io). 가용성·정책 변경 가능 |
 | **Place ID** | URL에 없으면 확정 불가 (Google Places API 미사용) |
+| **목록 getlist API** | Google 비공식 내부 엔드포인트. 변경·차단·ToS 위반 가능성. 비공개 목록 실패 |
 | **프로덕션** | 자체 OSRM/백엔드 프록시 또는 Nominatim 등 검토 필요 |
 
 ## 로컬 실행
@@ -75,9 +86,9 @@ npm run build
 ```
 poc/maps/
 ├── src/
-│   ├── components/     # LinkResolver, DayRouteMap (Leaflet)
-│   ├── data/           # Day 2 샘플 스팟
-│   └── lib/            # URL 파서, resolve, OSRM
+│   ├── components/     # LinkResolver, ListLinkImporter, DayRouteMap (Leaflet)
+│   ├── data/           # Day 2 샘플 스팟, 삿포로 목록 fixture
+│   └── lib/            # URL 파서, resolve, 목록 resolve, OSRM
 ├── vite.config.ts      # base + outDir → ../../maps-poc
 └── README.md
 
