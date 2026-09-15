@@ -607,3 +607,202 @@ h3 { font-size: 15px; margin-bottom: 8px; }
   margin-top: 24px;
 }
 .sticky-cta .btn-primary { min-width: 200px; }
+
+/* ---- Feedback updates: flag, transport, popups, booking, inline edit ---- */
+
+.trip-card .thumb.flag-ph {
+  font-size: 28px;
+  background: #eee;
+  border: 2px solid #333;
+  line-height: 1;
+}
+
+.transport-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+.transport-item {
+  border: 1px solid #999;
+  background: #eee;
+  padding: 3px 8px;
+  font-size: 12px;
+}
+
+/* S04: 후보지에서 추가 popup (details) */
+.popup-panel {
+  margin: 0 0 14px;
+  border: 2px solid #333;
+  background: #fff;
+  max-width: 480px;
+}
+.popup-panel > summary {
+  list-style: none;
+  cursor: pointer;
+  display: block;
+  width: 100%;
+  border: none;
+  border-bottom: 2px solid transparent;
+  text-align: left;
+}
+.popup-panel > summary::-webkit-details-marker { display: none; }
+.popup-panel[open] > summary {
+  border-bottom: 2px solid #333;
+  background: #e8e8e8;
+}
+.popup-body {
+  padding: 12px 14px;
+}
+.popup-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.popup-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #999;
+  padding: 8px 10px;
+  background: #fafafa;
+  font-size: 13px;
+}
+
+/* S04: spot thumb image/icon picker popup */
+.thumb-picker {
+  position: relative;
+  flex-shrink: 0;
+}
+.thumb-picker > summary {
+  list-style: none;
+  cursor: pointer;
+}
+.thumb-picker > summary::-webkit-details-marker { display: none; }
+.thumb-popup {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  z-index: 20;
+  margin-top: 4px;
+  border: 2px solid #333;
+  background: #fff;
+  padding: 6px;
+  min-width: 120px;
+  box-shadow: 2px 2px 0 #ccc;
+}
+.thumb-opt {
+  padding: 6px 8px;
+  font-size: 12px;
+  border: 1px solid #ccc;
+  margin-bottom: 4px;
+  background: #f5f5f5;
+  cursor: pointer;
+}
+.thumb-opt:last-child { margin-bottom: 0; }
+.thumb-opt:hover { background: #ddd; }
+
+.spot-card .actions .btn { white-space: nowrap; }
+
+/* S05: inline / popup edit (no separate edit screen) */
+.inline-edit {
+  margin: 8px 0 12px;
+}
+.inline-edit > summary {
+  list-style: none;
+  cursor: pointer;
+  display: inline-block;
+}
+.inline-edit > summary::-webkit-details-marker { display: none; }
+.inline-edit-panel {
+  margin-top: 8px;
+  border: 2px solid #333;
+  background: #fff;
+  padding: 12px;
+  max-width: 560px;
+}
+.palette-panel .palette-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.palette-row .tag,
+.palette-row .sticker {
+  cursor: pointer;
+  font-family: inherit;
+}
+.palette-row .tag.is-picked,
+.palette-row .sticker.is-picked {
+  background: #333;
+  color: #fff;
+  border-color: #333;
+}
+.check-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  margin-bottom: 16px;
+  padding-bottom: 4px;
+}
+
+/* S06 booking */
+.booking-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+}
+.booking-card {
+  border: 2px solid #333;
+  background: #fff;
+  padding: 16px;
+}
+.booking-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+}
+.booking-detail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+.booking-detail .item {
+  border: 1px solid #999;
+  background: #eee;
+  padding: 6px 10px;
+  font-size: 12px;
+}
+.proof-upload {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.proof-ph {
+  width: 160px;
+  min-height: 100px;
+  aspect-ratio: auto;
+}
+
+.spot-preview {
+  margin: 8px 0 0 18px;
+  font-size: 13px;
+}
+.spot-preview li { margin-bottom: 2px; }
+
+/* Nav wrap for 7 tabs */
+.nav-tabs a { font-size: 11px; padding: 4px 8px; }
+@media (max-width: 900px) {
+  .site-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}

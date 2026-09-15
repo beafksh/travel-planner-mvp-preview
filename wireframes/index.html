@@ -3,24 +3,25 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>S01 여행 목록 — 해외여행 플래너 (와이어프레임)</title>
+  <title>S01 여행목록 — 해외여행 플래너 (와이어프레임)</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <header class="site-header">
     <div class="logo">여행플래너 MVP</div>
     <nav class="nav-tabs" aria-label="화면 네비게이션">
-      <a href="index.html" class="active">S01 목록</a>
-      <a href="create.html">S02 생성</a>
-      <a href="hub.html">S03 허브</a>
-      <a href="day.html">S04 Day</a>
-      <a href="spot.html">S05 스팟</a>
-      <a href="candidates.html">S06 후보지</a>
+      <a href="index.html" class="active">S01 여행목록</a>
+      <a href="create.html">S02 여행생성</a>
+      <a href="hub.html">S03 여행상세</a>
+      <a href="day.html">S04 맵보드</a>
+      <a href="spot.html">S05 스팟상세</a>
+      <a href="booking.html">S06 예약관리</a>
+      <a href="candidates.html">S07 후보지</a>
     </nav>
   </header>
 
   <main class="main">
-    <div class="wf-label">S01 · 여행 목록 (홈)</div>
+    <div class="wf-label">S01 · 여행목록</div>
     <div class="page-title-row">
       <div>
         <h1>내 여행</h1>
@@ -29,41 +30,42 @@
       <a class="btn btn-primary" href="create.html">+ 새 여행 만들기</a>
     </div>
 
-    <!-- Empty state (hidden while sample trips exist):
-    <div class="empty-state">
-      <p>아직 여행이 없습니다.</p>
-      <p class="muted" style="margin-top:6px;">첫 여행을 만들어 일자별 맵+보드를 구성해 보세요.</p>
-      <a class="btn btn-primary" href="create.html" style="margin-top:12px;">+ 새 여행 만들기</a>
-    </div>
-    -->
-
     <div class="trip-list">
       <a class="trip-card" href="hub.html">
-        <div class="thumb">[썸네일]</div>
+        <div class="thumb flag-ph" aria-hidden="true">🇯🇵</div>
         <div class="info">
           <strong>도쿄 단풍 여행</strong>
-          <div class="meta">2026-10-10 ~ 2026-10-14 · 일본 도쿄 · 5일</div>
-          <div class="meta">스팟 12 · 후보지 5 · 최근 수정: 2026-09-12</div>
+          <div class="meta">2026-10-10 ~ 2026-10-14 · 4박 5일 · 일본 도쿄</div>
+          <div class="transport-row">
+            <span class="transport-item">출국 항공 KE001 10:30</span>
+            <span class="transport-item">귀국 항공 KE002 18:00</span>
+          </div>
         </div>
         <span class="btn btn-sm">열기 →</span>
       </a>
 
       <div class="trip-card">
-        <div class="thumb">[썸네일]</div>
+        <div class="thumb flag-ph" aria-hidden="true">🇯🇵</div>
         <div class="info">
           <strong>오사카·교토 맛집 투어</strong>
-          <div class="meta">2026-11-01 ~ 2026-11-05 · 일본 오사카 · 초안</div>
-          <div class="meta">스팟 3 · 후보지 8</div>
+          <div class="meta">2026-11-01 ~ 2026-11-05 · 4박 5일 · 일본 오사카</div>
+          <div class="transport-row">
+            <span class="transport-item">출국 항공 OZ101 09:00</span>
+            <span class="transport-item">귀국 항공 OZ102 19:30</span>
+          </div>
         </div>
         <span class="btn btn-sm">열기 →</span>
       </div>
 
       <div class="trip-card">
-        <div class="thumb">[썸네일]</div>
+        <div class="thumb flag-ph" aria-hidden="true">🇹🇭</div>
         <div class="info">
           <strong>방콕 휴양 (임시)</strong>
-          <div class="meta">날짜 미정 · 태국 방콕</div>
-          <div class="meta">스팟 0 · 후보지 2</div>
+          <div class="meta">날짜 미정 · — · 태국 방콕</div>
+          <div class="transport-row">
+            <span class="transport-item muted">출국 미정</span>
+            <span class="transport-item muted">귀국 미정</span>
+          </div>
         </div>
         <span class="btn btn-sm">열기 →</span>
       </div>
@@ -72,9 +74,9 @@
     <div class="box-dashed" style="margin-top:24px;">
       <strong>와이어프레임 안내</strong>
       <p class="muted" style="margin-top:6px;">
-        상단 탭으로 S01–S06 전체 화면을 탐색할 수 있습니다.
+        상단 탭으로 S01–S07 전체 화면을 탐색할 수 있습니다.
         샘플 데이터: <em>도쿄 단풍 여행 (2026-10)</em>.
-        코어 화면은 <a href="day.html">S04 Day 워크스페이스</a>입니다.
+        코어 화면은 <a href="day.html">S04 맵보드</a>입니다.
       </p>
     </div>
   </main>

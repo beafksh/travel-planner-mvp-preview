@@ -3,27 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>S02 여행 생성 — 해외여행 플래너</title>
+  <title>S02 여행생성 — 해외여행 플래너</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <header class="site-header">
     <div class="logo">여행플래너 MVP</div>
     <nav class="nav-tabs" aria-label="화면 네비게이션">
-      <a href="index.html">S01 목록</a>
-      <a href="create.html" class="active">S02 생성</a>
-      <a href="hub.html">S03 허브</a>
-      <a href="day.html">S04 Day</a>
-      <a href="spot.html">S05 스팟</a>
-      <a href="candidates.html">S06 후보지</a>
+      <a href="index.html">S01 여행목록</a>
+      <a href="create.html" class="active">S02 여행생성</a>
+      <a href="hub.html">S03 여행상세</a>
+      <a href="day.html">S04 맵보드</a>
+      <a href="spot.html">S05 스팟상세</a>
+      <a href="booking.html">S06 예약관리</a>
+      <a href="candidates.html">S07 후보지</a>
     </nav>
   </header>
 
   <main class="main create-page">
-    <div class="wf-label">S02 · 여행 생성</div>
-    <div class="breadcrumb"><a href="index.html">여행 목록</a> / 새 여행</div>
+    <div class="wf-label">S02 · 여행생성</div>
+    <div class="breadcrumb"><a href="index.html">여행목록</a> / 새 여행</div>
     <h1>새 여행 만들기</h1>
-    <p class="muted">제목·일정·목적지만 먼저 입력합니다. 상세 루트는 허브에서 구성합니다.</p>
+    <p class="muted">제목·일정·목적지·국기·교통을 입력합니다. 상세 루트는 여행상세에서 구성합니다.</p>
 
     <div class="box" style="margin-top:16px; max-width:560px;">
       <div class="form-group">
@@ -42,9 +43,63 @@
       </div>
       <div class="form-group">
         <label for="dest">목적지</label>
-        <!-- Manual destination only — no autocomplete -->
         <input id="dest" type="text" value="일본 도쿄" placeholder="국가 / 도시" autocomplete="off" />
       </div>
+      <div class="form-group">
+        <label for="flag">국기 (플래그)</label>
+        <select id="flag">
+          <option value="jp" selected>🇯🇵 일본</option>
+          <option value="th">🇹🇭 태국</option>
+          <option value="us">🇺🇸 미국</option>
+          <option value="fr">🇫🇷 프랑스</option>
+          <option value="other">기타 / 직접 선택</option>
+        </select>
+      </div>
+
+      <h3 style="margin:8px 0 12px; border-bottom:1px solid #ccc; padding-bottom:6px;">출국 교통</h3>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="out-mode">수단</label>
+          <select id="out-mode">
+            <option selected>항공</option>
+            <option>기차</option>
+            <option>버스</option>
+            <option>선박</option>
+            <option>기타</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="out-name">편명 / 노선명</label>
+          <input id="out-name" type="text" value="KE001" placeholder="예: KE001" />
+        </div>
+        <div class="form-group">
+          <label for="out-time">시간</label>
+          <input id="out-time" type="text" value="10:30" placeholder="HH:MM" />
+        </div>
+      </div>
+
+      <h3 style="margin:8px 0 12px; border-bottom:1px solid #ccc; padding-bottom:6px;">귀국 교통</h3>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="in-mode">수단</label>
+          <select id="in-mode">
+            <option selected>항공</option>
+            <option>기차</option>
+            <option>버스</option>
+            <option>선박</option>
+            <option>기타</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="in-name">편명 / 노선명</label>
+          <input id="in-name" type="text" value="KE002" placeholder="예: KE002" />
+        </div>
+        <div class="form-group">
+          <label for="in-time">시간</label>
+          <input id="in-time" type="text" value="18:00" placeholder="HH:MM" />
+        </div>
+      </div>
+
       <div class="form-group">
         <label for="note">한줄 메모 (선택)</label>
         <textarea id="note" rows="2" placeholder="예: 시부야·아사쿠사·우에노 단풍 위주">단풍 시즌, 시부야·아사쿠사 중심</textarea>
@@ -53,7 +108,7 @@
   </main>
 
   <div class="sticky-cta">
-    <a class="btn btn-primary" href="hub.html">여행 생성 → 허브로</a>
+    <a class="btn btn-primary" href="hub.html">여행 생성 → 여행상세로</a>
     <a class="btn" href="index.html">취소</a>
   </div>
 

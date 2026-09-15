@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>S06 예약관리 — 도쿄 단풍 여행</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="logo">여행플래너 MVP</div>
+    <nav class="nav-tabs" aria-label="화면 네비게이션">
+      <a href="index.html">S01 여행목록</a>
+      <a href="create.html">S02 여행생성</a>
+      <a href="hub.html">S03 여행상세</a>
+      <a href="day.html">S04 맵보드</a>
+      <a href="spot.html">S05 스팟상세</a>
+      <a href="booking.html" class="active">S06 예약관리</a>
+      <a href="candidates.html">S07 후보지</a>
+    </nav>
+  </header>
+
+  <main class="main">
+    <div class="wf-label">S06 · 예약관리</div>
+    <div class="breadcrumb">
+      <a href="index.html">여행목록</a> /
+      <a href="hub.html">도쿄 단풍 여행</a> /
+      예약관리
+    </div>
+    <div class="page-title-row">
+      <div>
+        <h1>예약관리</h1>
+        <p class="muted">스팟에 연결된 예약 정보·메모·증빙 이미지. 샘플: 도쿄 단풍 여행</p>
+      </div>
+      <a class="btn" href="hub.html">← 여행상세 (S03)</a>
+    </div>
+
+    <div class="booking-list">
+      <article class="booking-card">
+        <div class="booking-head">
+          <strong>센소지 주변 · 호텔 예약</strong>
+          <span class="tag">숙소</span>
+        </div>
+        <p class="meta">연결 스팟: <a href="spot.html">센소지</a> · Day 1–2</p>
+        <div class="booking-detail">
+          <div class="item"><strong>예약번호</strong> · HT-88421</div>
+          <div class="item"><strong>일시</strong> · 2026-10-10 15:00 체크인</div>
+          <div class="item"><strong>상태</strong> · 확정</div>
+        </div>
+        <div class="form-group" style="margin-top:12px;">
+          <label>메모</label>
+          <div class="memo-box" style="min-height:48px;">조식 포함. 아사쿠사역 도보 5분.</div>
+        </div>
+        <div class="form-group">
+          <label>증빙 이미지</label>
+          <div class="proof-upload">
+            <div class="photo-ph proof-ph">[업로드 영역]<br/>예약 확인서 / 바코드</div>
+            <button type="button" class="btn btn-sm">파일 선택 (목업)</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="booking-card">
+        <div class="booking-head">
+          <strong>시부야 스카이 입장권</strong>
+          <span class="tag">티켓</span>
+        </div>
+        <p class="meta">연결 스팟: 시부야 스카이 (후보지→일정 후보) · Day 1 백업</p>
+        <div class="booking-detail">
+          <div class="item"><strong>예약번호</strong> · SKY-10293</div>
+          <div class="item"><strong>일시</strong> · 2026-10-10 17:00 슬롯</div>
+          <div class="item"><strong>상태</strong> · 대기</div>
+        </div>
+        <div class="form-group" style="margin-top:12px;">
+          <label>메모</label>
+          <div class="memo-box" style="min-height:48px;">날씨 좋으면 Day1 저녁에 사용. 아니면 환불 검토.</div>
+        </div>
+        <div class="form-group">
+          <label>증빙 이미지</label>
+          <div class="proof-upload">
+            <div class="photo-ph proof-ph">[업로드 영역]<br/>QR / PDF 캡처</div>
+            <button type="button" class="btn btn-sm">파일 선택 (목업)</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="booking-card">
+        <div class="booking-head">
+          <strong>출국 항공 KE001</strong>
+          <span class="tag">교통</span>
+        </div>
+        <p class="meta">여행 단위 · 출국 · 2026-10-10 10:30</p>
+        <div class="booking-detail">
+          <div class="item"><strong>예약번호</strong> · KE-PNR-77A2</div>
+          <div class="item"><strong>일시</strong> · 2026-10-10 10:30</div>
+          <div class="item"><strong>상태</strong> · 확정</div>
+        </div>
+        <div class="form-group" style="margin-top:12px;">
+          <label>메모</label>
+          <div class="memo-box" style="min-height:48px;">인천 T2 · 수하물 1개.</div>
+        </div>
+        <div class="form-group">
+          <label>증빙 이미지</label>
+          <div class="proof-upload">
+            <div class="photo-ph proof-ph">[업로드 영역]<br/>e-티켓</div>
+            <button type="button" class="btn btn-sm">파일 선택 (목업)</button>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <div style="margin-top:24px; display:flex; gap:8px; flex-wrap:wrap;">
+      <a class="btn btn-primary" href="hub.html">← 여행상세 (S03)</a>
+      <button type="button" class="btn">+ 예약 추가 (목업)</button>
+    </div>
+  </main>
+
+  <footer class="page-footer">해외여행 플래너 MVP · Low-fi Wireframe · S06 예약관리</footer>
+</body>
+</html>

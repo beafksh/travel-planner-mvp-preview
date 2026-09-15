@@ -3,38 +3,104 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>S05 스팟 상세 — 우에노 공원</title>
+  <title>S05 스팟상세 — 우에노 공원</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <header class="site-header">
     <div class="logo">여행플래너 MVP</div>
     <nav class="nav-tabs" aria-label="화면 네비게이션">
-      <a href="index.html">S01 목록</a>
-      <a href="create.html">S02 생성</a>
-      <a href="hub.html">S03 허브</a>
-      <a href="day.html">S04 Day</a>
-      <a href="spot.html" class="active">S05 스팟</a>
-      <a href="candidates.html">S06 후보지</a>
+      <a href="index.html">S01 여행목록</a>
+      <a href="create.html">S02 여행생성</a>
+      <a href="hub.html">S03 여행상세</a>
+      <a href="day.html">S04 맵보드</a>
+      <a href="spot.html" class="active">S05 스팟상세</a>
+      <a href="booking.html">S06 예약관리</a>
+      <a href="candidates.html">S07 후보지</a>
     </nav>
   </header>
 
   <main class="main">
-    <div class="wf-label">S05 · 스팟 상세 (사진·메모·라벨·스티커)</div>
+    <div class="wf-label">S05 · 스팟상세 (사진·메모·라벨·스티커 · 인라인 편집)</div>
     <div class="breadcrumb">
-      <a href="index.html">여행 목록</a> /
+      <a href="index.html">여행목록</a> /
       <a href="hub.html">도쿄 단풍 여행</a> /
       <a href="day.html">Day 2</a> /
       우에노 공원
     </div>
 
-    <h1>우에노 공원 · 단풍</h1>
-    <p class="meta">Day 2 · 순서 3 · 2026-10-11 오후 13:00</p>
+    <div class="page-title-row">
+      <div>
+        <h1>우에노 공원 · 단풍</h1>
+        <p class="meta">Day 2 · 순서 3 · 2026-10-11 오후 13:00</p>
+      </div>
+      <details class="inline-edit">
+        <summary class="btn btn-sm">이름·시간 편집 ▾</summary>
+        <div class="inline-edit-panel">
+          <div class="form-group">
+            <label>스팟 이름</label>
+            <input type="text" value="우에노 공원 · 단풍" />
+          </div>
+          <div class="form-group">
+            <label>방문 시간</label>
+            <input type="text" value="13:00" placeholder="HH:MM" />
+          </div>
+          <button type="button" class="btn btn-primary btn-sm">저장 (목업)</button>
+        </div>
+      </details>
+    </div>
 
     <div class="detail-meta">
       <div class="item"><strong>라벨</strong> · 자연</div>
       <div class="item"><strong>스티커</strong> · 📷 포토 · 단풍</div>
       <div class="item"><strong>체류</strong> · 약 2시간</div>
+    </div>
+
+    <!-- Inline label/sticker palette (no separate edit screen) -->
+    <details class="inline-edit" open>
+      <summary class="btn btn-sm">라벨 / 스티커 팔레트 (인라인) ▾</summary>
+      <div class="inline-edit-panel palette-panel">
+        <p class="muted" style="margin-bottom:8px;">별도 편집 화면 없음 · 이 페이지에서만 선택</p>
+        <div class="form-group">
+          <label>라벨</label>
+          <div class="palette-row">
+            <button type="button" class="tag is-picked">자연</button>
+            <button type="button" class="tag">관광</button>
+            <button type="button" class="tag">쇼핑</button>
+            <button type="button" class="tag">먹거리</button>
+            <button type="button" class="tag">문화</button>
+            <button type="button" class="tag">휴식</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>스티커</label>
+          <div class="palette-row">
+            <button type="button" class="sticker is-picked">📷 포토</button>
+            <button type="button" class="sticker is-picked">단풍</button>
+            <button type="button" class="sticker">★ 필수</button>
+            <button type="button" class="sticker">비 대비</button>
+            <button type="button" class="sticker">여유</button>
+          </div>
+        </div>
+      </div>
+    </details>
+
+    <h2 style="margin-top:20px;">체류 시간</h2>
+    <div class="form-row" style="align-items:flex-end;">
+      <div class="form-group">
+        <label for="duration">체류</label>
+        <select id="duration">
+          <option>약 30분</option>
+          <option>약 45분</option>
+          <option>약 1시간</option>
+          <option selected>약 2시간</option>
+          <option>약 3시간</option>
+          <option>미정</option>
+        </select>
+      </div>
+      <label class="check-inline">
+        <input type="checkbox" /> 미정으로 표시
+      </label>
     </div>
 
     <h2>사진</h2>
@@ -46,16 +112,25 @@
     <p class="muted">F2: 스팟별 사진·메모를 모아 일정 중·후에도 참고합니다.</p>
 
     <h2 style="margin-top:20px;">메모</h2>
-    <div class="memo-box">
+    <details class="inline-edit" open>
+      <summary class="btn btn-sm">메모 편집 ▾</summary>
+      <div class="inline-edit-panel">
+        <textarea rows="4" style="width:100%; max-width:100%; border:2px solid #333; padding:8px; font-family:inherit;">10월 중순 단풍이 가장 예쁠 때. 입장 무료.
+국립박물관 옆 쪽 벤치에서 도시락 가능.
+비 오면 → 후보지「도쿄 국립박물관」또는「시노바즈노이케」근처 카페로 교체.</textarea>
+        <button type="button" class="btn btn-primary btn-sm" style="margin-top:8px;">저장 (목업)</button>
+      </div>
+    </details>
+    <div class="memo-box" style="margin-top:8px;">
       <p>10월 중순 단풍이 가장 예쁠 때. 입장 무료.</p>
       <p style="margin-top:8px;">국립박물관 옆 쪽 벤치에서 도시락 가능.</p>
       <p style="margin-top:8px; color:#666;">비 오면 → 후보지「도쿄 국립박물관」또는「시노바즈노이케」근처 카페로 교체.</p>
     </div>
 
     <div style="display:flex; gap:8px; margin-top:20px; flex-wrap:wrap;">
-      <a class="btn btn-primary" href="day.html">← Day 보드로 돌아가기</a>
+      <a class="btn btn-primary" href="day.html">← 맵보드로 돌아가기</a>
       <a class="btn" href="candidates.html">후보지와 교체…</a>
-      <button type="button" class="btn">라벨/스티커 편집</button>
+      <a class="btn" href="booking.html">예약 연결 (S06)</a>
     </div>
   </main>
 

@@ -3,31 +3,32 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>S06 대안·후보지 풀 — 도쿄 단풍 여행</title>
+  <title>S07 후보지 — 도쿄 단풍 여행</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <header class="site-header">
     <div class="logo">여행플래너 MVP</div>
     <nav class="nav-tabs" aria-label="화면 네비게이션">
-      <a href="index.html">S01 목록</a>
-      <a href="create.html">S02 생성</a>
-      <a href="hub.html">S03 허브</a>
-      <a href="day.html">S04 Day</a>
-      <a href="spot.html">S05 스팟</a>
-      <a href="candidates.html" class="active">S06 후보지</a>
+      <a href="index.html">S01 여행목록</a>
+      <a href="create.html">S02 여행생성</a>
+      <a href="hub.html">S03 여행상세</a>
+      <a href="day.html">S04 맵보드</a>
+      <a href="spot.html">S05 스팟상세</a>
+      <a href="booking.html">S06 예약관리</a>
+      <a href="candidates.html" class="active">S07 후보지</a>
     </nav>
   </header>
 
   <main class="main">
-    <div class="wf-label">S06 · 대안·후보지 풀</div>
+    <div class="wf-label">S07 · 후보지</div>
     <div class="breadcrumb">
-      <a href="index.html">여행 목록</a> /
+      <a href="index.html">여행목록</a> /
       <a href="hub.html">도쿄 단풍 여행</a> /
       후보지
     </div>
-    <h1>대안·후보지 풀</h1>
-    <p class="muted">일정이 깨질 때 넣을 예비 스팟. 「추가」로 Day에 붙이거나 「대체」로 기존 스팟을 바꿉니다. (F3)</p>
+    <h1>후보지</h1>
+    <p class="muted">양방향: 「일정에 추가」로 Day에 붙이거나, 일정 스팟을 「스팟에서 빼기 / 후보지로 등록」합니다. (F3)</p>
 
     <div class="filter-axes">
       <div class="filter-row">
@@ -47,6 +48,15 @@
       </div>
     </div>
 
+    <div class="box-dashed" style="margin-top:12px;">
+      <strong>양방향 흐름</strong>
+      <p class="muted" style="margin-top:6px;">
+        후보지 → 일정: <em>일정에 추가</em> ·
+        일정 → 후보지: 맵보드의 <em>후보지로 보내기</em> / 아래 <em>스팟에서 빼기·후보지로 등록</em>
+      </p>
+    </div>
+
+    <h2 style="margin-top:20px;">후보지 풀 (미배정)</h2>
     <div class="candidate-list">
       <div class="candidate-item">
         <div class="left">
@@ -58,7 +68,7 @@
           </div>
         </div>
         <div class="candidate-actions">
-          <a class="btn btn-primary btn-sm" href="day.html">추가</a>
+          <a class="btn btn-primary btn-sm" href="day.html">일정에 추가</a>
           <a class="btn btn-sm" href="day.html">대체</a>
         </div>
       </div>
@@ -73,7 +83,7 @@
           </div>
         </div>
         <div class="candidate-actions">
-          <a class="btn btn-primary btn-sm" href="day.html">추가</a>
+          <a class="btn btn-primary btn-sm" href="day.html">일정에 추가</a>
           <a class="btn btn-sm" href="day.html">대체</a>
         </div>
       </div>
@@ -88,7 +98,7 @@
           </div>
         </div>
         <div class="candidate-actions">
-          <a class="btn btn-primary btn-sm" href="day.html">추가</a>
+          <a class="btn btn-primary btn-sm" href="day.html">일정에 추가</a>
           <a class="btn btn-sm" href="day.html">대체</a>
         </div>
       </div>
@@ -103,7 +113,7 @@
           </div>
         </div>
         <div class="candidate-actions">
-          <a class="btn btn-primary btn-sm" href="day.html">추가</a>
+          <a class="btn btn-primary btn-sm" href="day.html">일정에 추가</a>
           <a class="btn btn-sm" href="day.html">대체</a>
         </div>
       </div>
@@ -118,15 +128,49 @@
           </div>
         </div>
         <div class="candidate-actions">
-          <a class="btn btn-primary btn-sm" href="day.html">추가</a>
+          <a class="btn btn-primary btn-sm" href="day.html">일정에 추가</a>
           <a class="btn btn-sm" href="day.html">대체</a>
         </div>
       </div>
     </div>
 
+    <h2 style="margin-top:28px;">일정 스팟 → 후보지로 (빼기/등록)</h2>
+    <p class="muted">이미 Day에 있는 스팟을 후보지로 되돌리는 개념 목업.</p>
+    <div class="candidate-list">
+      <div class="candidate-item">
+        <div class="left">
+          <strong>우에노 공원 · 단풍</strong>
+          <div class="meta">배정됨 · Day 2 · 순서 3</div>
+          <div class="tags" style="margin-top:6px;">
+            <span class="tag">라벨: 자연</span>
+            <span class="sticker">📷 포토</span>
+          </div>
+        </div>
+        <div class="candidate-actions">
+          <button type="button" class="btn btn-sm">스팟에서 빼기</button>
+          <button type="button" class="btn btn-sm">후보지로 등록</button>
+          <a class="btn btn-sm" href="spot.html">상세</a>
+        </div>
+      </div>
+      <div class="candidate-item">
+        <div class="left">
+          <strong>아메요코 시장</strong>
+          <div class="meta">배정됨 · Day 2 · 순서 4</div>
+          <div class="tags" style="margin-top:6px;">
+            <span class="tag">라벨: 먹거리</span>
+          </div>
+        </div>
+        <div class="candidate-actions">
+          <button type="button" class="btn btn-sm">스팟에서 빼기</button>
+          <button type="button" class="btn btn-sm">후보지로 등록</button>
+          <a class="btn btn-sm" href="spot.html">상세</a>
+        </div>
+      </div>
+    </div>
+
     <div style="margin-top:24px;">
-      <a class="btn" href="hub.html">← 여행 허브</a>
-      <a class="btn" href="day.html">맵+보드 열기</a>
+      <a class="btn" href="hub.html">← 여행상세</a>
+      <a class="btn" href="day.html">맵보드 열기</a>
     </div>
   </main>
 
