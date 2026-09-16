@@ -8,7 +8,7 @@ import {
 } from '@react-google-maps/api';
 import { getGoogleMapsApiKey, GOOGLE_MAPS_LIBRARIES } from '../../lib/googleMapsConfig';
 import { fetchGoogleDirections } from '../../lib/googleDirectionsRoute';
-import { findNearbyPlaceId } from '../../lib/resolveGooglePlace';
+import { findNearbyPlace } from '../../lib/resolveGooglePlace';
 import type { RouteResult } from '../../lib/routeTypes';
 import type { CandidateSpot, DaySpot } from '../../lib/types';
 
@@ -56,7 +56,7 @@ interface GoogleMapViewProps {
   candidates: CandidateSpot[];
   pendingClick: { lat: number; lng: number } | null;
   poiMarker: { lat: number; lng: number } | null;
-  onMapClick: (lat: number, lng: number, placeId?: string) => void;
+  onMapClick: (lat: number, lng: number, placeId?: string, fallbackName?: string) => void;
   onRouteUpdate: (result: RouteResult) => void;
   onLoadError: () => void;
 }
@@ -164,12 +164,17 @@ export function GoogleMapView({
       placesServiceRef.current = new google.maps.places.PlacesService(map);
     }
 
-    const nearbyPlaceId = await findNearbyPlaceId(lat, lng, placesServiceRef.current);
+    const nearbyPlace = await findNearbyPlace(lat, lng, placesServiceRef.current);
 
     if (clickRequestRef.current !== requestId) return;
 
-    if (nearbyPlaceId) {
-      onMapClickRef.current(lat, lng, nearbyPlaceId);
+    if (nearbyPlace) {
+      onMapClickRef.current(
+        nearbyPlace.lat ?? lat,
+        nearbyPlace.lng ?? lng,
+        nearbyPlace.placeId,
+        nearbyPlace.name,
+      );
     } else {
       onMapClickRef.current(lat, lng);
     }

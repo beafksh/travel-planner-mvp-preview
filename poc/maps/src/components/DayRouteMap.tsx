@@ -98,7 +98,7 @@ export function DayRouteMap({
   }, [mapMode, spots]);
 
   const handlePoiClick = useCallback(
-    (lat: number, lng: number, placeId: string) => {
+    (lat: number, lng: number, placeId: string, fallbackName?: string) => {
       const requestId = ++placeDetailRequestRef.current;
       setPendingClick(null);
       setSelectedPlace({
@@ -106,27 +106,18 @@ export function DayRouteMap({
         lat,
         lng,
         loading: true,
+        fallbackName,
       });
 
       const service = getPlacesService();
-      if (!service) {
-        setSelectedPlace({
-          placeId,
-          lat,
-          lng,
-          loading: false,
-          error: 'Places 서비스를 초기화할 수 없습니다.',
-        });
-        return;
-      }
-
-      fetchGooglePlaceDetails(placeId, service, lat, lng).then((details) => {
+      fetchGooglePlaceDetails(placeId, lat, lng, service).then((details) => {
         if (placeDetailRequestRef.current !== requestId) return;
         setSelectedPlace({
           placeId,
           lat: details.lat,
           lng: details.lng,
           loading: false,
+          fallbackName: details.name ? undefined : fallbackName,
           details,
           error: details.error,
         });
@@ -159,9 +150,9 @@ export function DayRouteMap({
   }, []);
 
   const handleMapClick = useCallback(
-    (lat: number, lng: number, placeId?: string) => {
+    (lat: number, lng: number, placeId?: string, fallbackName?: string) => {
       if (placeId && mapMode === 'google') {
-        handlePoiClick(lat, lng, placeId);
+        handlePoiClick(lat, lng, placeId, fallbackName);
       } else {
         handleEmptyMapClick(lat, lng);
       }
@@ -207,29 +198,41 @@ export function DayRouteMap({
     setPendingClick(null);
   }, [onAddCandidate, pendingClick]);
 
+  const resolvePlaceAddName = useCallback((place: SelectedPlaceState): string => {
+    const lat = place.details?.lat ?? place.lat;
+    const lng = place.details?.lng ?? place.lng;
+    return (
+      place.details?.name?.trim() ||
+      place.fallbackName?.trim() ||
+      `장소 (${lat.toFixed(5)}, ${lng.toFixed(5)})`
+    );
+  }, []);
+
   const handleAddPlaceToDay = useCallback(() => {
-    if (!selectedPlace?.details?.name) return;
-    const { details } = selectedPlace;
+    if (!selectedPlace || selectedPlace.loading) return;
+    const lat = selectedPlace.details?.lat ?? selectedPlace.lat;
+    const lng = selectedPlace.details?.lng ?? selectedPlace.lng;
     onAddSpot({
-      name: details.name,
-      lat: details.lat,
-      lng: details.lng,
+      name: resolvePlaceAddName(selectedPlace),
+      lat,
+      lng,
       label: 'POI',
       resolveMethod: 'map-click',
     });
     setSelectedPlace(null);
-  }, [onAddSpot, selectedPlace]);
+  }, [onAddSpot, resolvePlaceAddName, selectedPlace]);
 
   const handleAddPlaceToCandidates = useCallback(() => {
-    if (!selectedPlace?.details?.name) return;
-    const { details } = selectedPlace;
+    if (!selectedPlace || selectedPlace.loading) return;
+    const lat = selectedPlace.details?.lat ?? selectedPlace.lat;
+    const lng = selectedPlace.details?.lng ?? selectedPlace.lng;
     onAddCandidate({
-      name: details.name,
-      lat: details.lat,
-      lng: details.lng,
+      name: resolvePlaceAddName(selectedPlace),
+      lat,
+      lng,
     });
     setSelectedPlace(null);
-  }, [onAddCandidate, selectedPlace]);
+  }, [onAddCandidate, resolvePlaceAddName, selectedPlace]);
 
   const routeDescription =
     mapMode === 'osm'

@@ -5,6 +5,7 @@ export interface SelectedPlaceState {
   lat: number;
   lng: number;
   loading: boolean;
+  fallbackName?: string;
   details?: PlaceDetails;
   error?: string;
 }
@@ -32,14 +33,18 @@ export function PlaceDetailPanel({
   onAddToCandidates,
   onClose,
 }: PlaceDetailPanelProps) {
-  const { loading, details, error } = selectedPlace;
+  const { loading, details, error, fallbackName, lat, lng } = selectedPlace;
   const displayError = error ?? details?.error;
-  const canAdd = !loading && details?.name;
+  const displayName =
+    details?.name ||
+    fallbackName ||
+    (!loading ? `장소 (${lat.toFixed(5)}, ${lng.toFixed(5)})` : undefined);
+  const canAdd = !loading;
 
   return (
     <aside className="place-detail-panel" role="dialog" aria-label="장소 상세">
       <div className="place-detail-header">
-        <h3>{loading ? '장소 조회 중…' : details?.name || '장소 상세'}</h3>
+        <h3>{loading ? '장소 조회 중…' : displayName || '장소 상세'}</h3>
         <button
           type="button"
           className="place-detail-close"
@@ -57,8 +62,16 @@ export function PlaceDetailPanel({
       {!loading && displayError && (
         <div className="place-detail-error" role="alert">
           <p>{displayError}</p>
-          <p className="muted">상세 정보를 불러오지 못했습니다. 패널을 닫고 다시 시도하세요.</p>
+          <p className="muted">
+            상세 정보를 불러오지 못했습니다. 좌표·이름(있는 경우)으로 스팟을 추가하거나 패널을 닫고 다시 시도하세요.
+          </p>
         </div>
+      )}
+
+      {!loading && !details?.name && !details?.address && (
+        <p className="muted place-detail-coords place-detail-coords--standalone">
+          {lat.toFixed(5)}, {lng.toFixed(5)}
+        </p>
       )}
 
       {!loading && details && (
