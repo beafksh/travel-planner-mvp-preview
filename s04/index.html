@@ -66,46 +66,45 @@
           <!-- Multi-color route segments + direction markers -->
           <svg class="map-route" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
             <defs>
-              <marker id="arrow-s1" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto" markerUnits="userSpaceOnUse">
-                <path d="M0,0.4 L4.5,2.5 L0,4.6 Z" fill="#0F6B6B" />
+              <!-- Option A: smaller arrow markers (markerWidth/Height ~3) -->
+              <marker id="arrow-s1" markerWidth="3" markerHeight="3" refX="2.6" refY="1.5" orient="auto" markerUnits="userSpaceOnUse">
+                <path d="M0,0.35 L2.8,1.5 L0,2.65 Z" fill="#0F6B6B" />
               </marker>
-              <marker id="arrow-s2" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto" markerUnits="userSpaceOnUse">
-                <path d="M0,0.4 L4.5,2.5 L0,4.6 Z" fill="#FF6B4A" />
+              <marker id="arrow-s2" markerWidth="3" markerHeight="3" refX="2.6" refY="1.5" orient="auto" markerUnits="userSpaceOnUse">
+                <path d="M0,0.35 L2.8,1.5 L0,2.65 Z" fill="#FF6B4A" />
               </marker>
-              <marker id="arrow-s3" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto" markerUnits="userSpaceOnUse">
-                <path d="M0,0.4 L4.5,2.5 L0,4.6 Z" fill="#3B82F6" />
+              <marker id="arrow-s3" markerWidth="3" markerHeight="3" refX="2.6" refY="1.5" orient="auto" markerUnits="userSpaceOnUse">
+                <path d="M0,0.35 L2.8,1.5 L0,2.65 Z" fill="#3B82F6" />
               </marker>
-              <marker id="arrow-s4" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto" markerUnits="userSpaceOnUse">
-                <path d="M0,0.4 L4.5,2.5 L0,4.6 Z" fill="#8B5CF6" />
+              <marker id="arrow-s4" markerWidth="3" markerHeight="3" refX="2.6" refY="1.5" orient="auto" markerUnits="userSpaceOnUse">
+                <path d="M0,0.35 L2.8,1.5 L0,2.65 Z" fill="#8B5CF6" />
               </marker>
-              <marker id="arrow-s5" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto" markerUnits="userSpaceOnUse">
-                <path d="M0,0.4 L4.5,2.5 L0,4.6 Z" fill="#F59E0B" />
+              <marker id="arrow-s5" markerWidth="3" markerHeight="3" refX="2.6" refY="1.5" orient="auto" markerUnits="userSpaceOnUse">
+                <path d="M0,0.35 L2.8,1.5 L0,2.65 Z" fill="#F59E0B" />
               </marker>
-              <marker id="arrow-s6" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto" markerUnits="userSpaceOnUse">
-                <path d="M0,0.4 L4.5,2.5 L0,4.6 Z" fill="#10B981" />
+              <marker id="arrow-s6" markerWidth="3" markerHeight="3" refX="2.6" refY="1.5" orient="auto" markerUnits="userSpaceOnUse">
+                <path d="M0,0.35 L2.8,1.5 L0,2.65 Z" fill="#10B981" />
               </marker>
-              <marker id="arrow-s7" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto" markerUnits="userSpaceOnUse">
-                <path d="M0,0.4 L4.5,2.5 L0,4.6 Z" fill="#EC4899" />
+              <marker id="arrow-s7" markerWidth="3" markerHeight="3" refX="2.6" refY="1.5" orient="auto" markerUnits="userSpaceOnUse">
+                <path d="M0,0.35 L2.8,1.5 L0,2.65 Z" fill="#EC4899" />
               </marker>
-              <marker id="arrow-s8" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto" markerUnits="userSpaceOnUse">
-                <path d="M0,0.4 L4.5,2.5 L0,4.6 Z" fill="#6366F1" />
+              <marker id="arrow-s8" markerWidth="3" markerHeight="3" refX="2.6" refY="1.5" orient="auto" markerUnits="userSpaceOnUse">
+                <path d="M0,0.35 L2.8,1.5 L0,2.65 Z" fill="#6366F1" />
               </marker>
             </defs>
-            <!-- soft underlay -->
+            <!-- Option A: very thin dashed underlay -->
             <polyline class="route-underlay" points="22,70 42,32 60,26 78,55" />
             <!-- segment 1→2 -->
-            <polyline class="route-seg route-seg--1" points="22,70 42,32" marker-mid="url(#arrow-s1)" marker-end="url(#arrow-s1)" />
+            <polyline class="route-seg route-seg--1" points="22,70 42,32" marker-end="url(#arrow-s1)" />
             <!-- segment 2→3 -->
-            <polyline class="route-seg route-seg--2" points="42,32 60,26" marker-mid="url(#arrow-s2)" marker-end="url(#arrow-s2)" />
+            <polyline class="route-seg route-seg--2" points="42,32 60,26" marker-end="url(#arrow-s2)" />
             <!-- segment 3→4 -->
-            <polyline class="route-seg route-seg--3" points="60,26 78,55" marker-mid="url(#arrow-s3)" marker-end="url(#arrow-s3)" />
-            <!-- chevron accents along segments (extra visibility) -->
+            <polyline class="route-seg route-seg--3" points="60,26 78,55" marker-end="url(#arrow-s3)" />
+            <!-- Option A: fewer/smaller chevrons (1 per segment) -->
             <g class="route-chevrons">
-              <polygon class="chevron chevron--1" points="30.5,53 33.2,50.2 30.8,49.4" />
-              <polygon class="chevron chevron--1" points="35.8,42 38.5,39.2 36.1,38.4" />
-              <polygon class="chevron chevron--2" points="48.5,29.8 51.5,28.6 49.8,27.2" />
-              <polygon class="chevron chevron--3" points="66.5,35.5 69.2,38.8 67,39.5" />
-              <polygon class="chevron chevron--3" points="71.5,44.5 74.2,47.8 72,48.5" />
+              <polygon class="chevron chevron--1" points="31.2,51.5 32.8,49.8 31.4,49.3" />
+              <polygon class="chevron chevron--2" points="50.2,29.2 51.6,28.6 50.7,27.8" />
+              <polygon class="chevron chevron--3" points="68.8,39.2 70.2,41.0 69.0,41.4" />
             </g>
           </svg>
 
@@ -168,7 +167,7 @@
           <article class="spot-card" data-spot="1" id="card-1">
             <span class="spot-card__handle" title="드래그(시각)" aria-hidden="true">⋮⋮</span>
             <span class="spot-card__order" aria-hidden="true">1</span>
-            <button type="button" class="spot-card__thumb" data-icon-pick="1" aria-label="센소지 아이콘/이미지 선택" title="아이콘/이미지 선택">寺</button>
+            <button type="button" class="spot-card__thumb" data-icon-pick="1" data-image-key="🏯" aria-label="센소지 썸네일 선택" title="썸네일 선택 (imageKey)">🏯</button>
             <div class="spot-card__body">
               <div class="spot-card__name"><a href="#">센소지 (浅草寺)</a></div>
               <div class="spot-card__meta-row">
@@ -190,7 +189,7 @@
           <article class="spot-card" data-spot="2" id="card-2">
             <span class="spot-card__handle" title="드래그(시각)" aria-hidden="true">⋮⋮</span>
             <span class="spot-card__order" aria-hidden="true">2</span>
-            <button type="button" class="spot-card__thumb" data-icon-pick="2" aria-label="나카미세 아이콘/이미지 선택" title="아이콘/이미지 선택">街</button>
+            <button type="button" class="spot-card__thumb" data-icon-pick="2" data-image-key="🛍️" aria-label="나카미세 썸네일 선택" title="썸네일 선택 (imageKey)">🛍️</button>
             <div class="spot-card__body">
               <div class="spot-card__name"><a href="#">나카미세 거리</a></div>
               <div class="spot-card__meta-row">
@@ -212,7 +211,7 @@
           <article class="spot-card is-selected" data-spot="3" id="card-3" aria-current="true">
             <span class="spot-card__handle" title="드래그(시각)" aria-hidden="true">⋮⋮</span>
             <span class="spot-card__order" aria-hidden="true">3</span>
-            <button type="button" class="spot-card__thumb" data-icon-pick="3" aria-label="우에노 공원 아이콘/이미지 선택" title="아이콘/이미지 선택">園</button>
+            <button type="button" class="spot-card__thumb" data-icon-pick="3" data-image-key="🌳" aria-label="우에노 공원 썸네일 선택" title="썸네일 선택 (imageKey)">🌳</button>
             <div class="spot-card__body">
               <div class="spot-card__name"><a href="#">우에노 공원 · 단풍</a></div>
               <div class="spot-card__meta-row">
@@ -235,7 +234,7 @@
           <article class="spot-card" data-spot="4" id="card-4">
             <span class="spot-card__handle" title="드래그(시각)" aria-hidden="true">⋮⋮</span>
             <span class="spot-card__order" aria-hidden="true">4</span>
-            <button type="button" class="spot-card__thumb" data-icon-pick="4" aria-label="아메요코 아이콘/이미지 선택" title="아이콘/이미지 선택">市</button>
+            <button type="button" class="spot-card__thumb" data-icon-pick="4" data-image-key="🍜" aria-label="아메요코 썸네일 선택" title="썸네일 선택 (imageKey)">🍜</button>
             <div class="spot-card__body">
               <div class="spot-card__name"><a href="#">아메요코 시장</a></div>
               <div class="spot-card__meta-row">
@@ -299,10 +298,10 @@
     </div>
   </div>
 
-  <!-- Modal: 목록 추가 (스팟목록 가져오기(Google)) -->
+  <!-- Modal: 목록 추가 (스팟목록 가져오기(Google)) · S04-25/26 -->
   <div class="modal" id="modal-import-list" hidden aria-hidden="true">
     <div class="modal__backdrop" data-close-modal></div>
-    <div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="modal-import-list-title">
+    <div class="modal__dialog modal__dialog--wide" role="dialog" aria-modal="true" aria-labelledby="modal-import-list-title">
       <header class="modal__header">
         <h2 id="modal-import-list-title">스팟목록 가져오기(Google)</h2>
         <button type="button" class="modal__close" data-close-modal aria-label="닫기">×</button>
@@ -311,14 +310,49 @@
         <form class="form-stack" id="form-import-list" onsubmit="return false;">
           <label class="field">
             <span class="field__label">구글 저장목록 공유링크</span>
-            <input type="url" name="shareUrl" placeholder="https://maps.app.goo.gl/… (구글 저장목록 공유)" autocomplete="off" />
+            <input type="url" name="shareUrl" id="import-share-url" placeholder="https://maps.app.goo.gl/… (구글 저장목록 공유)" autocomplete="off" value="https://maps.app.goo.gl/demo-saved-list" />
           </label>
-          <p class="field__help">구글 저장목록 공유링크로 장소 목록을 가져와 Day/후보스팟에 넣습니다</p>
+          <p class="field__help">구글 저장목록 공유링크로 장소 목록을 가져와 Day 스팟에 넣습니다</p>
+          <button type="button" class="btn btn--ghost btn--sm" id="btn-resolve-import-list">목록 미리보기 (데모 resolve)</button>
         </form>
+
+        <!-- post-resolve demo state -->
+        <div class="import-resolve" id="import-resolve-panel">
+          <div class="import-resolve__head">
+            <strong class="import-resolve__name">도쿄 아사쿠사 저장목록</strong>
+            <span class="import-resolve__count" id="import-checked-count">0개 선택</span>
+          </div>
+          <p class="quota-guide" id="import-quota-guide">Day 스팟 잔여 <strong id="import-remain-n">21</strong>/25 — 가져올 항목은 잔여 수만큼 앞에서 자동 체크됩니다</p>
+          <p class="quota-guide quota-guide--soft">잔여 쿼터 N곳까지 자동 선택됩니다 · 기본체크 = max(0, 25 − N)</p>
+          <div class="check-toolbar" role="group" aria-label="전체선택">
+            <button type="button" class="btn btn--ghost btn--sm" id="btn-import-select-all">전체선택</button>
+            <button type="button" class="btn btn--ghost btn--sm" id="btn-import-deselect-all">전체해제</button>
+          </div>
+          <ul class="check-list" id="import-check-list" role="list">
+            <li class="check-item">
+              <label><input type="checkbox" name="importPlace" value="sensoji" data-place="센소지" /><span class="check-item__body"><strong>센소지</strong><span class="check-item__meta">사찰 · 아사쿠사</span></span></label>
+            </li>
+            <li class="check-item">
+              <label><input type="checkbox" name="importPlace" value="nakamise" data-place="나카미세 거리" /><span class="check-item__body"><strong>나카미세 거리</strong><span class="check-item__meta">쇼핑 · 아사쿠사</span></span></label>
+            </li>
+            <li class="check-item">
+              <label><input type="checkbox" name="importPlace" value="ueno" data-place="우에노 공원" /><span class="check-item__body"><strong>우에노 공원</strong><span class="check-item__meta">공원 · 우에노</span></span></label>
+            </li>
+            <li class="check-item">
+              <label><input type="checkbox" name="importPlace" value="ameyoko" data-place="아메요코 시장" /><span class="check-item__body"><strong>아메요코 시장</strong><span class="check-item__meta">시장 · 우에노</span></span></label>
+            </li>
+            <li class="check-item">
+              <label><input type="checkbox" name="importPlace" value="skytree" data-place="도쿄 스카이트리" /><span class="check-item__body"><strong>도쿄 스카이트리</strong><span class="check-item__meta">전망 · 스미다</span></span></label>
+            </li>
+            <li class="check-item">
+              <label><input type="checkbox" name="importPlace" value="kappabashi" data-place="갓파바시 주방거리" /><span class="check-item__body"><strong>갓파바시 주방거리</strong><span class="check-item__meta">쇼핑 · 아사쿠사</span></span></label>
+            </li>
+          </ul>
+        </div>
       </div>
       <footer class="modal__footer">
         <button type="button" class="btn btn--ghost" data-close-modal>취소</button>
-        <button type="button" class="btn btn--primary" id="btn-submit-import-list">가져오기</button>
+        <button type="button" class="btn btn--primary" id="btn-submit-import-list">선택 항목 가져오기</button>
       </footer>
     </div>
   </div>
@@ -391,7 +425,7 @@
     </div>
   </div>
 
-  <!-- Modal: 후보스팟에서 추가 -->
+  <!-- Modal: 후보스팟목록에서 가져오기 · S04-27 -->
   <div class="modal" id="modal-candidates" hidden aria-hidden="true">
     <div class="modal__backdrop" data-close-modal></div>
     <div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="modal-candidates-title">
@@ -400,66 +434,87 @@
         <button type="button" class="modal__close" data-close-modal aria-label="닫기">×</button>
       </header>
       <div class="modal__body">
-        <p class="modal__hint">후보스팟목록에서 골라 Day 2 보드로 가져옵니다. (정적 팝업)</p>
-        <ul class="candidate-pick-list">
-          <li class="candidate-pick">
-            <div>
-              <strong>도쿄 국립박물관</strong>
-              <div class="candidate-pick__meta">라벨: 문화 · 체류 약 90분 · 비 대비</div>
-            </div>
-            <button type="button" class="btn btn--primary btn--sm" data-add-candidate="museum">이 Day에 추가</button>
+        <p class="modal__hint">후보스팟목록에서 골라 Day 2 보드로 가져옵니다. (기본 자동체크 없음)</p>
+        <div class="check-toolbar" role="group" aria-label="전체선택">
+          <button type="button" class="btn btn--ghost btn--sm" id="btn-cand-select-all">전체선택</button>
+          <button type="button" class="btn btn--ghost btn--sm" id="btn-cand-deselect-all">전체해제</button>
+          <span class="import-resolve__count" id="cand-checked-count">0개 선택</span>
+        </div>
+        <ul class="check-list" id="cand-check-list" role="list">
+          <li class="check-item">
+            <label><input type="checkbox" name="candPlace" value="museum" data-place="도쿄 국립박물관" /><span class="check-item__body"><strong>도쿄 국립박물관</strong><span class="check-item__meta">라벨: 문화 · 체류 약 90분 · 비 대비</span></span></label>
           </li>
-          <li class="candidate-pick">
-            <div>
-              <strong>시노바즈노이케 카페</strong>
-              <div class="candidate-pick__meta">라벨: 휴식 · 체류 미정 · 실내</div>
-            </div>
-            <button type="button" class="btn btn--primary btn--sm" data-add-candidate="cafe">이 Day에 추가</button>
+          <li class="check-item">
+            <label><input type="checkbox" name="candPlace" value="cafe" data-place="시노바즈노이케 카페" /><span class="check-item__body"><strong>시노바즈노이케 카페</strong><span class="check-item__meta">라벨: 휴식 · 체류 미정 · 실내</span></span></label>
           </li>
-          <li class="candidate-pick">
-            <div>
-              <strong>시부야 스카이</strong>
-              <div class="candidate-pick__meta">라벨: 전망 · 체류 약 60분 · ★ 후보스팟</div>
-            </div>
-            <button type="button" class="btn btn--primary btn--sm" data-add-candidate="sky">이 Day에 추가</button>
+          <li class="check-item">
+            <label><input type="checkbox" name="candPlace" value="sky" data-place="시부야 스카이" /><span class="check-item__body"><strong>시부야 스카이</strong><span class="check-item__meta">라벨: 전망 · 체류 약 60분 · ★ 후보스팟</span></span></label>
+          </li>
+          <li class="check-item">
+            <label><input type="checkbox" name="candPlace" value="teamlab" data-place="팀랩 플래니츠" /><span class="check-item__body"><strong>팀랩 플래니츠</strong><span class="check-item__meta">라벨: 전시 · 체류 약 120분</span></span></label>
+          </li>
+          <li class="check-item">
+            <label><input type="checkbox" name="candPlace" value="tsukiji" data-place="쓰키지 장외시장" /><span class="check-item__body"><strong>쓰키지 장외시장</strong><span class="check-item__meta">라벨: 미식 · 체류 약 90분</span></span></label>
           </li>
         </ul>
       </div>
       <footer class="modal__footer">
         <button type="button" class="btn btn--ghost" data-close-modal>닫기</button>
+        <button type="button" class="btn btn--primary" id="btn-submit-candidates">선택 항목 보드에 추가</button>
       </footer>
     </div>
   </div>
 
-  <!-- Modal: 아이콘/이미지 선택 -->
+  <!-- Modal: 썸네일 선택 팝업 · photoUrls / imageKey (S04-5 · S04-23/24) -->
   <div class="modal" id="modal-icon" hidden aria-hidden="true">
     <div class="modal__backdrop" data-close-modal></div>
     <div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="modal-icon-title">
       <header class="modal__header">
-        <h2 id="modal-icon-title">아이콘/이미지 선택</h2>
+        <h2 id="modal-icon-title">썸네일 선택</h2>
         <button type="button" class="modal__close" data-close-modal aria-label="닫기">×</button>
       </header>
       <div class="modal__body">
-        <p class="modal__hint">스팟 썸네일용 아이콘 또는 이미지를 고릅니다.</p>
-        <div class="icon-grid" role="listbox" aria-label="아이콘 선택">
-          <button type="button" class="icon-option is-selected" data-icon="寺" role="option" aria-selected="true">寺</button>
-          <button type="button" class="icon-option" data-icon="街" role="option">街</button>
-          <button type="button" class="icon-option" data-icon="園" role="option">園</button>
-          <button type="button" class="icon-option" data-icon="市" role="option">市</button>
-          <button type="button" class="icon-option" data-icon="🏛" role="option">🏛</button>
-          <button type="button" class="icon-option" data-icon="☕" role="option">☕</button>
-          <button type="button" class="icon-option" data-icon="📷" role="option">📷</button>
-          <button type="button" class="icon-option" data-icon="🍜" role="option">🍜</button>
-        </div>
-        <div class="upload-dropzone" aria-label="이미지 업로드 영역">
-          <span class="upload-dropzone__label">또는 이미지 업로드</span>
-          <span class="upload-dropzone__hint">클릭 · 드래그앤드롭 (정적 데모)</span>
-          <input type="file" accept="image/*" aria-label="이미지 파일 선택" />
-        </div>
+        <p class="modal__hint">업로드 이미지(<code class="field-key">photoUrls</code>) 또는 기본 아이콘을 고르면 <code class="field-key">imageKey</code>에 저장됩니다.</p>
+
+        <section class="thumb-section" aria-labelledby="photo-urls-label">
+          <h3 id="photo-urls-label" class="thumb-section__title">업로드 이미지 <span class="field-key">(photoUrls)</span></h3>
+          <div class="photo-urls-grid" id="photo-urls-grid" role="listbox" aria-label="photoUrls 목록">
+            <button type="button" class="photo-url-option" data-image-key="photo:sensoji-1" role="option" aria-selected="false" title="photoUrls[0]">
+              <span class="photo-url-option__img" aria-hidden="true">🏯</span>
+              <span class="photo-url-option__cap">sensoji-1.jpg</span>
+            </button>
+            <button type="button" class="photo-url-option" data-image-key="photo:sensoji-2" role="option" aria-selected="false" title="photoUrls[1]">
+              <span class="photo-url-option__img photo-url-option__img--alt" aria-hidden="true">📷</span>
+              <span class="photo-url-option__cap">sensoji-2.jpg</span>
+            </button>
+          </div>
+          <div class="upload-dropzone" id="thumb-upload-dropzone" aria-label="이미지 업로드 영역">
+            <span class="upload-dropzone__label">이미지 업로드 → photoUrls</span>
+            <span class="upload-dropzone__hint">클릭 · 드래그앤드롭 (정적 데모 · 토스트)</span>
+            <input type="file" id="thumb-upload-input" accept="image/*" aria-label="이미지 파일 선택" />
+          </div>
+        </section>
+
+        <section class="thumb-section" aria-labelledby="default-icons-label">
+          <h3 id="default-icons-label" class="thumb-section__title">기본 아이콘 <span class="field-key">(imageKey)</span></h3>
+          <div class="icon-grid" role="listbox" aria-label="기본 아이콘 선택">
+            <button type="button" class="icon-option is-selected" data-icon="🏯" data-image-key="icon:castle" role="option" aria-selected="true">🏯</button>
+            <button type="button" class="icon-option" data-icon="🍜" data-image-key="icon:ramen" role="option" aria-selected="false">🍜</button>
+            <button type="button" class="icon-option" data-icon="🌳" data-image-key="icon:park" role="option" aria-selected="false">🌳</button>
+            <button type="button" class="icon-option" data-icon="📷" data-image-key="icon:camera" role="option" aria-selected="false">📷</button>
+            <button type="button" class="icon-option" data-icon="🛍️" data-image-key="icon:shop" role="option" aria-selected="false">🛍️</button>
+            <button type="button" class="icon-option" data-icon="🏛️" data-image-key="icon:museum" role="option" aria-selected="false">🏛️</button>
+            <button type="button" class="icon-option" data-icon="☕" data-image-key="icon:cafe" role="option" aria-selected="false">☕</button>
+            <button type="button" class="icon-option" data-icon="🚶" data-image-key="icon:walk" role="option" aria-selected="false">🚶</button>
+            <button type="button" class="icon-option" data-icon="🗼" data-image-key="icon:tower" role="option" aria-selected="false">🗼</button>
+            <button type="button" class="icon-option" data-icon="🍣" data-image-key="icon:sushi" role="option" aria-selected="false">🍣</button>
+          </div>
+        </section>
+        <p class="field__help field__help--soft" id="image-key-preview">선택 imageKey: <code>icon:castle</code></p>
       </div>
       <footer class="modal__footer">
         <button type="button" class="btn btn--ghost" data-close-modal>취소</button>
-        <button type="button" class="btn btn--primary" id="btn-apply-icon">적용</button>
+        <button type="button" class="btn btn--primary" id="btn-apply-icon">imageKey 적용</button>
       </footer>
     </div>
   </div>
@@ -556,7 +611,8 @@
         "4": "아메요코 시장"
       };
       var iconTargetId = null;
-      var selectedIcon = "寺";
+      var selectedIcon = "🏯";
+      var selectedImageKey = "icon:castle";
       var registerTarget = "spot";
 
       function setView(view) {
@@ -671,25 +727,110 @@
         }, 2200);
       }
 
-      /* —— 스팟목록 가져오기(Google) —— */
+      /* v0.8.3: N/25 · Import 체크박스 · 썸네일 imageKey */
+      var SPOT_CAP = 25;
+      var spotCount = 4;
+      function remainingQuota() {
+        return Math.max(0, SPOT_CAP - spotCount);
+      }
+      function refreshSpotCount() {
+        var nEl = document.getElementById("board-spot-n");
+        var wrap = document.getElementById("board-spot-count");
+        if (nEl) nEl.textContent = String(spotCount);
+        if (wrap) wrap.classList.toggle("is-full", spotCount >= SPOT_CAP);
+      }
+
+      function getChecked(listSel) {
+        return Array.prototype.slice.call(document.querySelectorAll(listSel + ' input[type="checkbox"]:checked'));
+      }
+      function setCheckedCount(countElId, n) {
+        var el = document.getElementById(countElId);
+        if (el) el.textContent = n + "개 선택";
+      }
+      function wireCheckList(listId, countId, opts) {
+        opts = opts || {};
+        var list = document.getElementById(listId);
+        if (!list) return;
+        function sync() {
+          setCheckedCount(countId, getChecked("#" + listId).length);
+        }
+        list.addEventListener("change", sync);
+        sync();
+        return {
+          selectAll: function () {
+            list.querySelectorAll('input[type="checkbox"]').forEach(function (cb) { cb.checked = true; });
+            sync();
+          },
+          deselectAll: function () {
+            list.querySelectorAll('input[type="checkbox"]').forEach(function (cb) { cb.checked = false; });
+            sync();
+          },
+          autoCheckFirst: function (n) {
+            var boxes = list.querySelectorAll('input[type="checkbox"]');
+            boxes.forEach(function (cb, i) { cb.checked = i < n; });
+            sync();
+          },
+          sync: sync,
+          checked: function () { return getChecked("#" + listId); }
+        };
+      }
+
+      var importListCtl = wireCheckList("import-check-list", "import-checked-count");
+      var candListCtl = wireCheckList("cand-check-list", "cand-checked-count");
+
+      function refreshImportQuotaGuide() {
+        var rem = remainingQuota();
+        var remEl = document.getElementById("import-remain-n");
+        if (remEl) remEl.textContent = String(rem);
+        var guide = document.getElementById("import-quota-guide");
+        if (guide) {
+          guide.innerHTML = "Day 스팟 잔여 <strong>" + rem + "</strong>/25 — 가져올 항목은 잔여 수만큼 앞에서 자동 체크됩니다";
+        }
+      }
+
+      function prepareImportChecks() {
+        refreshImportQuotaGuide();
+        if (importListCtl) importListCtl.autoCheckFirst(remainingQuota());
+      }
+
+      /* —— 스팟목록 가져오기(Google) —— S04-25/26 —— */
       function openImportList() {
+        prepareImportChecks();
         openModal("modal-import-list");
       }
       ["btn-open-import-list", "btn-open-import-list-board", "btn-open-import-list-hint"].forEach(function (id) {
         var el = document.getElementById(id);
         if (el) el.addEventListener("click", openImportList);
       });
+      var btnResolveImport = document.getElementById("btn-resolve-import-list");
+      if (btnResolveImport) {
+        btnResolveImport.addEventListener("click", function () {
+          prepareImportChecks();
+          showToast("목록 resolve 완료 · 기본체크 max(0,25−N) (데모)");
+        });
+      }
+      var btnImpAll = document.getElementById("btn-import-select-all");
+      var btnImpNone = document.getElementById("btn-import-deselect-all");
+      if (btnImpAll && importListCtl) btnImpAll.addEventListener("click", function () { importListCtl.selectAll(); });
+      if (btnImpNone && importListCtl) btnImpNone.addEventListener("click", function () { importListCtl.deselectAll(); });
+
       var btnImport = document.getElementById("btn-submit-import-list");
       if (btnImport) {
         btnImport.addEventListener("click", function () {
-          var form = document.getElementById("form-import-list");
-          var url = form ? form.querySelector('[name="shareUrl"]') : null;
-          var val = url && url.value.trim() ? url.value.trim() : "";
-          showToast(val ? "장소 목록 가져오기 완료 (데모)" : "공유링크를 입력해 주세요 (데모)");
-          if (val) {
-            closeModal(btnImport);
-            if (url) url.value = "";
+          var checked = importListCtl ? importListCtl.checked() : [];
+          if (!checked.length) {
+            showToast("가져올 항목을 선택해 주세요");
+            return;
           }
+          if (spotCount + checked.length > SPOT_CAP) {
+            showCapAlarm();
+            showToast("차단: 선택 " + checked.length + "곳 + 현재 " + spotCount + "곳 > 25");
+            return;
+          }
+          spotCount += checked.length;
+          refreshSpotCount();
+          showToast("선택 " + checked.length + "곳 가져오기 완료 (데모) · " + spotCount + "/25");
+          closeModal(btnImport);
         });
       }
 
@@ -712,7 +853,7 @@
         if (title) title.textContent = registerTarget === "candidate" ? "후보스팟 등록" : "스팟 등록";
         if (hint) {
           hint.textContent = registerTarget === "candidate"
-            ? "미배정 후보스팟으로 등록합니다. 이후 「후보스팟에서 추가」로 Day에 붙일 수 있습니다."
+            ? "미배정 후보스팟으로 등록합니다. 이후 「후보스팟목록에서 가져오기」로 Day에 붙일 수 있습니다."
             : "Day 2 보드에 스팟으로 등록합니다.";
         }
         updateRegisterCta();
@@ -778,20 +919,35 @@
         });
       }
 
+      /* —— 후보스팟목록에서 가져오기 —— S04-27 —— */
       function openCandidates() {
+        if (candListCtl) candListCtl.deselectAll(); // 기본 자동체크 없음
         openModal("modal-candidates");
       }
-      
-      
-      /* v0.8.1 S04-16~20: N/25 · 상한 차단 알람 · Directions 실패 알람 */
-      var SPOT_CAP = 25;
-      var spotCount = 4;
-      function refreshSpotCount() {
-        var nEl = document.getElementById("board-spot-n");
-        var wrap = document.getElementById("board-spot-count");
-        if (nEl) nEl.textContent = String(spotCount);
-        if (wrap) wrap.classList.toggle("is-full", spotCount >= SPOT_CAP);
+      var btnCandAll = document.getElementById("btn-cand-select-all");
+      var btnCandNone = document.getElementById("btn-cand-deselect-all");
+      if (btnCandAll && candListCtl) btnCandAll.addEventListener("click", function () { candListCtl.selectAll(); });
+      if (btnCandNone && candListCtl) btnCandNone.addEventListener("click", function () { candListCtl.deselectAll(); });
+      var btnSubmitCand = document.getElementById("btn-submit-candidates");
+      if (btnSubmitCand) {
+        btnSubmitCand.addEventListener("click", function () {
+          var checked = candListCtl ? candListCtl.checked() : [];
+          if (!checked.length) {
+            showToast("추가할 후보스팟을 선택해 주세요");
+            return;
+          }
+          if (spotCount + checked.length > SPOT_CAP) {
+            showCapAlarm();
+            showToast("차단: 선택 " + checked.length + "곳 + 현재 " + spotCount + "곳 > 25");
+            return;
+          }
+          spotCount += checked.length;
+          refreshSpotCount();
+          showToast("후보스팟 " + checked.length + "곳 → Day 보드 추가 (데모) · " + spotCount + "/25");
+          closeModal(btnSubmitCand);
+        });
       }
+
       function showCapAlarm() {
         var n = document.getElementById("alarm-cap-n");
         if (n) n.textContent = String(spotCount);
@@ -865,6 +1021,70 @@
           setSpotRegisterMode(!spotModeOn);
         });
       }
+
+      /* S04-22: 스팟등록모드 성공 → 신규 핀 포커스 (스팟 #1 고정 금지) */
+      var nextDemoSpotId = 5;
+      function focusNewPin(pin) {
+        var stage = document.getElementById("map-stage");
+        document.querySelectorAll(".spot-pin.is-focus-new").forEach(function (p) {
+          p.classList.remove("is-focus-new");
+        });
+        if (pin) {
+          pin.classList.add("is-focus-new");
+          pin.classList.add("is-selected");
+          selectSpot(pin.getAttribute("data-spot"));
+          if (stage) {
+            stage.classList.add("is-camera-focus");
+            setTimeout(function () { stage.classList.remove("is-camera-focus"); }, 400);
+          }
+          try { pin.focus(); } catch (err) {}
+        }
+      }
+      function demoRegisterAtMap(clientX, clientY) {
+        if (!guardSpotCap("스팟등록모드")) return;
+        var stage = document.getElementById("map-stage");
+        if (!stage) return;
+        var rect = stage.getBoundingClientRect();
+        var leftPct = Math.max(8, Math.min(92, ((clientX - rect.left) / rect.width) * 100));
+        var topPct = Math.max(10, Math.min(90, ((clientY - rect.top) / rect.height) * 100));
+        var id = String(nextDemoSpotId++);
+        var pin = document.createElement("button");
+        pin.type = "button";
+        pin.className = "spot-pin";
+        pin.style.left = leftPct.toFixed(1) + "%";
+        pin.style.top = topPct.toFixed(1) + "%";
+        pin.setAttribute("data-spot", id);
+        pin.setAttribute("aria-label", id + "번 신규 스팟");
+        pin.title = id + ". 신규 스팟";
+        pin.textContent = id;
+        stage.appendChild(pin);
+        names[id] = "신규 스팟 " + id;
+        pin.addEventListener("click", function (e) {
+          e.stopPropagation();
+          selectSpot(id);
+        });
+        spotCount += 1;
+        refreshSpotCount();
+        // clear other selections then focus NEW pin (not #1)
+        document.querySelectorAll(".spot-pin.is-selected").forEach(function (p) {
+          if (p !== pin) {
+            p.classList.remove("is-selected");
+            p.setAttribute("aria-pressed", "false");
+          }
+        });
+        focusNewPin(pin);
+        showToast("스팟등록 성공 · 신규 핀 #" + id + " 포커스 (S04-22 데모)");
+        setSpotRegisterMode(false);
+      }
+      var mapStageEl = document.getElementById("map-stage");
+      if (mapStageEl) {
+        mapStageEl.addEventListener("click", function (e) {
+          if (!spotModeOn) return;
+          if (e.target.closest(".spot-pin")) return;
+          demoRegisterAtMap(e.clientX, e.clientY);
+        });
+      }
+
       document.querySelectorAll("[data-empty-action]").forEach(function (btn) {
         btn.addEventListener("click", function () {
           var a = btn.getAttribute("data-empty-action");
@@ -912,46 +1132,93 @@
         });
       });
 
-      document.querySelectorAll("[data-add-candidate]").forEach(function (btn) {
-        btn.addEventListener("click", function () {
-          showToast("후보스팟 → Day 스팟으로 추가됨 (데모)");
-          closeModal(btn);
+      /* —— 썸네일 선택 팝업 · photoUrls / imageKey —— S04-23/24 —— */
+      function updateImageKeyPreview() {
+        var prev = document.getElementById("image-key-preview");
+        if (prev) prev.innerHTML = "선택 imageKey: <code>" + (selectedImageKey || "—") + "</code>";
+      }
+      function clearThumbSelections() {
+        document.querySelectorAll(".icon-option").forEach(function (o) {
+          o.classList.remove("is-selected");
+          o.setAttribute("aria-selected", "false");
         });
-      });
-
+        document.querySelectorAll(".photo-url-option").forEach(function (o) {
+          o.classList.remove("is-selected");
+          o.setAttribute("aria-selected", "false");
+        });
+      }
       document.querySelectorAll("[data-icon-pick]").forEach(function (thumb) {
         thumb.addEventListener("click", function (e) {
           e.stopPropagation();
           iconTargetId = thumb.getAttribute("data-icon-pick");
-          selectedIcon = (thumb.textContent || "").trim() || "寺";
+          selectedIcon = (thumb.textContent || "").trim() || "🏯";
+          selectedImageKey = thumb.getAttribute("data-image-key") || ("icon:" + selectedIcon);
+          clearThumbSelections();
+          var matched = false;
           document.querySelectorAll(".icon-option").forEach(function (opt) {
-            var on = opt.getAttribute("data-icon") === selectedIcon;
+            var on = opt.getAttribute("data-icon") === selectedIcon || opt.getAttribute("data-image-key") === selectedImageKey;
             opt.classList.toggle("is-selected", on);
             opt.setAttribute("aria-selected", on ? "true" : "false");
+            if (on) matched = true;
           });
+          if (!matched) {
+            document.querySelectorAll(".photo-url-option").forEach(function (opt) {
+              var on = opt.getAttribute("data-image-key") === selectedImageKey;
+              opt.classList.toggle("is-selected", on);
+              opt.setAttribute("aria-selected", on ? "true" : "false");
+            });
+          }
+          updateImageKeyPreview();
           openModal("modal-icon");
         });
       });
 
       document.querySelectorAll(".icon-option").forEach(function (opt) {
         opt.addEventListener("click", function () {
+          clearThumbSelections();
           selectedIcon = opt.getAttribute("data-icon");
-          document.querySelectorAll(".icon-option").forEach(function (o) {
-            var on = o === opt;
-            o.classList.toggle("is-selected", on);
-            o.setAttribute("aria-selected", on ? "true" : "false");
-          });
+          selectedImageKey = opt.getAttribute("data-image-key") || ("icon:" + selectedIcon);
+          opt.classList.add("is-selected");
+          opt.setAttribute("aria-selected", "true");
+          updateImageKeyPreview();
         });
       });
+      document.querySelectorAll(".photo-url-option").forEach(function (opt) {
+        opt.addEventListener("click", function () {
+          clearThumbSelections();
+          selectedImageKey = opt.getAttribute("data-image-key");
+          selectedIcon = (opt.querySelector(".photo-url-option__img") || {}).textContent || "📷";
+          selectedIcon = (selectedIcon || "📷").trim();
+          opt.classList.add("is-selected");
+          opt.setAttribute("aria-selected", "true");
+          updateImageKeyPreview();
+        });
+      });
+
+      var uploadInput = document.getElementById("thumb-upload-input");
+      if (uploadInput) {
+        uploadInput.addEventListener("change", function () {
+          var fname = (uploadInput.files && uploadInput.files[0] && uploadInput.files[0].name) || "upload.jpg";
+          selectedImageKey = "photo:" + fname;
+          selectedIcon = "📷";
+          clearThumbSelections();
+          updateImageKeyPreview();
+          showToast("업로드 → photoUrls 추가 데모 · imageKey=" + selectedImageKey);
+          uploadInput.value = "";
+        });
+      }
 
       var applyIcon = document.getElementById("btn-apply-icon");
       if (applyIcon) {
         applyIcon.addEventListener("click", function () {
           if (iconTargetId) {
             var thumb = document.querySelector('[data-icon-pick="' + iconTargetId + '"]');
-            if (thumb) thumb.textContent = selectedIcon;
+            if (thumb) {
+              thumb.textContent = selectedIcon;
+              thumb.setAttribute("data-image-key", selectedImageKey);
+            }
           }
-          showToast("아이콘/이미지 적용됨 (데모)");
+          showToast("imageKey 적용: " + selectedImageKey + " (데모)");
           closeModal(applyIcon);
         });
       }
