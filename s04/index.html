@@ -324,12 +324,10 @@
         <div class="import-resolve" id="import-resolve-panel">
           <div class="import-resolve__head">
             <strong class="import-resolve__name">도쿄 아사쿠사 저장목록</strong>
-            <span class="import-resolve__count" id="import-checked-count">0개 선택</span>
           </div>
           <div class="quota-status" id="import-quota-status" aria-live="polite">
-            <span class="quota-status__chip">잔여 <strong id="import-remain-n">21</strong>/25</span>
-            <span class="quota-status__legend"><i class="quota-dot quota-dot--auto" aria-hidden="true"></i>자동체크</span>
-            <span class="quota-status__legend"><i class="quota-dot quota-dot--manual" aria-hidden="true"></i>직접선택</span>
+            <span class="quota-status__chip">선택수 <strong id="import-checked-count">0</strong></span>
+            <span class="quota-status__chip">잔여추가가능 <strong id="import-remain-n">21</strong></span>
           </div>
           <div class="check-toolbar" role="group" aria-label="전체선택">
             <button type="button" class="btn btn--ghost btn--sm" id="btn-import-select-all">전체선택</button>
@@ -752,7 +750,13 @@
       }
       function setCheckedCount(countElId, n) {
         var el = document.getElementById(countElId);
-        if (el) el.textContent = n + "개 선택";
+        if (!el) return;
+        // import 모달: 헤더는 「선택수」숫자만 (카피 「n개 선택」 미사용)
+        if (countElId === "import-checked-count") {
+          el.textContent = String(n);
+          return;
+        }
+        el.textContent = n + "개 선택";
       }
       function wireCheckList(listId, countId, opts) {
         opts = opts || {};
@@ -851,7 +855,7 @@
       var btnImpNone = document.getElementById("btn-import-deselect-all");
       if (btnImpAll && importListCtl) btnImpAll.addEventListener("click", function () {
         importListCtl.selectAll();
-        markImportAutoChecks(0); // 전체선택은 직접선택으로 표시
+        markImportAutoChecks(0); // 전체선택 후 자동체크 표시 해제
         document.querySelectorAll("#import-check-list .check-item").forEach(function (item) {
           item.classList.remove("is-auto-checked");
           var badge = item.querySelector("[data-auto-badge]");

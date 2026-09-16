@@ -1876,3 +1876,9 @@ body.spot-register-mode .map-stage {
   padding: 6px 10px;
   min-height: 36px;
 }
+
+.quota-status {
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.quota-status__legend { display: none !important; }
