@@ -183,7 +183,7 @@
               <button type="button" class="btn btn--icon" disabled aria-label="센소지 위로">▲</button>
               <button type="button" class="btn btn--icon" aria-label="센소지 아래로">▼</button>
             </div>
-            <button type="button" class="btn btn--ghost btn--sm btn--edit-spot" data-edit-spot="1" data-spot-name="센소지 (浅草寺)" data-spot-lat="35.7148" data-spot-lng="139.7967" aria-haspopup="dialog" aria-controls="modal-register" title="스팟 수정">수정</button>
+            <button type="button" class="btn btn--ghost btn--sm btn--edit-spot" data-edit-spot="1" data-spot-name="센소지 (浅草寺)" data-spot-lat="35.7148" data-spot-lng="139.7967" aria-haspopup="dialog" aria-controls="modal-register" title="스팟 수정" data-spot-url="https://maps.app.goo.gl/sensoji-demo">수정</button>
             <button type="button" class="btn btn--revert" data-revert="1" title="후보스팟으로 되돌리기">되돌리기</button>
           </article>
 
@@ -206,7 +206,7 @@
               <button type="button" class="btn btn--icon" aria-label="나카미세 위로">▲</button>
               <button type="button" class="btn btn--icon" aria-label="나카미세 아래로">▼</button>
             </div>
-            <button type="button" class="btn btn--ghost btn--sm btn--edit-spot" data-edit-spot="2" data-spot-name="나카미세 거리" data-spot-lat="35.7117" data-spot-lng="139.7948" aria-haspopup="dialog" aria-controls="modal-register" title="스팟 수정">수정</button>
+            <button type="button" class="btn btn--ghost btn--sm btn--edit-spot" data-edit-spot="2" data-spot-name="나카미세 거리" data-spot-lat="35.7117" data-spot-lng="139.7948" aria-haspopup="dialog" aria-controls="modal-register" title="스팟 수정" data-spot-url="https://maps.app.goo.gl/nakamise-demo">수정</button>
             <button type="button" class="btn btn--revert" data-revert="2" title="후보스팟으로 되돌리기">되돌리기</button>
           </article>
 
@@ -230,7 +230,7 @@
               <button type="button" class="btn btn--icon" aria-label="우에노 공원 위로">▲</button>
               <button type="button" class="btn btn--icon" aria-label="우에노 공원 아래로">▼</button>
             </div>
-            <button type="button" class="btn btn--ghost btn--sm btn--edit-spot" data-edit-spot="3" data-spot-name="우에노 공원 · 단풍" data-spot-lat="35.7146" data-spot-lng="139.7745" aria-haspopup="dialog" aria-controls="modal-register" title="스팟 수정">수정</button>
+            <button type="button" class="btn btn--ghost btn--sm btn--edit-spot" data-edit-spot="3" data-spot-name="우에노 공원 · 단풍" data-spot-lat="35.7146" data-spot-lng="139.7745" aria-haspopup="dialog" aria-controls="modal-register" title="스팟 수정" data-spot-url="https://maps.app.goo.gl/ueno-demo">수정</button>
             <button type="button" class="btn btn--revert" data-revert="3" title="후보스팟으로 되돌리기">되돌리기</button>
           </article>
 
@@ -252,7 +252,7 @@
               <button type="button" class="btn btn--icon" aria-label="아메요코 위로">▲</button>
               <button type="button" class="btn btn--icon" disabled aria-label="아메요코 아래로">▼</button>
             </div>
-            <button type="button" class="btn btn--ghost btn--sm btn--edit-spot" data-edit-spot="4" data-spot-name="아메요코 시장" data-spot-lat="35.7096" data-spot-lng="139.7745" aria-haspopup="dialog" aria-controls="modal-register" title="스팟 수정">수정</button>
+            <button type="button" class="btn btn--ghost btn--sm btn--edit-spot" data-edit-spot="4" data-spot-name="아메요코 시장" data-spot-lat="35.7096" data-spot-lng="139.7745" aria-haspopup="dialog" aria-controls="modal-register" title="스팟 수정" data-spot-url="https://maps.app.goo.gl/ameyoko-demo">수정</button>
             <button type="button" class="btn btn--revert" data-revert="4" title="후보스팟으로 되돌리기">되돌리기</button>
           </article>
 
@@ -364,7 +364,7 @@
     </div>
   </div>
 
-  <!-- Modal: 스팟 등록 / 후보스팟 등록 -->
+  <!-- Modal: 스팟 등록 / 후보스팟 등록 / 스팟 수정(S04-29 동일 스켈레톤) -->
   <div class="modal" id="modal-register" hidden aria-hidden="true">
     <div class="modal__backdrop" data-close-modal></div>
     <div class="modal__dialog modal__dialog--wide" role="dialog" aria-modal="true" aria-labelledby="modal-register-title">
@@ -923,7 +923,7 @@
         }
         if (hint) {
           if (registerMode === "edit") {
-            hint.textContent = "스팟 등록과 같은 모달·필드입니다. 값을 고친 뒤 저장하세요.";
+            hint.textContent = "스팟 등록과 동일 스켈레톤 · 이름·위치(위도·경도)·링크. 기존값이 채워져 있습니다.";
           } else if (registerTarget === "candidate") {
             hint.textContent = "미배정 후보스팟으로 등록합니다. 이후 「후보스팟목록에서 가져오기」로 Day에 붙일 수 있습니다.";
           } else {
@@ -954,10 +954,14 @@
         var lat = form.querySelector('[name="lat"]');
         var lng = form.querySelector('[name="lng"]');
         var memo = form.querySelector('[name="memo"]');
+        var gName = form.querySelector('[name="gName"]');
+        var gUrl = form.querySelector('[name="gUrl"]');
         if (name) name.value = (data && data.name) || "";
         if (lat) lat.value = (data && data.lat) || "";
         if (lng) lng.value = (data && data.lng) || "";
         if (memo) memo.value = (data && data.memo) || "";
+        if (gName) gName.value = (data && data.name) || "";
+        if (gUrl) gUrl.value = (data && data.url) || "";
       }
 
       function openRegister(target) {
@@ -978,12 +982,23 @@
           name: btn.getAttribute("data-spot-name") || "",
           lat: btn.getAttribute("data-spot-lat") || "",
           lng: btn.getAttribute("data-spot-lng") || "",
+          url: btn.getAttribute("data-spot-url") || "",
           memo: ""
         });
         setRegisterTarget("spot");
+        // S04-29: 이름·위치·링크 골격 동일 — 좌표 있으면 A, 없으면 링크 있으면 B
+        var hasLat = !!(btn.getAttribute("data-spot-lat") || "").trim();
+        var hasUrl = !!(btn.getAttribute("data-spot-url") || "").trim();
+        var useGmaps = !hasLat && hasUrl;
         var latRadio = document.getElementById("reg-method-latlng");
-        if (latRadio) latRadio.checked = true;
-        setRegisterMethod("latlng");
+        var gRadio = document.getElementById("reg-method-gmaps");
+        if (useGmaps) {
+          if (gRadio) gRadio.checked = true;
+          setRegisterMethod("gmaps");
+        } else {
+          if (latRadio) latRadio.checked = true;
+          setRegisterMethod("latlng");
+        }
         openModal("modal-register");
       }
 
