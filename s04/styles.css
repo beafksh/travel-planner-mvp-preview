@@ -677,11 +677,10 @@ button {
   flex: 1 1 auto;
   min-height: 0;
   overflow-x: hidden;
-  overflow-y: auto;
-  /* 스크롤바 유무와 무관하게 우측 카드 잘림 방지 */
+  /* scroll(고정) + gutter: 4곳/25곳 모두 동일 콘텐츠 너비 */
+  overflow-y: scroll;
   scrollbar-gutter: stable;
   padding: 8px;
-  padding-inline-end: 8px;
   display: flex;
   flex-direction: column;
   gap: 7px;
@@ -692,6 +691,7 @@ button {
 .board-scroll > .spot-card,
 .board-scroll > .board-empty,
 .board-scroll > .board-hint {
+  width: 100%;
   max-width: 100%;
   min-width: 0;
   box-sizing: border-box;
@@ -2009,12 +2009,10 @@ body.spot-register-mode .map-stage {
   .route-legend { max-width: min(58vw, 640px); }
 }
 
-/* 보드 패널: 스크롤 영역에 gutter 예약 · 우측 잘림 방지 */
-.board-pane {
-  scrollbar-gutter: stable;
-}
+/* 보드 리스트: 스크롤 없어도 25개일 때와 같은 너비 (gutter 예약) */
 @supports not (scrollbar-gutter: stable) {
   .board-scroll {
-    padding-inline-end: 14px; /* 레거시: 스크롤바 폭만큼 여유 */
+    /* 레거시: 항상 스크롤바 트랙만큼 우측 패딩 고정 */
+    padding-inline-end: calc(8px + 15px);
   }
 }
