@@ -52,9 +52,9 @@
   --fs-title: 18px;
   --fs-h2: 17px;
   --target: 40px;
-  --board-card-h: 76px;
-  --split-map: 60%;
-  --split-board: 40%;
+  --board-card-h: 88px;
+  --split-map: 52%;
+  --split-board: 48%;
 }
 
 *,
@@ -110,7 +110,7 @@ button {
   height: 100dvh;
   max-height: 100vh;
   max-height: 100dvh;
-  max-width: 1440px;
+  max-width: 1680px;
   margin: 0 auto;
   background: var(--color-surface);
   box-shadow: 0 0 0 1px rgba(20, 20, 20, 0.04);
@@ -803,11 +803,14 @@ button {
 }
 .spot-card__name {
   font-weight: 700;
-  font-size: 14px;
+  font-size: 14.5px;
   letter-spacing: -0.015em;
-  white-space: nowrap;
+  white-space: normal;
   overflow: hidden;
-  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  line-height: 1.25;
   color: var(--color-ink);
 }
 .spot-card__name a {
@@ -999,8 +1002,8 @@ button {
 
 @media (min-width: 900px) {
   .viewport-note { display: inline-block; }
-  .viewport-note::after { content: "데스크 ≥900 · 맵60/보드40"; }
-  .route-legend { display: inline-flex; max-width: min(52vw, 560px); }
+  .viewport-note::after { content: "데스크 ≥900 · 맵52/보드48"; }
+  .route-legend { display: inline-flex; max-width: min(48vw, 520px); }
   .segment { display: none; }
   .workspace { margin-top: 0; }
 
@@ -1014,9 +1017,10 @@ button {
   .workspace.is-map-view .map-pane,
   .workspace.is-board-view .map-pane {
     display: flex;
-    flex: 0 0 var(--split-map);
-    width: var(--split-map);
-    max-width: var(--split-map);
+    flex: 1 1 auto; /* 맵이 남는 폭 */
+    min-width: 0;
+    width: auto;
+    max-width: none;
     border-right: none;
   }
 
@@ -1024,8 +1028,11 @@ button {
   .workspace.is-map-view .board-pane,
   .workspace.is-board-view .board-pane {
     display: flex;
-    flex: 1 1 var(--split-board);
-    min-width: 300px;
+    /* 스팟 수와 무관 · 보드 패널 너비 고정 */
+    flex: 0 0 var(--split-board);
+    width: var(--split-board);
+    max-width: var(--split-board);
+    min-width: min(480px, 48vw);
   }
 
   .splitter { display: flex; }
@@ -1046,9 +1053,19 @@ button {
 
 @media (max-width: 520px) {
   .spot-card { flex-wrap: wrap; }
-  .btn--revert {
+  .spot-card__actions {
     width: 100%;
-    margin-top: 2px;
+    max-width: none;
+    flex-direction: row;
+    min-width: 0;
+  }
+  .spot-card__actions .btn--edit-spot,
+  .spot-card__actions .btn--revert {
+    flex: 1;
+  }
+  .btn--revert {
+    width: auto;
+    margin-top: 0;
   }
   .pane-header__actions {
     width: 100%;
@@ -1962,17 +1979,21 @@ body.spot-register-mode .map-stage {
   align-items: stretch;
   gap: 4px;
   flex-shrink: 0;
-  align-self: center;
-  min-width: 76px;
+  align-self: flex-start;
+  min-width: 88px;
+  max-width: 96px;
+  overflow: visible;
 }
 .spot-card__actions .btn--edit-spot,
 .spot-card__actions .btn--revert {
   width: 100%;
   margin: 0;
-  font-size: 11.5px;
-  padding: 5px 8px;
-  min-height: 32px;
+  font-size: 11px;
+  padding: 5px 6px;
+  min-height: 30px;
   white-space: nowrap;
+  overflow: visible;
+  text-overflow: clip;
 }
 .btn--revert {
   /* keep existing look; ensure fits vertical stack */
@@ -2014,5 +2035,22 @@ body.spot-register-mode .map-stage {
   .board-scroll {
     /* 레거시: 항상 스크롤바 트랙만큼 우측 패딩 고정 */
     padding-inline-end: calc(8px + 15px);
+  }
+}
+
+/* 보드 셸 넓히기 · 카드 세로 액션 잘림 방지 */
+.board-scroll > .spot-card {
+  overflow: visible;
+}
+.spot-card__body {
+  flex: 1 1 auto;
+  min-width: 0; /* 이름  Truncate/clamp 공간 */
+}
+.spot-card__moves {
+  flex-shrink: 0;
+}
+@media (min-width: 900px) {
+  .app {
+    max-width: min(1680px, 100%);
   }
 }
