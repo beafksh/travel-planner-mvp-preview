@@ -48,3 +48,8 @@ python3 -m http.server 8080
 - CTA 줄: 장소목록 · 스팟등록 · 후보등록 · 후보에서추가 · 맵클릭
 - 빈 상태: `.board-scroll.is-empty` 시 빈 상태 블록 표시 (데모: 콘솔/`classList.add('is-empty')`)
 - 등록 대상 탭: `스팟 (Day N)` (선택 Day 반영)
+
+## v0.8.1 AC 데모
+- 카운터 `N/25곳` · **상한데모** 버튼으로 25/25 전환
+- 가득 시 「장소목록」「스팟등록」「후보에서추가」→ **차단 + 알람** 모달
+- **경로실패** 버튼 → Directions `ZERO_RESULTS` 에러 알람

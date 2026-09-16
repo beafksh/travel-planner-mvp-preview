@@ -139,7 +139,9 @@
         <div class="board-toolbar" aria-label="보드 도구">
           <div class="board-toolbar__title-row">
             <h2 class="board-toolbar__title">보드 · 스팟 순서</h2>
-            <span class="board-toolbar__count" id="board-spot-count" aria-live="polite"><strong>4</strong>/25곳</span>
+            <span class="board-toolbar__count" id="board-spot-count" aria-live="polite"><strong id="board-spot-n">4</strong>/25곳</span>
+            <button type="button" class="btn btn--ghost btn--xs" id="btn-demo-cap" title="v0.8.1 데모: 상한을 25/25로">상한데모</button>
+            <button type="button" class="btn btn--ghost btn--xs" id="btn-demo-directions" title="v0.8.1 데모: Directions 실패 알람">경로실패</button>
             <a class="board-link-muted board-toolbar__manage" href="#" title="S06 예약관리(내역)">예약관리(내역) →</a>
           </div>
           <div class="board-toolbar__cta" role="toolbar" aria-label="보드 추가 액션">
@@ -769,6 +771,67 @@
         openModal("modal-candidates");
       }
       
+      
+      /* v0.8.1 S04-16~20: N/25 · 상한 차단 알람 · Directions 실패 알람 */
+      var SPOT_CAP = 25;
+      var spotCount = 4;
+      function refreshSpotCount() {
+        var nEl = document.getElementById("board-spot-n");
+        var wrap = document.getElementById("board-spot-count");
+        if (nEl) nEl.textContent = String(spotCount);
+        if (wrap) wrap.classList.toggle("is-full", spotCount >= SPOT_CAP);
+      }
+      function showCapAlarm() {
+        var n = document.getElementById("alarm-cap-n");
+        if (n) n.textContent = String(spotCount);
+        openModal("alarm-cap");
+      }
+      function showDirectionsAlarm(code) {
+        var c = document.getElementById("alarm-dir-code");
+        if (c) c.textContent = code || "ZERO_RESULTS";
+        openModal("alarm-directions");
+      }
+      function guardSpotCap(actionLabel) {
+        if (spotCount >= SPOT_CAP) {
+          showCapAlarm();
+          showToast("차단: " + (actionLabel || "추가") + " · Day 스팟 상한 25곳");
+          return false;
+        }
+        return true;
+      }
+      var demoCap = document.getElementById("btn-demo-cap");
+      if (demoCap) {
+        demoCap.addEventListener("click", function () {
+          spotCount = spotCount >= SPOT_CAP ? 4 : SPOT_CAP;
+          refreshSpotCount();
+          showToast(spotCount >= SPOT_CAP ? "상한 데모 ON · 25/25곳" : "상한 데모 OFF · 4/25곳");
+        });
+      }
+      var demoDir = document.getElementById("btn-demo-directions");
+      if (demoDir) {
+        demoDir.addEventListener("click", function () {
+          showDirectionsAlarm("ZERO_RESULTS");
+        });
+      }
+      function wrapCap(id, label) {
+        var el = document.getElementById(id);
+        if (!el) return;
+        el.addEventListener("click", function (e) {
+          if (!guardSpotCap(label)) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+          }
+        }, true);
+      }
+      wrapCap("btn-open-import-list", "장소목록가져오기");
+      wrapCap("btn-open-import-list-board", "장소목록가져오기");
+      wrapCap("btn-open-import-list-hint", "장소목록가져오기");
+      wrapCap("btn-open-register-spot", "스팟등록");
+      wrapCap("btn-open-register-spot-hint", "스팟등록");
+      wrapCap("btn-open-candidates", "후보스팟에서 추가");
+      wrapCap("btn-open-candidates-hint", "후보스팟에서 추가");
+      refreshSpotCount();
+
       var mapClickBtn = document.getElementById("btn-map-click-add");
       if (mapClickBtn) {
         mapClickBtn.addEventListener("click", function () {

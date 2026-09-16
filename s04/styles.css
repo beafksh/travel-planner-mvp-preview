@@ -1482,3 +1482,24 @@ body.modal-open { overflow: hidden; }
   .board-toolbar__title-row { flex-wrap: wrap; }
   .board-toolbar__manage { margin-left: 0; width: 100%; }
 }
+
+/* v0.8.1 alarms */
+.modal__dialog--alarm {
+  border: 1px solid rgba(255, 107, 74, 0.35);
+  box-shadow: 0 12px 40px rgba(255, 107, 74, 0.12);
+}
+.alarm-msg {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--color-ink);
+}
+.board-toolbar__count.is-full strong {
+  color: var(--color-accent);
+}
+.btn--xs {
+  font-size: 11px;
+  padding: 4px 8px;
+  min-height: 28px;
+  border-radius: 8px;
+}
