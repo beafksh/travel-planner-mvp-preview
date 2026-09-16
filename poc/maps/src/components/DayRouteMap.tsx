@@ -1,9 +1,15 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { MapContainer, Marker, Polyline, Popup, TileLayer, useMap, useMapEvents } from 'react-leaflet';
-import L from 'leaflet';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { CandidateSpotList } from './CandidateSpotList';
-import { fetchRoute, type RouteMethod } from '../lib/osrmRoute';
+import { MapModeToggle } from './MapModeToggle';
+import { GoogleMapView } from './maps/GoogleMapView';
+import { MapClickPanel, type PendingClickState } from './maps/MapClickPanel';
+import { OsmMapView } from './maps/OsmMapView';
+import { getGoogleMapsApiKey } from '../lib/googleMapsConfig';
+import { loadMapMode, saveMapMode, type MapMode } from '../lib/mapMode';
+import { fetchRoute } from '../lib/osrmRoute';
+import { resolveGooglePlaceName } from '../lib/resolveGooglePlace';
 import { reverseGeocode } from '../lib/reverseGeocode';
+import type { RouteMethod, RouteResult } from '../lib/routeTypes';
 import type { CandidateSpot, DaySpot } from '../lib/types';
 
 interface DayRouteMapProps {
@@ -15,67 +21,6 @@ interface DayRouteMapProps {
   onRemoveCandidate: (candidateId: string) => void;
 }
 
-interface PendingClick {
-  lat: number;
-  lng: number;
-  name: string;
-  loading: boolean;
-  geocodeError?: string;
-  fromCache?: boolean;
-}
-
-function createNumberedIcon(order: number) {
-  return L.divIcon({
-    className: 'numbered-marker',
-    html: `<span>${order}</span>`,
-    iconSize: [28, 28],
-    iconAnchor: [14, 28],
-    popupAnchor: [0, -28],
-  });
-}
-
-const tempClickIcon = L.divIcon({
-  className: 'temp-click-marker',
-  html: '<span>+</span>',
-  iconSize: [32, 32],
-  iconAnchor: [16, 32],
-  popupAnchor: [0, -32],
-});
-
-const candidateIcon = L.divIcon({
-  className: 'candidate-marker-icon',
-  html: '<span>★</span>',
-  iconSize: [26, 26],
-  iconAnchor: [13, 26],
-  popupAnchor: [0, -26],
-});
-
-function FitBounds({ spots, candidates }: { spots: DaySpot[]; candidates: CandidateSpot[] }) {
-  const map = useMap();
-
-  useEffect(() => {
-    const points: [number, number][] = [
-      ...spots.map((s) => [s.lat, s.lng] as [number, number]),
-      ...candidates.map((c) => [c.lat, c.lng] as [number, number]),
-    ];
-    if (points.length === 0) return;
-    const bounds = L.latLngBounds(points);
-    map.fitBounds(bounds, { padding: [40, 40], maxZoom: 15 });
-  }, [map, spots, candidates]);
-
-  return null;
-}
-
-function MapClickHandler({ onMapClick, disabled }: { onMapClick: (lat: number, lng: number) => void; disabled: boolean }) {
-  useMapEvents({
-    click(e) {
-      if (disabled) return;
-      onMapClick(e.latlng.lat, e.latlng.lng);
-    },
-  });
-  return null;
-}
-
 export function DayRouteMap({
   spots,
   candidates,
@@ -84,19 +29,46 @@ export function DayRouteMap({
   onMoveCandidateToDay,
   onRemoveCandidate,
 }: DayRouteMapProps) {
+  const googleApiKey = getGoogleMapsApiKey();
+  const googleAvailable = Boolean(googleApiKey);
+
+  const [mapMode, setMapMode] = useState<MapMode>(() => {
+    const saved = loadMapMode();
+    if (saved === 'google' && !googleAvailable) return 'osm';
+    return saved;
+  });
+  const [googleLoadFailed, setGoogleLoadFailed] = useState(false);
+
   const [routePositions, setRoutePositions] = useState<[number, number][]>([]);
   const [routeMethod, setRouteMethod] = useState<RouteMethod>('straight-line');
   const [routeError, setRouteError] = useState<string | null>(null);
-  const [pendingClick, setPendingClick] = useState<PendingClick | null>(null);
+  const [pendingClick, setPendingClick] = useState<PendingClickState | null>(null);
   const geocodeRequestRef = useRef(0);
+  const placesServiceRef = useRef<google.maps.places.PlacesService | null>(null);
 
-  const center = useMemo(() => {
-    if (spots.length === 0) return { lat: 35.7148, lng: 139.7967 };
-    const first = spots[0];
-    return { lat: first.lat, lng: first.lng };
-  }, [spots]);
+  const handleModeChange = useCallback(
+    (mode: MapMode) => {
+      if (mode === 'google' && !googleAvailable) return;
+      setGoogleLoadFailed(false);
+      setMapMode(mode);
+      saveMapMode(mode);
+    },
+    [googleAvailable],
+  );
+
+  const handleGoogleLoadError = useCallback(() => {
+    setGoogleLoadFailed(true);
+  }, []);
+
+  const handleGoogleRouteUpdate = useCallback((result: RouteResult) => {
+    setRoutePositions(result.positions);
+    setRouteMethod(result.method);
+    setRouteError(result.error ?? null);
+  }, []);
 
   useEffect(() => {
+    if (mapMode !== 'osm') return;
+
     let cancelled = false;
 
     async function loadRoute() {
@@ -111,30 +83,65 @@ export function DayRouteMap({
     return () => {
       cancelled = true;
     };
-  }, [spots]);
+  }, [mapMode, spots]);
 
-  const handleMapClick = useCallback((lat: number, lng: number) => {
-    const requestId = ++geocodeRequestRef.current;
+  const resolveClickName = useCallback(
+    async (
+      lat: number,
+      lng: number,
+      placeId?: string,
+    ): Promise<Pick<PendingClickState, 'name' | 'geocodeError' | 'fromCache' | 'fromPoi'>> => {
+      if (placeId && mapMode === 'google' && typeof google !== 'undefined') {
+        if (!placesServiceRef.current) {
+          placesServiceRef.current = new google.maps.places.PlacesService(
+            document.createElement('div'),
+          );
+        }
+        const place = await resolveGooglePlaceName(placeId, placesServiceRef.current);
+        return {
+          name: place.name,
+          geocodeError: place.error,
+          fromPoi: true,
+        };
+      }
 
-    setPendingClick({
-      lat,
-      lng,
-      name: '',
-      loading: true,
-    });
+      const result = await reverseGeocode(lat, lng);
+      return {
+        name: result.name,
+        geocodeError: result.error,
+        fromCache: result.fromCache,
+      };
+    },
+    [mapMode],
+  );
 
-    reverseGeocode(lat, lng).then((result) => {
-      if (geocodeRequestRef.current !== requestId) return;
+  const handleMapClick = useCallback(
+    (lat: number, lng: number, placeId?: string) => {
+      const requestId = ++geocodeRequestRef.current;
+
       setPendingClick({
         lat,
         lng,
-        name: result.name,
-        loading: false,
-        geocodeError: result.error,
-        fromCache: result.fromCache,
+        name: '',
+        loading: true,
+        fromPoi: Boolean(placeId),
       });
-    });
-  }, []);
+
+      resolveClickName(lat, lng, placeId).then((result) => {
+        if (geocodeRequestRef.current !== requestId) return;
+        setPendingClick({
+          lat,
+          lng,
+          name: result.name,
+          loading: false,
+          geocodeError: result.geocodeError,
+          fromCache: result.fromCache,
+          fromPoi: result.fromPoi,
+        });
+      });
+    },
+    [resolveClickName],
+  );
 
   const handleCancelClick = useCallback(() => {
     geocodeRequestRef.current += 1;
@@ -143,7 +150,9 @@ export function DayRouteMap({
 
   const handleAddToDay = useCallback(() => {
     if (!pendingClick || pendingClick.loading) return;
-    const name = pendingClick.name.trim() || `클릭 지점 (${pendingClick.lat.toFixed(5)}, ${pendingClick.lng.toFixed(5)})`;
+    const name =
+      pendingClick.name.trim() ||
+      `클릭 지점 (${pendingClick.lat.toFixed(5)}, ${pendingClick.lng.toFixed(5)})`;
     onAddSpot({
       name,
       lat: pendingClick.lat,
@@ -156,7 +165,9 @@ export function DayRouteMap({
 
   const handleAddToCandidates = useCallback(() => {
     if (!pendingClick || pendingClick.loading) return;
-    const name = pendingClick.name.trim() || `클릭 지점 (${pendingClick.lat.toFixed(5)}, ${pendingClick.lng.toFixed(5)})`;
+    const name =
+      pendingClick.name.trim() ||
+      `클릭 지점 (${pendingClick.lat.toFixed(5)}, ${pendingClick.lng.toFixed(5)})`;
     onAddCandidate({
       name,
       lat: pendingClick.lat,
@@ -165,126 +176,118 @@ export function DayRouteMap({
     setPendingClick(null);
   }, [onAddCandidate, pendingClick]);
 
+  const routeDescription =
+    mapMode === 'osm'
+      ? routeMethod === 'osrm'
+        ? 'OSRM 경로 표시됨'
+        : '직선 폴백'
+      : routeMethod === 'google-directions'
+        ? 'Google Directions 경로 표시됨'
+        : '직선 폴백';
+
+  const geocodeLabel =
+    mapMode === 'google' && pendingClick?.fromPoi
+      ? 'Places 조회 중…'
+      : 'Nominatim 조회 중…';
+
+  const showGoogleUnavailable = mapMode === 'google' && (!googleAvailable || googleLoadFailed);
+
   return (
     <section className="panel" aria-labelledby="route-heading">
-      <h2 id="route-heading">B) S04 일자별 스팟 마커 + 동선</h2>
-      <p className="muted">
-        Leaflet + OpenStreetMap · 동선: OSRM public (
-        <code>router.project-osrm.org</code>)
-        {routeMethod === 'osrm' ? ' · 경로 표시됨' : ' · 직선 폴백'}
-      </p>
+      <div className="map-panel-header">
+        <div>
+          <h2 id="route-heading">B) S04 일자별 스팟 마커 + 동선</h2>
+          <p className="muted">
+            {mapMode === 'osm'
+              ? (
+                <>
+                  Leaflet + OpenStreetMap · 동선: OSRM public (
+                  <code>router.project-osrm.org</code>)
+                </>
+              )
+              : (
+                <>
+                  Google Maps JavaScript API · 동선: DirectionsService + DirectionsRenderer
+                </>
+              )}
+            {' · '}
+            {routeDescription}
+          </p>
+        </div>
+        <MapModeToggle
+          mode={mapMode}
+          googleAvailable={googleAvailable}
+          onChange={handleModeChange}
+        />
+      </div>
+
       <p className="muted map-click-hint">
-        <strong>등록 경로 4:</strong> 지도를 클릭하면 해당 위치를 스팟으로 등록할 수 있습니다 (Nominatim 역지오코딩).
+        <strong>등록 경로 4:</strong> 지도를 클릭하면 해당 위치를 스팟으로 등록할 수 있습니다
+        {mapMode === 'google' ? ' (POI 클릭 시 Places 이름 조회)' : ' (Nominatim 역지오코딩)'}.
       </p>
 
-      <div className="leaflet-map-wrap">
-        <MapContainer center={center} zoom={14} scrollWheelZoom className="leaflet-map">
-          <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
-          <FitBounds spots={spots} candidates={candidates} />
-          <MapClickHandler onMapClick={handleMapClick} disabled={false} />
-          {spots.map((spot) => (
-            <Marker
-              key={spot.id}
-              position={[spot.lat, spot.lng]}
-              icon={createNumberedIcon(spot.order)}
-            >
-              <Popup>
-                <strong>{spot.order}. {spot.name}</strong>
-                {spot.time && <div>{spot.time}</div>}
-                <div className="muted">{spot.lat.toFixed(5)}, {spot.lng.toFixed(5)}</div>
-              </Popup>
-            </Marker>
-          ))}
-          {candidates.map((spot) => (
-            <Marker key={spot.id} position={[spot.lat, spot.lng]} icon={candidateIcon}>
-              <Popup>
-                <strong>후보: {spot.name}</strong>
-                <div className="muted">{spot.lat.toFixed(5)}, {spot.lng.toFixed(5)}</div>
-              </Popup>
-            </Marker>
-          ))}
-          {pendingClick && (
-            <Marker position={[pendingClick.lat, pendingClick.lng]} icon={tempClickIcon} />
-          )}
-          {routePositions.length >= 2 && (
-            <Polyline
-              positions={routePositions}
-              pathOptions={{
-                color: routeMethod === 'osrm' ? '#1a73e8' : '#9aa0a6',
-                weight: routeMethod === 'osrm' ? 4 : 3,
-                dashArray: routeMethod === 'osrm' ? undefined : '8 6',
-                opacity: 0.85,
-              }}
-            />
-          )}
-        </MapContainer>
+      {showGoogleUnavailable && (
+        <div className="result-box error google-unavailable-banner" role="alert">
+          <p>
+            {googleLoadFailed
+              ? 'Google Maps 로드에 실패했습니다.'
+              : 'Google Maps API 키가 설정되지 않았습니다.'}
+          </p>
+          <p className="muted">
+            GitHub Actions secret <code>VITE_GOOGLE_MAPS_API_KEY</code> 또는 로컬{' '}
+            <code>.env</code>에 브라우저 키를 설정하세요. 키 제한·빌링을 확인한 뒤 다시 시도하거나
+            OSM 모드로 전환하세요.
+          </p>
+          <button type="button" className="btn-secondary btn-compact" onClick={() => handleModeChange('osm')}>
+            OSM 모드로 전환
+          </button>
+        </div>
+      )}
 
-        {pendingClick && (
-          <div className="click-panel" role="dialog" aria-label="클릭 지점 등록">
-            <h3>클릭 지점</h3>
-            <dl className="click-panel-fields">
-              <div>
-                <dt>좌표</dt>
-                <dd>{pendingClick.lat.toFixed(5)}, {pendingClick.lng.toFixed(5)}</dd>
-              </div>
-              <div>
-                <dt>이름</dt>
-                <dd>
-                  {pendingClick.loading ? (
-                    <span className="muted">Nominatim 조회 중…</span>
-                  ) : (
-                    <input
-                      type="text"
-                      className="name-input"
-                      value={pendingClick.name}
-                      onChange={(e) =>
-                        setPendingClick((prev) => prev ? { ...prev, name: e.target.value } : prev)
-                      }
-                      placeholder="클릭 지점"
-                    />
-                  )}
-                </dd>
-              </div>
-            </dl>
-            {pendingClick.geocodeError && (
-              <p className="muted click-panel-note">
-                역지오코딩 실패 — 이름 없이도 등록 가능합니다.
-              </p>
-            )}
-            {!pendingClick.loading && pendingClick.fromCache && (
-              <p className="muted click-panel-note">캐시된 지명 사용</p>
-            )}
-            <div className="click-panel-actions">
-              <button
-                type="button"
-                className="btn-primary btn-compact"
-                onClick={handleAddToDay}
-                disabled={pendingClick.loading}
-              >
-                Day 동선에 스팟 추가
-              </button>
-              <button
-                type="button"
-                className="btn-secondary btn-compact"
-                onClick={handleAddToCandidates}
-                disabled={pendingClick.loading}
-              >
-                후보스팟으로 추가
-              </button>
-              <button type="button" className="btn-ghost btn-compact" onClick={handleCancelClick}>
-                취소
-              </button>
-            </div>
-          </div>
+      <div className="map-wrap">
+        {mapMode === 'osm' ? (
+          <OsmMapView
+            spots={spots}
+            candidates={candidates}
+            routePositions={routePositions}
+            routeMethod={routeMethod}
+            pendingClick={pendingClick}
+            onMapClick={(lat, lng) => handleMapClick(lat, lng)}
+          />
+        ) : (
+          !showGoogleUnavailable && googleApiKey && (
+            <GoogleMapView
+              spots={spots}
+              candidates={candidates}
+              pendingClick={pendingClick}
+              onMapClick={handleMapClick}
+              onRouteUpdate={handleGoogleRouteUpdate}
+              onLoadError={handleGoogleLoadError}
+            />
+          )
+        )}
+
+        {pendingClick && !showGoogleUnavailable && (
+          <MapClickPanel
+            pendingClick={pendingClick}
+            geocodeLabel={geocodeLabel}
+            onNameChange={(name) =>
+              setPendingClick((prev) => (prev ? { ...prev, name } : prev))
+            }
+            onAddToDay={handleAddToDay}
+            onAddToCandidates={handleAddToCandidates}
+            onCancel={handleCancelClick}
+          />
         )}
       </div>
 
       {routeError && routeMethod === 'straight-line' && (
         <div className="result-box error" role="alert">
-          <p>OSRM 경로 조회 실패 — 직선 Polyline으로 표시합니다.</p>
+          <p>
+            {mapMode === 'osm'
+              ? 'OSRM 경로 조회 실패 — 직선 Polyline으로 표시합니다.'
+              : 'Google Directions 조회 실패 — 직선 Polyline으로 표시합니다.'}
+          </p>
           <p className="muted">{routeError}</p>
         </div>
       )}

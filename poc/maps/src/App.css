@@ -177,11 +177,69 @@ body {
   word-break: break-all;
 }
 
+.map-wrap,
 .leaflet-map-wrap {
   position: relative;
   border-radius: 8px;
   overflow: hidden;
   border: 1px solid #dde2e8;
+}
+
+.map-panel-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 4px;
+}
+
+.map-mode-toggle {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.map-mode-btn {
+  padding: 6px 12px;
+  border: 1px solid #c4c9d0;
+  border-radius: 8px;
+  background: #fff;
+  color: #3c4043;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.map-mode-btn.active {
+  background: #1a73e8;
+  color: #fff;
+  border-color: #1a73e8;
+}
+
+.map-mode-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.google-unavailable-banner {
+  margin-bottom: 12px;
+}
+
+.google-map-loading,
+.google-map-fallback {
+  height: 420px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8f9fa;
+}
+
+.google-map-fallback {
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  text-align: center;
 }
 
 .map-click-hint {

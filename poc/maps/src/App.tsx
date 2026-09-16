@@ -82,7 +82,7 @@ export default function App() {
       <header className="app-header">
         <h1>Travel Planner — Maps POC</h1>
         <p className="muted">
-          OpenStreetMap + Leaflet · 무료 경로 · <code>poc/maps/</code> 전용 (wireframes/, s04/ 미변경)
+          OSM (Leaflet) / Google Maps JavaScript API 토글 · <code>poc/maps/</code> 전용 (wireframes/, s04/ 미변경)
         </p>
       </header>
       <main className="app-main">
@@ -98,7 +98,7 @@ export default function App() {
         />
       </main>
       <footer className="app-footer muted">
-        POC — GitHub Pages 배포 · Google Maps API 미사용
+        POC — GitHub Pages 배포 · Google Maps는 선택(브라우저 키) · OSM 기본
       </footer>
     </div>
   );
