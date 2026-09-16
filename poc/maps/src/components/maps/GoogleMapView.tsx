@@ -39,6 +39,14 @@ function createMarkerIcons() {
       strokeColor: '#ffffff',
       strokeWeight: 2,
     } satisfies google.maps.Symbol,
+    poi: {
+      path: google.maps.SymbolPath.CIRCLE,
+      scale: 16,
+      fillColor: '#34a853',
+      fillOpacity: 1,
+      strokeColor: '#ffffff',
+      strokeWeight: 2,
+    } satisfies google.maps.Symbol,
   };
 }
 
@@ -46,6 +54,7 @@ interface GoogleMapViewProps {
   spots: DaySpot[];
   candidates: CandidateSpot[];
   pendingClick: { lat: number; lng: number } | null;
+  poiMarker: { lat: number; lng: number } | null;
   onMapClick: (lat: number, lng: number, placeId?: string) => void;
   onRouteUpdate: (result: RouteResult) => void;
   onLoadError: () => void;
@@ -55,6 +64,7 @@ export function GoogleMapView({
   spots,
   candidates,
   pendingClick,
+  poiMarker,
   onMapClick,
   onRouteUpdate,
   onLoadError,
@@ -253,6 +263,13 @@ export function GoogleMapView({
             fontSize: '14px',
             fontWeight: '700',
           }}
+        />
+      )}
+      {poiMarker && (
+        <Marker
+          position={{ lat: poiMarker.lat, lng: poiMarker.lng }}
+          icon={markerIcons.poi}
+          zIndex={1000}
         />
       )}
     </GoogleMap>

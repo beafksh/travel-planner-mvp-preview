@@ -4,10 +4,11 @@ import { MapModeToggle } from './MapModeToggle';
 import { GoogleMapView } from './maps/GoogleMapView';
 import { MapClickPanel, type PendingClickState } from './maps/MapClickPanel';
 import { OsmMapView } from './maps/OsmMapView';
+import { PlaceDetailPanel, type SelectedPlaceState } from './maps/PlaceDetailPanel';
 import { getGoogleMapsApiKey } from '../lib/googleMapsConfig';
 import { loadMapMode, saveMapMode, type MapMode } from '../lib/mapMode';
 import { fetchRoute } from '../lib/osrmRoute';
-import { resolveGooglePlaceName } from '../lib/resolveGooglePlace';
+import { fetchGooglePlaceDetails } from '../lib/resolveGooglePlace';
 import { reverseGeocode } from '../lib/reverseGeocode';
 import type { RouteMethod, RouteResult } from '../lib/routeTypes';
 import type { CandidateSpot, DaySpot } from '../lib/types';
@@ -43,8 +44,19 @@ export function DayRouteMap({
   const [routeMethod, setRouteMethod] = useState<RouteMethod>('straight-line');
   const [routeError, setRouteError] = useState<string | null>(null);
   const [pendingClick, setPendingClick] = useState<PendingClickState | null>(null);
+  const [selectedPlace, setSelectedPlace] = useState<SelectedPlaceState | null>(null);
   const geocodeRequestRef = useRef(0);
+  const placeDetailRequestRef = useRef(0);
   const placesServiceRef = useRef<google.maps.places.PlacesService | null>(null);
+
+  const getPlacesService = useCallback(() => {
+    if (!placesServiceRef.current && typeof google !== 'undefined') {
+      placesServiceRef.current = new google.maps.places.PlacesService(
+        document.createElement('div'),
+      );
+    }
+    return placesServiceRef.current;
+  }, []);
 
   const handleModeChange = useCallback(
     (mode: MapMode) => {
@@ -85,67 +97,86 @@ export function DayRouteMap({
     };
   }, [mapMode, spots]);
 
-  const resolveClickName = useCallback(
-    async (
-      lat: number,
-      lng: number,
-      placeId?: string,
-    ): Promise<Pick<PendingClickState, 'name' | 'geocodeError' | 'fromCache' | 'fromPoi'>> => {
-      if (placeId && mapMode === 'google' && typeof google !== 'undefined') {
-        if (!placesServiceRef.current) {
-          placesServiceRef.current = new google.maps.places.PlacesService(
-            document.createElement('div'),
-          );
-        }
-        const place = await resolveGooglePlaceName(placeId, placesServiceRef.current);
-        return {
-          name: place.name,
-          geocodeError: place.error,
-          fromPoi: true,
-        };
-      }
-
-      const result = await reverseGeocode(lat, lng);
-      return {
-        name: result.name,
-        geocodeError: result.error,
-        fromCache: result.fromCache,
-      };
-    },
-    [mapMode],
-  );
-
-  const handleMapClick = useCallback(
-    (lat: number, lng: number, placeId?: string) => {
-      const requestId = ++geocodeRequestRef.current;
-
-      setPendingClick({
+  const handlePoiClick = useCallback(
+    (lat: number, lng: number, placeId: string) => {
+      const requestId = ++placeDetailRequestRef.current;
+      setPendingClick(null);
+      setSelectedPlace({
+        placeId,
         lat,
         lng,
-        name: '',
         loading: true,
-        fromPoi: Boolean(placeId),
       });
 
-      resolveClickName(lat, lng, placeId).then((result) => {
-        if (geocodeRequestRef.current !== requestId) return;
-        setPendingClick({
+      const service = getPlacesService();
+      if (!service) {
+        setSelectedPlace({
+          placeId,
           lat,
           lng,
-          name: result.name,
           loading: false,
-          geocodeError: result.geocodeError,
-          fromCache: result.fromCache,
-          fromPoi: result.fromPoi,
+          error: 'Places 서비스를 초기화할 수 없습니다.',
+        });
+        return;
+      }
+
+      fetchGooglePlaceDetails(placeId, service, lat, lng).then((details) => {
+        if (placeDetailRequestRef.current !== requestId) return;
+        setSelectedPlace({
+          placeId,
+          lat: details.lat,
+          lng: details.lng,
+          loading: false,
+          details,
+          error: details.error,
         });
       });
     },
-    [resolveClickName],
+    [getPlacesService],
+  );
+
+  const handleEmptyMapClick = useCallback((lat: number, lng: number) => {
+    const requestId = ++geocodeRequestRef.current;
+    setSelectedPlace(null);
+    setPendingClick({
+      lat,
+      lng,
+      name: '',
+      loading: true,
+    });
+
+    reverseGeocode(lat, lng).then((result) => {
+      if (geocodeRequestRef.current !== requestId) return;
+      setPendingClick({
+        lat,
+        lng,
+        name: result.name,
+        loading: false,
+        geocodeError: result.error,
+        fromCache: result.fromCache,
+      });
+    });
+  }, []);
+
+  const handleMapClick = useCallback(
+    (lat: number, lng: number, placeId?: string) => {
+      if (placeId && mapMode === 'google') {
+        handlePoiClick(lat, lng, placeId);
+      } else {
+        handleEmptyMapClick(lat, lng);
+      }
+    },
+    [mapMode, handlePoiClick, handleEmptyMapClick],
   );
 
   const handleCancelClick = useCallback(() => {
     geocodeRequestRef.current += 1;
     setPendingClick(null);
+  }, []);
+
+  const handleClosePlacePanel = useCallback(() => {
+    placeDetailRequestRef.current += 1;
+    setSelectedPlace(null);
   }, []);
 
   const handleAddToDay = useCallback(() => {
@@ -176,6 +207,30 @@ export function DayRouteMap({
     setPendingClick(null);
   }, [onAddCandidate, pendingClick]);
 
+  const handleAddPlaceToDay = useCallback(() => {
+    if (!selectedPlace?.details?.name) return;
+    const { details } = selectedPlace;
+    onAddSpot({
+      name: details.name,
+      lat: details.lat,
+      lng: details.lng,
+      label: 'POI',
+      resolveMethod: 'map-click',
+    });
+    setSelectedPlace(null);
+  }, [onAddSpot, selectedPlace]);
+
+  const handleAddPlaceToCandidates = useCallback(() => {
+    if (!selectedPlace?.details?.name) return;
+    const { details } = selectedPlace;
+    onAddCandidate({
+      name: details.name,
+      lat: details.lat,
+      lng: details.lng,
+    });
+    setSelectedPlace(null);
+  }, [onAddCandidate, selectedPlace]);
+
   const routeDescription =
     mapMode === 'osm'
       ? routeMethod === 'osrm'
@@ -185,12 +240,11 @@ export function DayRouteMap({
         ? 'Google Directions 경로 표시됨'
         : '직선 폴백';
 
-  const geocodeLabel =
-    mapMode === 'google' && pendingClick?.fromPoi
-      ? 'Places 조회 중…'
-      : 'Nominatim 조회 중…';
-
   const showGoogleUnavailable = mapMode === 'google' && (!googleAvailable || googleLoadFailed);
+
+  const poiMarker = selectedPlace
+    ? { lat: selectedPlace.lat, lng: selectedPlace.lng }
+    : null;
 
   return (
     <section className="panel" aria-labelledby="route-heading">
@@ -222,8 +276,11 @@ export function DayRouteMap({
       </div>
 
       <p className="muted map-click-hint">
-        <strong>등록 경로 4:</strong> 지도를 클릭하면 해당 위치를 스팟으로 등록할 수 있습니다
-        {mapMode === 'google' ? ' (POI 클릭 시 Places 이름 조회)' : ' (Nominatim 역지오코딩)'}.
+        <strong>등록 경로 4:</strong>{' '}
+        {mapMode === 'google'
+          ? 'POI(장소) 클릭 시 상세 패널 · 빈 지도 클릭 시 좌표 등록 패널'
+          : '지도를 클릭하면 해당 위치를 스팟으로 등록할 수 있습니다 (Nominatim 역지오코딩)'}
+        .
       </p>
 
       {showGoogleUnavailable && (
@@ -244,7 +301,7 @@ export function DayRouteMap({
         </div>
       )}
 
-      <div className="map-wrap">
+      <div className={`map-wrap${selectedPlace ? ' map-wrap--with-detail' : ''}`}>
         {mapMode === 'osm' ? (
           <OsmMapView
             spots={spots}
@@ -260,6 +317,7 @@ export function DayRouteMap({
               spots={spots}
               candidates={candidates}
               pendingClick={pendingClick}
+              poiMarker={poiMarker}
               onMapClick={handleMapClick}
               onRouteUpdate={handleGoogleRouteUpdate}
               onLoadError={handleGoogleLoadError}
@@ -270,13 +328,22 @@ export function DayRouteMap({
         {pendingClick && !showGoogleUnavailable && (
           <MapClickPanel
             pendingClick={pendingClick}
-            geocodeLabel={geocodeLabel}
+            geocodeLabel="Nominatim 조회 중…"
             onNameChange={(name) =>
               setPendingClick((prev) => (prev ? { ...prev, name } : prev))
             }
             onAddToDay={handleAddToDay}
             onAddToCandidates={handleAddToCandidates}
             onCancel={handleCancelClick}
+          />
+        )}
+
+        {selectedPlace && !showGoogleUnavailable && (
+          <PlaceDetailPanel
+            selectedPlace={selectedPlace}
+            onAddToDay={handleAddPlaceToDay}
+            onAddToCandidates={handleAddPlaceToCandidates}
+            onClose={handleClosePlacePanel}
           />
         )}
       </div>
