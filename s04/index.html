@@ -22,7 +22,7 @@
       </div>
       <div class="topbar__actions">
         <button type="button" class="btn btn--ghost btn--sm" id="btn-open-import-list" aria-haspopup="dialog" aria-controls="modal-import-list">
-          장소목록가져오기
+          스팟목록 가져오기(Google)
         </button>
         <span class="viewport-note" aria-hidden="true"></span>
       </div>
@@ -257,9 +257,9 @@
           <div class="board-empty" id="board-empty" hidden>
             <div class="board-empty__icon" aria-hidden="true">📍</div>
             <p class="board-empty__title">이 Day에 스팟이 아직 없어요</p>
-            <p class="board-empty__desc">장소목록을 가져오거나, 스팟·후보스팟을 등록해 보세요.<br/>스팟등록모드를 켜고 맵에서 위치를 고를 수 있어요. (최대 25곳)</p>
+            <p class="board-empty__desc">스팟목록을 가져오거나, 스팟·후보스팟을 등록해 보세요.<br/>스팟등록모드를 켜고 맵에서 위치를 고를 수 있어요. (최대 25곳)</p>
             <div class="board-empty__actions">
-              <button type="button" class="btn btn--primary btn--sm" data-empty-action="import">장소목록 가져오기</button>
+              <button type="button" class="btn btn--primary btn--sm" data-empty-action="import">스팟목록 가져오기(Google)</button>
               <button type="button" class="btn btn--ghost btn--sm" data-empty-action="spot">스팟 등록</button>
               <button type="button" class="btn btn--ghost btn--sm" data-empty-action="map">스팟등록모드</button>
             </div>
@@ -268,7 +268,7 @@
             <span class="board-hint__label">빠른 추가</span>
             <button type="button" class="link-btn" id="btn-open-register-spot-hint" data-register-target="spot">스팟 등록</button>
             <button type="button" class="link-btn" id="btn-open-register-candidate-hint" data-register-target="candidate">후보스팟 등록</button>
-            <button type="button" class="link-btn" id="btn-open-candidates-hint">후보에서 추가</button>
+            <button type="button" class="link-btn" id="btn-open-candidates-hint">후보스팟목록에서 가져오기</button>
             <button type="button" class="link-btn" id="btn-open-import-list-hint">스팟목록 가져오기</button>
           </div>
         </div>
@@ -299,12 +299,12 @@
     </div>
   </div>
 
-  <!-- Modal: 목록 추가 (장소목록가져오기) -->
+  <!-- Modal: 목록 추가 (스팟목록 가져오기(Google)) -->
   <div class="modal" id="modal-import-list" hidden aria-hidden="true">
     <div class="modal__backdrop" data-close-modal></div>
     <div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="modal-import-list-title">
       <header class="modal__header">
-        <h2 id="modal-import-list-title">목록 추가</h2>
+        <h2 id="modal-import-list-title">스팟목록 가져오기(Google)</h2>
         <button type="button" class="modal__close" data-close-modal aria-label="닫기">×</button>
       </header>
       <div class="modal__body">
@@ -380,7 +380,7 @@
               <span class="field__label">공유링크</span>
               <input type="url" name="gUrl" placeholder="https://maps.app.goo.gl/…" autocomplete="off" />
             </label>
-            <p class="field__help field__help--soft">단건 장소 공유링크 · 목록 URL이면 「장소목록가져오기」를 사용하세요</p>
+            <p class="field__help field__help--soft">단건 장소 공유링크 · 목록 URL이면 「스팟목록 가져오기(Google)」를 사용하세요</p>
           </div>
         </form>
       </div>
@@ -396,11 +396,11 @@
     <div class="modal__backdrop" data-close-modal></div>
     <div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="modal-candidates-title">
       <header class="modal__header">
-        <h2 id="modal-candidates-title">후보스팟에서 추가</h2>
+        <h2 id="modal-candidates-title">후보스팟목록에서 가져오기</h2>
         <button type="button" class="modal__close" data-close-modal aria-label="닫기">×</button>
       </header>
       <div class="modal__body">
-        <p class="modal__hint">기존 후보스팟에서 Day 2 보드로 추가합니다. (정적 팝업)</p>
+        <p class="modal__hint">후보스팟목록에서 골라 Day 2 보드로 가져옵니다. (정적 팝업)</p>
         <ul class="candidate-pick-list">
           <li class="candidate-pick">
             <div>
@@ -671,7 +671,7 @@
         }, 2200);
       }
 
-      /* —— 장소목록가져오기 —— */
+      /* —— 스팟목록 가져오기(Google) —— */
       function openImportList() {
         openModal("modal-import-list");
       }
@@ -834,13 +834,13 @@
           }
         }, true);
       }
-      wrapCap("btn-open-import-list", "장소목록가져오기");
-      wrapCap("btn-open-import-list-board", "장소목록가져오기");
-      wrapCap("btn-open-import-list-hint", "장소목록가져오기");
+      wrapCap("btn-open-import-list", "스팟목록 가져오기(Google)");
+      wrapCap("btn-open-import-list-board", "스팟목록 가져오기(Google)");
+      wrapCap("btn-open-import-list-hint", "스팟목록 가져오기(Google)");
       wrapCap("btn-open-register-spot", "스팟등록");
       wrapCap("btn-open-register-spot-hint", "스팟등록");
-      wrapCap("btn-open-candidates", "후보스팟에서 추가");
-      wrapCap("btn-open-candidates-hint", "후보스팟에서 추가");
+      wrapCap("btn-open-candidates", "후보스팟목록에서 가져오기");
+      wrapCap("btn-open-candidates-hint", "후보스팟목록에서 가져오기");
       refreshSpotCount();
 
       var spotModeOn = false;
