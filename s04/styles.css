@@ -678,13 +678,23 @@ button {
   min-height: 0;
   overflow-x: hidden;
   overflow-y: auto;
+  /* 스크롤바 유무와 무관하게 우측 카드 잘림 방지 */
+  scrollbar-gutter: stable;
   padding: 8px;
+  padding-inline-end: 8px;
   display: flex;
   flex-direction: column;
   gap: 7px;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior: contain;
   background: linear-gradient(180deg, #FAF8F5 0%, var(--color-surface) 48px);
+}
+.board-scroll > .spot-card,
+.board-scroll > .board-empty,
+.board-scroll > .board-hint {
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
 }
 
 .spot-card {
@@ -1997,4 +2007,14 @@ body.spot-register-mode .map-stage {
 @media (min-width: 1200px) {
   .pane-header__meta { display: inline; }
   .route-legend { max-width: min(58vw, 640px); }
+}
+
+/* 보드 패널: 스크롤 영역에 gutter 예약 · 우측 잘림 방지 */
+.board-pane {
+  scrollbar-gutter: stable;
+}
+@supports not (scrollbar-gutter: stable) {
+  .board-scroll {
+    padding-inline-end: 14px; /* 레거시: 스크롤바 폭만큼 여유 */
+  }
 }
