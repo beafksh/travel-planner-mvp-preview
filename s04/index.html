@@ -183,6 +183,7 @@
               <button type="button" class="btn btn--icon" disabled aria-label="센소지 위로">▲</button>
               <button type="button" class="btn btn--icon" aria-label="센소지 아래로">▼</button>
             </div>
+            <button type="button" class="btn btn--ghost btn--sm btn--edit-spot" data-edit-spot="1" data-spot-name="센소지 (浅草寺)" data-spot-lat="35.7148" data-spot-lng="139.7967" aria-haspopup="dialog" aria-controls="modal-register" title="스팟 수정">수정</button>
             <button type="button" class="btn btn--revert" data-revert="1" title="후보스팟으로 되돌리기">되돌리기</button>
           </article>
 
@@ -205,6 +206,7 @@
               <button type="button" class="btn btn--icon" aria-label="나카미세 위로">▲</button>
               <button type="button" class="btn btn--icon" aria-label="나카미세 아래로">▼</button>
             </div>
+            <button type="button" class="btn btn--ghost btn--sm btn--edit-spot" data-edit-spot="2" data-spot-name="나카미세 거리" data-spot-lat="35.7117" data-spot-lng="139.7948" aria-haspopup="dialog" aria-controls="modal-register" title="스팟 수정">수정</button>
             <button type="button" class="btn btn--revert" data-revert="2" title="후보스팟으로 되돌리기">되돌리기</button>
           </article>
 
@@ -228,6 +230,7 @@
               <button type="button" class="btn btn--icon" aria-label="우에노 공원 위로">▲</button>
               <button type="button" class="btn btn--icon" aria-label="우에노 공원 아래로">▼</button>
             </div>
+            <button type="button" class="btn btn--ghost btn--sm btn--edit-spot" data-edit-spot="3" data-spot-name="우에노 공원 · 단풍" data-spot-lat="35.7146" data-spot-lng="139.7745" aria-haspopup="dialog" aria-controls="modal-register" title="스팟 수정">수정</button>
             <button type="button" class="btn btn--revert" data-revert="3" title="후보스팟으로 되돌리기">되돌리기</button>
           </article>
 
@@ -249,6 +252,7 @@
               <button type="button" class="btn btn--icon" aria-label="아메요코 위로">▲</button>
               <button type="button" class="btn btn--icon" disabled aria-label="아메요코 아래로">▼</button>
             </div>
+            <button type="button" class="btn btn--ghost btn--sm btn--edit-spot" data-edit-spot="4" data-spot-name="아메요코 시장" data-spot-lat="35.7096" data-spot-lng="139.7745" aria-haspopup="dialog" aria-controls="modal-register" title="스팟 수정">수정</button>
             <button type="button" class="btn btn--revert" data-revert="4" title="후보스팟으로 되돌리기">되돌리기</button>
           </article>
 
@@ -369,7 +373,7 @@
         <button type="button" class="modal__close" data-close-modal aria-label="닫기">×</button>
       </header>
       <div class="modal__body">
-        <div class="target-toggle" role="group" aria-label="등록 대상">
+        <div class="target-toggle" id="reg-target-toggle" role="group" aria-label="등록 대상">
           <button type="button" class="target-toggle__btn is-active" data-target="spot" id="reg-target-spot">스팟 (Day 2)</button>
           <button type="button" class="target-toggle__btn" data-target="candidate" id="reg-target-candidate">후보스팟</button>
         </div>
@@ -883,27 +887,48 @@
         });
       }
 
-      /* —— 스팟 등록 / 후보스팟 등록 —— */
+      /* —— 스팟 등록 / 후보스팟 등록 / 스팟 수정(동일 모달) —— */
+      var registerMode = "create"; // create | edit
+      var editingSpotId = null;
+
       function updateRegisterCta() {
         var btn = document.getElementById("btn-submit-register");
         if (!btn) return;
-        var method = (document.querySelector('input[name="regMethod"]:checked') || {}).value || "latlng";
-        btn.textContent = method === "gmaps" ? "링크 등록" : "좌표 등록";
+        if (registerMode === "edit") {
+          var method = (document.querySelector('input[name="regMethod"]:checked') || {}).value || "latlng";
+          btn.textContent = method === "gmaps" ? "링크 저장" : "수정 저장";
+          return;
+        }
+        var method2 = (document.querySelector('input[name="regMethod"]:checked') || {}).value || "latlng";
+        btn.textContent = method2 === "gmaps" ? "링크 등록" : "좌표 등록";
       }
 
       function setRegisterTarget(target) {
-        registerTarget = target === "candidate" ? "candidate" : "spot";
+        if (registerMode === "edit") {
+          registerTarget = "spot";
+        } else {
+          registerTarget = target === "candidate" ? "candidate" : "spot";
+        }
         var title = document.getElementById("modal-register-title");
         var hint = document.getElementById("reg-target-hint");
+        var toggle = document.getElementById("reg-target-toggle");
         document.querySelectorAll(".target-toggle__btn").forEach(function (b) {
           var on = b.getAttribute("data-target") === registerTarget;
           b.classList.toggle("is-active", on);
         });
-        if (title) title.textContent = registerTarget === "candidate" ? "후보스팟 등록" : "스팟 등록";
+        if (toggle) toggle.hidden = registerMode === "edit";
+        if (title) {
+          if (registerMode === "edit") title.textContent = "스팟 수정";
+          else title.textContent = registerTarget === "candidate" ? "후보스팟 등록" : "스팟 등록";
+        }
         if (hint) {
-          hint.textContent = registerTarget === "candidate"
-            ? "미배정 후보스팟으로 등록합니다. 이후 「후보스팟목록에서 가져오기」로 Day에 붙일 수 있습니다."
-            : "Day 2 보드에 스팟으로 등록합니다.";
+          if (registerMode === "edit") {
+            hint.textContent = "스팟 등록과 같은 모달·필드입니다. 값을 고친 뒤 저장하세요.";
+          } else if (registerTarget === "candidate") {
+            hint.textContent = "미배정 후보스팟으로 등록합니다. 이후 「후보스팟목록에서 가져오기」로 Day에 붙일 수 있습니다.";
+          } else {
+            hint.textContent = "Day 2 보드에 스팟으로 등록합니다.";
+          }
         }
         updateRegisterCta();
       }
@@ -922,8 +947,40 @@
         updateRegisterCta();
       }
 
+      function fillRegisterForm(data) {
+        var form = document.getElementById("form-register");
+        if (!form) return;
+        var name = form.querySelector('[name="name"]');
+        var lat = form.querySelector('[name="lat"]');
+        var lng = form.querySelector('[name="lng"]');
+        var memo = form.querySelector('[name="memo"]');
+        if (name) name.value = (data && data.name) || "";
+        if (lat) lat.value = (data && data.lat) || "";
+        if (lng) lng.value = (data && data.lng) || "";
+        if (memo) memo.value = (data && data.memo) || "";
+      }
+
       function openRegister(target) {
+        registerMode = "create";
+        editingSpotId = null;
+        fillRegisterForm({});
         setRegisterTarget(target || "spot");
+        var latRadio = document.getElementById("reg-method-latlng");
+        if (latRadio) latRadio.checked = true;
+        setRegisterMethod("latlng");
+        openModal("modal-register");
+      }
+
+      function openEditSpot(btn) {
+        registerMode = "edit";
+        editingSpotId = btn.getAttribute("data-edit-spot");
+        fillRegisterForm({
+          name: btn.getAttribute("data-spot-name") || "",
+          lat: btn.getAttribute("data-spot-lat") || "",
+          lng: btn.getAttribute("data-spot-lng") || "",
+          memo: ""
+        });
+        setRegisterTarget("spot");
         var latRadio = document.getElementById("reg-method-latlng");
         if (latRadio) latRadio.checked = true;
         setRegisterMethod("latlng");
@@ -933,6 +990,12 @@
       document.querySelectorAll("[data-register-target]").forEach(function (btn) {
         btn.addEventListener("click", function () {
           openRegister(btn.getAttribute("data-register-target"));
+        });
+      });
+
+      document.querySelectorAll("[data-edit-spot]").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          openEditSpot(btn);
         });
       });
 
@@ -963,7 +1026,13 @@
             var n = form ? form.querySelector('[name="name"]') : null;
             name = n && n.value.trim() ? n.value.trim() : "새 장소";
           }
-          showToast(name + " · " + label + " 등록됨 (데모)");
+          if (registerMode === "edit") {
+            showToast(name + " · 스팟 수정 저장 (데모)");
+            registerMode = "create";
+            editingSpotId = null;
+          } else {
+            showToast(name + " · " + label + " 등록됨 (데모)");
+          }
           closeModal(btnSubmitReg);
         });
       }

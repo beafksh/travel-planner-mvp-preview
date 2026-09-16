@@ -1856,3 +1856,10 @@ body.spot-register-mode .map-stage {
 .quota-dot--auto { background: var(--color-primary); }
 .quota-dot--manual { background: #C4BDB2; }
 .quota-guide, .quota-guide--soft { display: none !important; }
+
+.btn--edit-spot {
+  flex-shrink: 0;
+  font-size: 12px;
+  padding: 6px 10px;
+  min-height: 36px;
+}
