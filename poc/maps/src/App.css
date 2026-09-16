@@ -384,6 +384,11 @@ body {
   font-size: 0.78rem;
 }
 
+.place-detail-coords--standalone {
+  padding: 0 14px 8px;
+  margin: 0;
+}
+
 .place-detail-reviews h4 {
   margin: 0 0 8px;
   font-size: 0.88rem;
