@@ -44,6 +44,7 @@ jobs:
         working-directory: poc/maps
         env:
           VITE_GOOGLE_MAPS_API_KEY: ${{ secrets.VITE_GOOGLE_MAPS_API_KEY }}
+          VITE_RESOLVE_API_BASE: ${{ secrets.VITE_RESOLVE_API_BASE }}
         run: npm run build
 
       - name: Verify build output
@@ -75,6 +76,7 @@ jobs:
         working-directory: poc/maps
         env:
           VITE_GOOGLE_MAPS_API_KEY: ${{ secrets.VITE_GOOGLE_MAPS_API_KEY }}
+          VITE_RESOLVE_API_BASE: ${{ secrets.VITE_RESOLVE_API_BASE }}
         run: npm run build
 
       - name: Setup Pages

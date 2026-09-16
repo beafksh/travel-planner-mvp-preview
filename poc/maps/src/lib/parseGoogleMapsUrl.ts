@@ -2,6 +2,8 @@
  * 펼쳐진 Google Maps URL에서 좌표·장소명·placeId 추출 (유료 API 없음).
  */
 
+import { isGoogleMapsHost, unwrapGoogleMapsUrl } from './unwrapGoogleMapsUrl';
+
 export interface ParsedCoords {
   placeId?: string;
   name?: string;
@@ -12,13 +14,14 @@ export interface ParsedCoords {
 
 export function parseExpandedGoogleMapsUrl(url: string): ParsedCoords | null {
   const trimmed = url.trim();
-  if (!trimmed || !/google\.com\/maps/i.test(trimmed)) return null;
+  const unwrapped = unwrapGoogleMapsUrl(trimmed);
+  if (!trimmed || !isGoogleMapsHost(unwrapped)) return null;
 
-  let decoded = trimmed;
+  let decoded = unwrapped;
   try {
-    decoded = decodeURIComponent(trimmed);
+    decoded = decodeURIComponent(unwrapped);
   } catch {
-    decoded = trimmed;
+    decoded = unwrapped;
   }
 
   const placeId = extractPlaceId(decoded);
@@ -106,5 +109,5 @@ export function isShortLink(url: string): boolean {
 }
 
 export function isExpandedLink(url: string): boolean {
-  return /google\.com\/maps/i.test(url.trim());
+  return isGoogleMapsHost(unwrapGoogleMapsUrl(url.trim()));
 }

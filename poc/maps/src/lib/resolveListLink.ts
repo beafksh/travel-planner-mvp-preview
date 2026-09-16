@@ -1,12 +1,16 @@
 import sapporoFixture from '../data/sapporo-list.json';
+import { expandShortLink } from './expandShortLink';
+import { fetchViaJina } from './fetchViaJina';
+import { getResolveApiBase } from './getResolveApiBase';
 import {
   buildEntityListGetListUrl,
   extractListIdFromUrl,
 } from './parseGoogleMapsListUrl';
-import { isShortLink } from './parseGoogleMapsUrl';
+import { isExpandedLink, isShortLink } from './parseGoogleMapsUrl';
+import { unwrapGoogleMapsUrl } from './unwrapGoogleMapsUrl';
 import type { ListResolveResult, ResolvedList, ResolvedListPlace } from './types';
 
-const PROXY_TIMEOUT_MS = 15_000;
+const REQUEST_TIMEOUT_MS = 15_000;
 const EXAMPLE_SHORT_URL = 'https://maps.app.goo.gl/ZKGW1AaMWT2eePtd6';
 const EXAMPLE_LIST_ID = 'wkR0T1lyzscvuOSJnXq3qg';
 
@@ -55,68 +59,67 @@ function parseEntityListResponse(raw: unknown, sourceUrl: string, resolvedUrl?: 
   };
 }
 
-async function fetchViaCorsProxy(targetUrl: string): Promise<string | null> {
-  const attempts: Array<() => Promise<string | null>> = [
-    async () => {
-      const proxy = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
-      const res = await fetch(proxy, { signal: AbortSignal.timeout(PROXY_TIMEOUT_MS) });
-      if (!res.ok) return null;
-      const json = (await res.json()) as { contents?: string };
-      return json.contents ?? null;
-    },
-    async () => {
-      const proxy = `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`;
-      const res = await fetch(proxy, { signal: AbortSignal.timeout(PROXY_TIMEOUT_MS) });
-      if (!res.ok) return null;
-      return res.text();
-    },
-  ];
-
-  for (const attempt of attempts) {
-    try {
-      const body = await attempt();
-      if (body) return body;
-    } catch {
-      // 다음 프록시 시도
-    }
+async function resolveExpandedUrl(sourceUrl: string): Promise<string> {
+  if (isShortLink(sourceUrl)) {
+    const expanded = await expandShortLink(sourceUrl);
+    if (expanded.ok) return expanded.resolvedUrl;
+    return sourceUrl;
   }
 
-  return null;
+  if (isExpandedLink(sourceUrl)) {
+    return unwrapGoogleMapsUrl(sourceUrl);
+  }
+
+  return unwrapGoogleMapsUrl(sourceUrl);
 }
 
-async function resolveRedirectUrl(sourceUrl: string): Promise<string | null> {
-  if (!isShortLink(sourceUrl)) return sourceUrl;
+async function fetchGetListBody(getListUrl: string): Promise<{ body: string | null; errors: string[] }> {
+  const errors: string[] = [];
 
-  const attempts: Array<() => Promise<string | null>> = [
-    async () => {
-      const proxy = `https://api.allorigins.win/get?url=${encodeURIComponent(sourceUrl)}`;
-      const res = await fetch(proxy, { signal: AbortSignal.timeout(PROXY_TIMEOUT_MS) });
-      if (!res.ok) return null;
-      const json = (await res.json()) as { status?: { url?: string } };
-      return json.status?.url ?? null;
-    },
-    async () => {
-      const proxy = `https://corsproxy.io/?${encodeURIComponent(sourceUrl)}`;
-      const res = await fetch(proxy, {
-        method: 'HEAD',
-        redirect: 'follow',
-        signal: AbortSignal.timeout(PROXY_TIMEOUT_MS),
-      });
-      if (res.url && res.url !== proxy) return res.url;
-      return null;
-    },
-  ];
-
-  for (const attempt of attempts) {
-    try {
-      const resolved = await attempt();
-      if (resolved) return resolved;
-    } catch {
-      // 다음 프록시 시도
-    }
+  const viaJina = await fetchViaJina(getListUrl);
+  if (viaJina.ok) {
+    return { body: viaJina.body, errors };
   }
+  errors.push(viaJina.error);
 
-  return null;
+  const viaAllOrigins = await fetchViaAllOrigins(getListUrl);
+  if (viaAllOrigins.body) {
+    return { body: viaAllOrigins.body, errors };
+  }
+  if (viaAllOrigins.error) errors.push(viaAllOrigins.error);
+
+  const viaCorsProxy = await fetchViaCorsProxyIo(getListUrl);
+  if (viaCorsProxy.body) {
+    return { body: viaCorsProxy.body, errors };
+  }
+  if (viaCorsProxy.error) errors.push(viaCorsProxy.error);
+
+  return { body: null, errors };
+}
+
+async function fetchViaAllOrigins(targetUrl: string): Promise<{ body: string | null; error?: string }> {
+  const proxy = `https://api.allorigins.win/get?url=${encodeURIComponent(targetUrl)}`;
+  try {
+    const res = await fetch(proxy, { signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS) });
+    if (!res.ok) return { body: null, error: `allorigins HTTP ${res.status}` };
+    const json = (await res.json()) as { contents?: string };
+    return { body: json.contents ?? null };
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : 'unknown error';
+    return { body: null, error: `allorigins: ${msg}` };
+  }
+}
+
+async function fetchViaCorsProxyIo(targetUrl: string): Promise<{ body: string | null; error?: string }> {
+  const proxy = `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`;
+  try {
+    const res = await fetch(proxy, { signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS) });
+    if (!res.ok) return { body: null, error: `corsproxy.io HTTP ${res.status}` };
+    return { body: await res.text() };
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : 'unknown error';
+    return { body: null, error: `corsproxy.io: ${msg}` };
+  }
 }
 
 function matchesFixture(sourceUrl: string, listId: string | null): boolean {
@@ -137,14 +140,14 @@ function getFixtureFallback(sourceUrl: string): ResolvedList {
 }
 
 async function resolveViaApi(sourceUrl: string): Promise<ResolvedList | null> {
-  const base = import.meta.env.VITE_RESOLVE_API_BASE?.replace(/\/$/, '');
+  const base = getResolveApiBase();
   if (!base) return null;
 
   const res = await fetch(`${base}/api/maps/resolve-list-link`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ url: sourceUrl }),
-    signal: AbortSignal.timeout(PROXY_TIMEOUT_MS),
+    signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
   });
 
   if (!res.ok) return null;
@@ -158,22 +161,36 @@ async function resolveViaApi(sourceUrl: string): Promise<ResolvedList | null> {
   };
 }
 
-async function resolveViaClient(sourceUrl: string): Promise<ResolvedList | null> {
-  const resolvedUrl = await resolveRedirectUrl(sourceUrl);
-  const listId = extractListIdFromUrl(resolvedUrl ?? sourceUrl);
-  if (!listId) return null;
+async function resolveViaClient(
+  sourceUrl: string,
+): Promise<{ list: ResolvedList | null; errors: string[] }> {
+  const errors: string[] = [];
+  const resolvedUrl = await resolveExpandedUrl(sourceUrl);
+  const listId = extractListIdFromUrl(resolvedUrl);
+  if (!listId) {
+    errors.push('목록 ID(!2s…!3e3) 추출 실패');
+    return { list: null, errors };
+  }
 
   const getListUrl = buildEntityListGetListUrl(listId);
-  const body = await fetchViaCorsProxy(getListUrl);
-  if (!body) return null;
+  const fetched = await fetchGetListBody(getListUrl);
+  errors.push(...fetched.errors);
+
+  if (!fetched.body) {
+    return { list: null, errors };
+  }
 
   try {
-    const parsed = JSON.parse(stripGoogleJsonPrefix(body));
-    const list = parseEntityListResponse(parsed, sourceUrl, resolvedUrl ?? undefined);
-    if (!list) return null;
-    return { ...list, resolveMethod: 'cors-proxy-entitylist' };
+    const parsed = JSON.parse(stripGoogleJsonPrefix(fetched.body));
+    const list = parseEntityListResponse(parsed, sourceUrl, resolvedUrl);
+    if (!list) {
+      errors.push('getlist 응답 파싱 실패');
+      return { list: null, errors };
+    }
+    return { list: { ...list, resolveMethod: 'cors-proxy-entitylist' }, errors };
   } catch {
-    return null;
+    errors.push('getlist JSON 파싱 오류');
+    return { list: null, errors };
   }
 }
 
@@ -194,10 +211,12 @@ export async function resolveListLink(sourceUrl: string): Promise<ListResolveRes
     // API 실패 시 클라이언트·fixture로 폴백
   }
 
+  let clientErrors: string[] = [];
   try {
     const viaClient = await resolveViaClient(trimmed);
-    if (viaClient) {
-      return { ok: true, list: viaClient };
+    clientErrors = viaClient.errors;
+    if (viaClient.list) {
+      return { ok: true, list: viaClient.list };
     }
   } catch {
     // fixture 폴백 시도
@@ -207,10 +226,14 @@ export async function resolveListLink(sourceUrl: string): Promise<ListResolveRes
     return { ok: true, list: getFixtureFallback(trimmed) };
   }
 
+  const detail = clientErrors.length > 0 ? ` (${clientErrors.join('; ')})` : '';
+  const hasBackend = Boolean(getResolveApiBase());
+
   return {
     ok: false,
     error: '목록 링크를 자동으로 해석하지 못했습니다.',
-    hint:
-      '비공개 목록·CORS 프록시 제한·비공식 getlist API 변경으로 실패할 수 있습니다. 예제 URL(삿포로)은 fixture로 데모 가능합니다. VITE_RESOLVE_API_BASE 백엔드 프록시 사용을 권장합니다.',
+    hint: hasBackend
+      ? `백엔드·공개 프록시 모두 실패했습니다${detail}. 펼쳐진 목록 URL을 붙여넣거나 VITE_RESOLVE_API_BASE 백엔드를 확인하세요. 예제 URL(삿포로)은 fixture로 데모 가능합니다.`
+      : `비공개 목록·CORS 프록시 제한·비공식 getlist API 변경으로 실패할 수 있습니다${detail}. VITE_RESOLVE_API_BASE 백엔드 프록시 사용을 권장합니다. 예제 URL(삿포로)은 fixture로 데모 가능합니다.`,
   };
 }

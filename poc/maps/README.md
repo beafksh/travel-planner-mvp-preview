@@ -33,7 +33,7 @@ cp .env.example .env
 | 변수 | 필수 | 설명 |
 |------|------|------|
 | `VITE_GOOGLE_MAPS_API_KEY` | Google 모드만 | 브라우저용 Google Maps API 키 |
-| `VITE_RESOLVE_API_BASE` | 선택 | 백엔드 resolve 프록시 base URL |
+| `VITE_RESOLVE_API_BASE` | 선택 (프로덕션 권장) | 백엔드 resolve 프록시 base URL. 설정 시 short/list 링크는 `POST /api/maps/resolve-link` · `resolve-list-link` 우선. GitHub Actions secret `VITE_RESOLVE_API_BASE`로 Pages 빌드에 주입 |
 
 > **보안:** 브라우저 키는 오직 `VITE_GOOGLE_MAPS_API_KEY`에서만 읽습니다. 서버 키(`GOOGLE_MAPS_SERVER_API_KEY`)는 FE·빌드·Actions에 넣지 않습니다.
 
@@ -67,7 +67,7 @@ cp .env.example .env
 ### A) 링크 → 위치
 
 1. **펼쳐진 URL** — 샘플 「펼쳐진 URL (센소지)」 클릭 → **Resolve**
-2. **short link** — CORS 프록시 시도, 실패 시 수동 좌표 폴백
+2. **short link** — `VITE_RESOLVE_API_BASE` 백엔드 우선 → unshorten.me 등 공개 프록시 폴백 → 수동 좌표
 3. **수동 폴백** — 장소명 + lat/lng 입력
 4. resolve 성공 후 **스팟 목록에 추가**
 
@@ -102,7 +102,7 @@ Google Maps 공유 목록 short link → **Import** → 지도에 추가
 | **Directions waypoint** | Google Directions는 중간 경유지 최대 23개. 초과 시 직선 Polyline |
 | **POI 클릭 (Google)** | 네이티브 `map.addListener('click')`로 `IconMouseEvent.placeId` 수신. `placeId` 없으면 50m 이내 `nearbySearch` 폴백. 빈 지도는 MapClickPanel. 리뷰 최대 2건·사진 attribution 필수 |
 | **Places API** | POI 상세 패널에 Places Details 사용. 키에 Places API 활성화·referrer 제한 필요. 조회 실패 시 패널에 오류 표시(크래시 없음) |
-| **short link 파싱** | CORS 프록시 의존, 불안정 |
+| **short link 파싱** | 프로덕션: `VITE_RESOLVE_API_BASE` 백엔드 권장. 백엔드 없을 때 unshorten.me·jina.ai 등 공개 프록시 폴백 — 서비스 중단·rate limit 가능 |
 | **OSRM public** | 데모 서버 쿼터·가용성 제한 |
 | **역지오코딩** | Nominatim 정책(약 1 req/sec). Google POI는 Places API 사용 |
 | **목록 getlist API** | Google 비공식 엔드포인트, 변경·차단 가능 |
