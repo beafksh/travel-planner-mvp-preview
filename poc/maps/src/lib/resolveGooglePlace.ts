@@ -56,6 +56,65 @@ export function resolveGooglePlaceName(
   });
 }
 
+const NEARBY_SEARCH_RADIUS_M = 50;
+const MAX_POI_DISTANCE_M = 50;
+
+function distanceMeters(
+  lat1: number,
+  lng1: number,
+  lat2: number,
+  lng2: number,
+): number {
+  const toRad = (deg: number) => (deg * Math.PI) / 180;
+  const earthRadiusM = 6371000;
+  const dLat = toRad(lat2 - lat1);
+  const dLng = toRad(lng2 - lng1);
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng / 2) ** 2;
+  return earthRadiusM * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+/**
+ * placeId 없는 클릭에서 근처 POI를 찾습니다. 50m 이내 가장 가까운 장소만 반환.
+ */
+export function findNearbyPlaceId(
+  lat: number,
+  lng: number,
+  placesService: google.maps.places.PlacesService,
+): Promise<string | undefined> {
+  return new Promise((resolve) => {
+    placesService.nearbySearch(
+      {
+        location: { lat, lng },
+        radius: NEARBY_SEARCH_RADIUS_M,
+      },
+      (results, status) => {
+        if (status !== google.maps.places.PlacesServiceStatus.OK || !results?.length) {
+          resolve(undefined);
+          return;
+        }
+
+        let bestPlaceId: string | undefined;
+        let bestDistance = Infinity;
+
+        for (const place of results) {
+          if (!place.place_id || !place.geometry?.location) continue;
+          const placeLat = place.geometry.location.lat();
+          const placeLng = place.geometry.location.lng();
+          const dist = distanceMeters(lat, lng, placeLat, placeLng);
+          if (dist <= MAX_POI_DISTANCE_M && dist < bestDistance) {
+            bestDistance = dist;
+            bestPlaceId = place.place_id;
+          }
+        }
+
+        resolve(bestPlaceId);
+      },
+    );
+  });
+}
+
 export function fetchGooglePlaceDetails(
   placeId: string,
   placesService: google.maps.places.PlacesService,
