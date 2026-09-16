@@ -3,28 +3,31 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>S04 맵보드 — 퍼블 프로토타입</title>
+  <title>S04 맵보드 — 제품 UI 프로토타입</title>
   <link rel="stylesheet" as="style" crossorigin
     href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <div class="app">
-    <!-- Top bar -->
     <header class="topbar">
       <a class="topbar__back" href="#" aria-label="여행상세로 돌아가기" title="여행상세">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path d="M15 6L9 12l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M15 6L9 12l6 6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </a>
       <div class="topbar__titles">
-        <div class="topbar__trip">S04 맵보드 · 도쿄 단풍 여행 · 2026-10-10~14</div>
+        <div class="topbar__trip">도쿄 단풍 여행 · 2026-10-10~14</div>
         <h1 class="topbar__day">Day 2 · 아사쿠사·우에노</h1>
       </div>
-      <span class="viewport-note" aria-hidden="true"></span>
+      <div class="topbar__actions">
+        <button type="button" class="btn btn--ghost btn--sm" id="btn-open-import-list" aria-haspopup="dialog" aria-controls="modal-import-list">
+          장소목록가져오기
+        </button>
+        <span class="viewport-note" aria-hidden="true"></span>
+      </div>
     </header>
 
-    <!-- Day chips (shared) -->
     <nav class="day-chips" aria-label="일자 선택">
       <a class="day-chip" href="#">Day 1</a>
       <button type="button" class="day-chip is-active" aria-current="true">Day 2</button>
@@ -34,34 +37,76 @@
       <button type="button" class="day-chip day-chip--add" aria-label="Day 추가">+ Day</button>
     </nav>
 
-    <!-- Mobile segment: default 보드 -->
     <div class="segment" role="tablist" aria-label="맵과 보드 전환">
       <button type="button" class="segment__btn" role="tab" id="tab-map" aria-selected="false" data-view="map">맵</button>
       <button type="button" class="segment__btn is-active" role="tab" id="tab-board" aria-selected="true" data-view="board">보드</button>
     </div>
 
-    <!-- Workspace: desktop split 60/40 · mobile segment -->
     <div class="workspace is-board-view" id="workspace">
       <!-- MAP 60% -->
       <section class="pane map-pane" aria-label="지도" id="map-pane">
         <div class="pane-header">
-          <span class="pane-header__title">맵 · 일자 루트</span>
-          <span class="pane-header__meta">핀 = 보드 순서</span>
+          <div class="pane-header__left">
+            <span class="pane-header__title">맵 · 일자 루트</span>
+            <span class="pane-header__meta">세그먼트 색 + 화살표 = 이동 방향</span>
+          </div>
+          <div class="route-legend" aria-hidden="true">
+            <span class="route-legend__item"><i style="background:#0F6B6B"></i>1→2</span>
+            <span class="route-legend__item"><i style="background:#FF6B4A"></i>2→3</span>
+            <span class="route-legend__item"><i style="background:#3B82F6"></i>3→4</span>
+          </div>
         </div>
         <div class="map-stage" id="map-stage">
-          <div class="map-stage__grid" aria-hidden="true"></div>
-          <div class="map-stage__badge">도쿄 · 플레이스홀더 맵</div>
+          <div class="map-stage__terrain" aria-hidden="true"></div>
+          <div class="map-stage__roads" aria-hidden="true"></div>
+          <div class="map-stage__parks" aria-hidden="true"></div>
+          <div class="map-stage__water" aria-hidden="true"></div>
+          <div class="map-stage__badge">도쿄 · 아사쿠사·우에노</div>
 
+          <!-- Multi-color route segments + direction markers -->
           <svg class="map-route" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-            <polyline
-              points="22,70 42,32 60,26 78,55"
-              fill="none"
-              stroke="#0F6B6B"
-              stroke-width="0.8"
-              stroke-dasharray="2 1.5"
-              stroke-linecap="round"
-              opacity="0.55"
-            />
+            <defs>
+              <marker id="arrow-s1" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto" markerUnits="userSpaceOnUse">
+                <path d="M0,0.4 L4.5,2.5 L0,4.6 Z" fill="#0F6B6B" />
+              </marker>
+              <marker id="arrow-s2" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto" markerUnits="userSpaceOnUse">
+                <path d="M0,0.4 L4.5,2.5 L0,4.6 Z" fill="#FF6B4A" />
+              </marker>
+              <marker id="arrow-s3" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto" markerUnits="userSpaceOnUse">
+                <path d="M0,0.4 L4.5,2.5 L0,4.6 Z" fill="#3B82F6" />
+              </marker>
+              <marker id="arrow-s4" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto" markerUnits="userSpaceOnUse">
+                <path d="M0,0.4 L4.5,2.5 L0,4.6 Z" fill="#8B5CF6" />
+              </marker>
+              <marker id="arrow-s5" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto" markerUnits="userSpaceOnUse">
+                <path d="M0,0.4 L4.5,2.5 L0,4.6 Z" fill="#F59E0B" />
+              </marker>
+              <marker id="arrow-s6" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto" markerUnits="userSpaceOnUse">
+                <path d="M0,0.4 L4.5,2.5 L0,4.6 Z" fill="#10B981" />
+              </marker>
+              <marker id="arrow-s7" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto" markerUnits="userSpaceOnUse">
+                <path d="M0,0.4 L4.5,2.5 L0,4.6 Z" fill="#EC4899" />
+              </marker>
+              <marker id="arrow-s8" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto" markerUnits="userSpaceOnUse">
+                <path d="M0,0.4 L4.5,2.5 L0,4.6 Z" fill="#6366F1" />
+              </marker>
+            </defs>
+            <!-- soft underlay -->
+            <polyline class="route-underlay" points="22,70 42,32 60,26 78,55" />
+            <!-- segment 1→2 -->
+            <polyline class="route-seg route-seg--1" points="22,70 42,32" marker-mid="url(#arrow-s1)" marker-end="url(#arrow-s1)" />
+            <!-- segment 2→3 -->
+            <polyline class="route-seg route-seg--2" points="42,32 60,26" marker-mid="url(#arrow-s2)" marker-end="url(#arrow-s2)" />
+            <!-- segment 3→4 -->
+            <polyline class="route-seg route-seg--3" points="60,26 78,55" marker-mid="url(#arrow-s3)" marker-end="url(#arrow-s3)" />
+            <!-- chevron accents along segments (extra visibility) -->
+            <g class="route-chevrons">
+              <polygon class="chevron chevron--1" points="30.5,53 33.2,50.2 30.8,49.4" />
+              <polygon class="chevron chevron--1" points="35.8,42 38.5,39.2 36.1,38.4" />
+              <polygon class="chevron chevron--2" points="48.5,29.8 51.5,28.6 49.8,27.2" />
+              <polygon class="chevron chevron--3" points="66.5,35.5 69.2,38.8 67,39.5" />
+              <polygon class="chevron chevron--3" points="71.5,44.5 74.2,47.8 72,48.5" />
+            </g>
           </svg>
 
           <button type="button" class="spot-pin spot-pin--booked" style="left:22%; top:70%;" data-spot="1"
@@ -73,35 +118,39 @@
           <button type="button" class="spot-pin" style="left:78%; top:55%;" data-spot="4"
             aria-label="4번 아메요코 시장" title="4. 아메요코 시장">4</button>
 
-          <!-- Mobile peak sheet (hidden ≥900px via CSS) -->
           <div class="peak-sheet" id="peak-sheet" role="region" aria-label="선택 스팟 요약">
             <div class="peak-sheet__handle" aria-hidden="true"></div>
             <div class="peak-sheet__row">
               <span class="peak-sheet__num" id="peak-num">3</span>
               <div class="peak-sheet__name" id="peak-name">우에노 공원 · 단풍</div>
-              <button type="button" class="btn btn--ghost" style="min-height:36px;padding:0 12px;font-size:13px;">상세</button>
+              <button type="button" class="btn btn--ghost btn--sm">상세</button>
             </div>
             <p class="peak-sheet__hint">위로 끌면 스팟상세(S05) · 정적 데모</p>
           </div>
         </div>
       </section>
 
-      <!-- Visual splitter (desktop) -->
       <div class="splitter" aria-hidden="true" title="스플리터(시각)">
         <div class="splitter__grip"></div>
       </div>
 
       <!-- BOARD 40% -->
       <section class="pane board-pane" aria-label="보드" id="board-pane">
-        <div class="pane-header">
-          <div>
+        <div class="pane-header pane-header--board">
+          <div class="pane-header__left">
             <span class="pane-header__title">보드 · 스팟 순서</span>
-            <span class="pane-header__meta"> 4곳</span>
+            <span class="pane-header__meta"><strong>4</strong>곳</span>
           </div>
           <div class="pane-header__actions">
             <a class="board-link-muted" href="#" title="S06 예약관리(내역)">예약관리(내역) →</a>
-            <button type="button" class="btn btn--ghost btn--sm" id="btn-open-add-spot" aria-haspopup="dialog" aria-controls="modal-add-spot">
-              스팟 추가
+            <button type="button" class="btn btn--ghost btn--sm" id="btn-open-import-list-board" aria-haspopup="dialog" aria-controls="modal-import-list">
+              장소목록가져오기
+            </button>
+            <button type="button" class="btn btn--ghost btn--sm" id="btn-open-register-spot" aria-haspopup="dialog" aria-controls="modal-register" data-register-target="spot">
+              스팟 등록
+            </button>
+            <button type="button" class="btn btn--ghost btn--sm" id="btn-open-register-candidate" aria-haspopup="dialog" aria-controls="modal-register" data-register-target="candidate">
+              후보스팟 등록
             </button>
             <button type="button" class="btn btn--primary btn--sm" id="btn-open-candidates" aria-haspopup="dialog" aria-controls="modal-candidates">
               후보스팟에서 추가
@@ -110,7 +159,6 @@
         </div>
 
         <div class="board-scroll" id="board-list">
-          <!-- Card 1 -->
           <article class="spot-card" data-spot="1" id="card-1">
             <span class="spot-card__handle" title="드래그(시각)" aria-hidden="true">⋮⋮</span>
             <span class="spot-card__order" aria-hidden="true">1</span>
@@ -133,7 +181,6 @@
             <button type="button" class="btn btn--revert" data-revert="1" title="후보스팟으로 되돌리기">되돌리기</button>
           </article>
 
-          <!-- Card 2 -->
           <article class="spot-card" data-spot="2" id="card-2">
             <span class="spot-card__handle" title="드래그(시각)" aria-hidden="true">⋮⋮</span>
             <span class="spot-card__order" aria-hidden="true">2</span>
@@ -156,7 +203,6 @@
             <button type="button" class="btn btn--revert" data-revert="2" title="후보스팟으로 되돌리기">되돌리기</button>
           </article>
 
-          <!-- Card 3 — selected, sync with pin -->
           <article class="spot-card is-selected" data-spot="3" id="card-3" aria-current="true">
             <span class="spot-card__handle" title="드래그(시각)" aria-hidden="true">⋮⋮</span>
             <span class="spot-card__order" aria-hidden="true">3</span>
@@ -180,7 +226,6 @@
             <button type="button" class="btn btn--revert" data-revert="3" title="후보스팟으로 되돌리기">되돌리기</button>
           </article>
 
-          <!-- Card 4 -->
           <article class="spot-card" data-spot="4" id="card-4">
             <span class="spot-card__handle" title="드래그(시각)" aria-hidden="true">⋮⋮</span>
             <span class="spot-card__order" aria-hidden="true">4</span>
@@ -203,14 +248,16 @@
           </article>
 
           <div class="board-hint">
-            <button type="button" class="link-btn" id="btn-open-add-spot-hint">스팟 추가</button>
+            <button type="button" class="link-btn" id="btn-open-register-spot-hint" data-register-target="spot">스팟 등록</button>
+            ·
+            <button type="button" class="link-btn" id="btn-open-register-candidate-hint" data-register-target="candidate">후보스팟 등록</button>
             ·
             <button type="button" class="link-btn" id="btn-open-candidates-hint">후보스팟에서 추가</button>
-            로 Day에 붙이기
+            ·
+            <button type="button" class="link-btn" id="btn-open-import-list-hint">장소목록가져오기</button>
           </div>
         </div>
 
-        <!-- Fixed label/sticker palette (MVP) -->
         <aside class="palette" aria-label="고정 라벨·스티커 팔레트">
           <div class="palette__label">라벨 팔레트 (고정)</div>
           <div class="palette__row">
@@ -223,7 +270,7 @@
             <span class="label-chip label-chip--booked">예약됨</span>
             <span class="label-chip label-chip--need-book">예약필요</span>
           </div>
-          <div class="palette__label" style="margin-top:10px;">스티커 팔레트 (고정 · 카드당 최대 3 +N)</div>
+          <div class="palette__label palette__label--second">스티커 팔레트 (고정 · 카드당 최대 3 +N)</div>
           <div class="palette__row">
             <span class="sticker">★ 필수</span>
             <span class="sticker">📷 포토</span>
@@ -237,46 +284,99 @@
     </div>
   </div>
 
-  <!-- Modal: 스팟 추가 (신규) -->
-  <div class="modal" id="modal-add-spot" hidden aria-hidden="true">
+  <!-- Modal: 목록 추가 (장소목록가져오기) -->
+  <div class="modal" id="modal-import-list" hidden aria-hidden="true">
     <div class="modal__backdrop" data-close-modal></div>
-    <div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="modal-add-spot-title">
+    <div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="modal-import-list-title">
       <header class="modal__header">
-        <h2 id="modal-add-spot-title">스팟 추가</h2>
+        <h2 id="modal-import-list-title">목록 추가</h2>
         <button type="button" class="modal__close" data-close-modal aria-label="닫기">×</button>
       </header>
       <div class="modal__body">
-        <p class="modal__hint">새 스팟을 Day 2 보드에 직접 추가합니다. (정적 폼 · 플레이스홀더)</p>
-        <form class="add-spot-form" id="form-add-spot" onsubmit="return false;">
-          <label class="add-spot-form__field">
-            <span>스팟 이름</span>
-            <input type="text" name="name" placeholder="예: 도쿄 스카이트리" autocomplete="off" />
+        <form class="form-stack" id="form-import-list" onsubmit="return false;">
+          <label class="field">
+            <span class="field__label">구글 저장목록 공유링크</span>
+            <input type="url" name="shareUrl" placeholder="https://maps.app.goo.gl/… (구글 저장목록 공유)" autocomplete="off" />
           </label>
-          <label class="add-spot-form__field">
-            <span>라벨</span>
-            <select name="label">
-              <option>관광</option>
-              <option>쇼핑</option>
-              <option>자연</option>
-              <option>먹거리</option>
-              <option>문화</option>
-              <option>휴식</option>
-            </select>
-          </label>
-          <label class="add-spot-form__field">
-            <span>메모 (선택)</span>
-            <input type="text" name="memo" placeholder="짧은 메모" autocomplete="off" />
-          </label>
+          <p class="field__help">구글 저장목록 공유링크로 장소 목록을 가져와 Day/후보스팟에 넣습니다</p>
         </form>
       </div>
       <footer class="modal__footer">
         <button type="button" class="btn btn--ghost" data-close-modal>취소</button>
-        <button type="button" class="btn btn--primary" id="btn-submit-add-spot">추가</button>
+        <button type="button" class="btn btn--primary" id="btn-submit-import-list">가져오기</button>
       </footer>
     </div>
   </div>
 
-  <!-- Modal: 후보스팟 추가 -->
+  <!-- Modal: 스팟 등록 / 후보스팟 등록 -->
+  <div class="modal" id="modal-register" hidden aria-hidden="true">
+    <div class="modal__backdrop" data-close-modal></div>
+    <div class="modal__dialog modal__dialog--wide" role="dialog" aria-modal="true" aria-labelledby="modal-register-title">
+      <header class="modal__header">
+        <h2 id="modal-register-title">스팟 등록</h2>
+        <button type="button" class="modal__close" data-close-modal aria-label="닫기">×</button>
+      </header>
+      <div class="modal__body">
+        <div class="target-toggle" role="group" aria-label="등록 대상">
+          <button type="button" class="target-toggle__btn is-active" data-target="spot" id="reg-target-spot">스팟 (Day)</button>
+          <button type="button" class="target-toggle__btn" data-target="candidate" id="reg-target-candidate">후보스팟</button>
+        </div>
+        <p class="modal__hint" id="reg-target-hint">Day 2 보드에 스팟으로 등록합니다.</p>
+
+        <fieldset class="radio-group" id="reg-method-group">
+          <legend class="radio-group__legend">등록 방식</legend>
+          <label class="radio-option">
+            <input type="radio" name="regMethod" value="latlng" checked id="reg-method-latlng" />
+            <span>A) 위도·경도로 등록</span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="regMethod" value="gmaps" id="reg-method-gmaps" />
+            <span>B) 구글맵 공유링크로 등록</span>
+          </label>
+        </fieldset>
+
+        <form class="form-stack" id="form-register" onsubmit="return false;">
+          <div class="reg-panel is-active" data-panel="latlng" id="panel-latlng">
+            <label class="field">
+              <span class="field__label">이름</span>
+              <input type="text" name="name" placeholder="예: 도쿄 스카이트리" autocomplete="off" />
+            </label>
+            <div class="field-row">
+              <label class="field">
+                <span class="field__label">위도</span>
+                <input type="text" name="lat" inputmode="decimal" placeholder="35.7101" autocomplete="off" />
+              </label>
+              <label class="field">
+                <span class="field__label">경도</span>
+                <input type="text" name="lng" inputmode="decimal" placeholder="139.8107" autocomplete="off" />
+              </label>
+            </div>
+            <label class="field">
+              <span class="field__label">메모 <em class="field__optional">(선택)</em></span>
+              <input type="text" name="memo" placeholder="짧은 메모" autocomplete="off" />
+            </label>
+          </div>
+          <div class="reg-panel" data-panel="gmaps" id="panel-gmaps" hidden>
+            <label class="field">
+              <span class="field__label">이름 <em class="field__optional">(선택)</em></span>
+              <input type="text" name="gName" placeholder="비우면 링크에서 추정" autocomplete="off" />
+            </label>
+            <label class="field">
+              <span class="field__label">공유링크</span>
+              <input type="url" name="gUrl" placeholder="https://maps.app.goo.gl/…" autocomplete="off" />
+            </label>
+            <p class="field__help field__help--soft">단건 장소 공유링크 · 목록 URL이면 「장소목록가져오기」를 사용하세요</p>
+          </div>
+        </form>
+      </div>
+      <footer class="modal__footer">
+        <button type="button" class="btn btn--ghost" data-close-modal>취소</button>
+        <button type="button" class="btn btn--primary" id="btn-submit-register">좌표 등록</button>
+      </footer>
+    </div>
+  </div>
+
+  <!-- Modal: 후보스팟에서 추가 -->
   <div class="modal" id="modal-candidates" hidden aria-hidden="true">
     <div class="modal__backdrop" data-close-modal></div>
     <div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="modal-candidates-title">
@@ -285,8 +385,7 @@
         <button type="button" class="modal__close" data-close-modal aria-label="닫기">×</button>
       </header>
       <div class="modal__body">
-        <p class="modal__hint">기존 후보스팟에서 Day 2 보드로 추가합니다. (정적 팝업 · S07 페이지 자체는 변경 없음)</p>
-        <p class="modal__hint modal__hint--dim">딤 배경 + 중앙 모달 · 뒤 화면 클릭 시 닫힘</p>
+        <p class="modal__hint">기존 후보스팟에서 Day 2 보드로 추가합니다. (정적 팝업)</p>
         <ul class="candidate-pick-list">
           <li class="candidate-pick">
             <div>
@@ -305,7 +404,7 @@
           <li class="candidate-pick">
             <div>
               <strong>시부야 스카이</strong>
-              <div class="candidate-pick__meta">라벨: 전망 · 체류 약 60분 · ★ 후보</div>
+              <div class="candidate-pick__meta">라벨: 전망 · 체류 약 60분 · ★ 후보스팟</div>
             </div>
             <button type="button" class="btn btn--primary btn--sm" data-add-candidate="sky">이 Day에 추가</button>
           </li>
@@ -326,8 +425,7 @@
         <button type="button" class="modal__close" data-close-modal aria-label="닫기">×</button>
       </header>
       <div class="modal__body">
-        <p class="modal__hint">스팟 썸네일용 아이콘 또는 이미지를 고릅니다. (정적 팝업)</p>
-        <p class="modal__hint modal__hint--dim">딤 배경 + 중앙 모달 · 뒤 화면 클릭 시 닫힘</p>
+        <p class="modal__hint">스팟 썸네일용 아이콘 또는 이미지를 고릅니다.</p>
         <div class="icon-grid" role="listbox" aria-label="아이콘 선택">
           <button type="button" class="icon-option is-selected" data-icon="寺" role="option" aria-selected="true">寺</button>
           <button type="button" class="icon-option" data-icon="街" role="option">街</button>
@@ -340,7 +438,7 @@
         </div>
         <div class="upload-dropzone" aria-label="이미지 업로드 영역">
           <span class="upload-dropzone__label">또는 이미지 업로드</span>
-          <span class="upload-dropzone__hint">클릭 · 드래그앤드롭 (와이어/정적)</span>
+          <span class="upload-dropzone__hint">클릭 · 드래그앤드롭 (정적 데모)</span>
           <input type="file" accept="image/*" aria-label="이미지 파일 선택" />
         </div>
       </div>
@@ -351,7 +449,7 @@
     </div>
   </div>
 
-  <!-- Modal: 예약연결 목록 선택 (미연결 스팟) -->
+  <!-- Modal: 예약연결 목록 선택 -->
   <div class="modal" id="modal-booking-link" hidden aria-hidden="true">
     <div class="modal__backdrop" data-close-modal></div>
     <div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="modal-booking-link-title">
@@ -360,7 +458,7 @@
         <button type="button" class="modal__close" data-close-modal aria-label="닫기">×</button>
       </header>
       <div class="modal__body">
-        <p class="modal__hint">미연결 스팟 → 붙일 예약을 고릅니다. (정적 · 스팟↔예약 연결)</p>
+        <p class="modal__hint">미연결 스팟 → 붙일 예약을 고릅니다.</p>
         <p class="modal__hint modal__hint--dim">이미 연결된 스팟은 「연결됨 → 예약 상세」로 해당 예약만 엽니다</p>
         <ul class="candidate-pick-list">
           <li class="candidate-pick">
@@ -393,7 +491,7 @@
     </div>
   </div>
 
-  <!-- Modal: 예약 상세 (연결됨 스팟 → S06 상세 정적) -->
+  <!-- Modal: 예약 상세 -->
   <div class="modal" id="modal-booking-detail" hidden aria-hidden="true">
     <div class="modal__backdrop" data-close-modal></div>
     <div class="modal__dialog modal__dialog--detail" role="dialog" aria-modal="true" aria-labelledby="modal-booking-detail-title">
@@ -402,7 +500,7 @@
         <button type="button" class="modal__close" data-close-modal aria-label="닫기">×</button>
       </header>
       <div class="modal__body">
-        <p class="modal__hint">연결됨 → 예약 상세 (S06 상세 정적 데모 · 목록 선택 아님)</p>
+        <p class="modal__hint">연결됨 → 예약 상세 (S06 상세 정적 데모)</p>
         <div class="booking-detail-card">
           <div class="booking-detail-card__head">
             <strong>센소지 주변 · 호텔 예약</strong>
@@ -426,7 +524,6 @@
     </div>
   </div>
 
-  <!-- Toast for 되돌리기 -->
   <div class="toast" id="toast" hidden role="status" aria-live="polite"></div>
 
   <script>
@@ -445,6 +542,7 @@
       };
       var iconTargetId = null;
       var selectedIcon = "寺";
+      var registerTarget = "spot";
 
       function setView(view) {
         workspace.classList.toggle("is-map-view", view === "map");
@@ -502,7 +600,6 @@
         });
       });
 
-      /* Visual-only drag affordance on handle */
       document.querySelectorAll(".spot-card__handle").forEach(function (h) {
         h.addEventListener("mousedown", function () {
           h.closest(".spot-card").classList.add("is-dragging");
@@ -515,7 +612,6 @@
         });
       });
 
-      /* —— Modals —— */
       function openModal(id) {
         var m = document.getElementById(id);
         if (!m) return;
@@ -549,20 +645,131 @@
         if (e.key === "Escape") closeModal(document);
       });
 
+      function showToast(msg) {
+        var t = document.getElementById("toast");
+        if (!t) return;
+        t.textContent = msg;
+        t.hidden = false;
+        clearTimeout(showToast._timer);
+        showToast._timer = setTimeout(function () {
+          t.hidden = true;
+        }, 2200);
+      }
+
+      /* —— 장소목록가져오기 —— */
+      function openImportList() {
+        openModal("modal-import-list");
+      }
+      ["btn-open-import-list", "btn-open-import-list-board", "btn-open-import-list-hint"].forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el) el.addEventListener("click", openImportList);
+      });
+      var btnImport = document.getElementById("btn-submit-import-list");
+      if (btnImport) {
+        btnImport.addEventListener("click", function () {
+          var form = document.getElementById("form-import-list");
+          var url = form ? form.querySelector('[name="shareUrl"]') : null;
+          var val = url && url.value.trim() ? url.value.trim() : "";
+          showToast(val ? "장소 목록 가져오기 완료 (데모)" : "공유링크를 입력해 주세요 (데모)");
+          if (val) {
+            closeModal(btnImport);
+            if (url) url.value = "";
+          }
+        });
+      }
+
+      /* —— 스팟 등록 / 후보스팟 등록 —— */
+      function updateRegisterCta() {
+        var btn = document.getElementById("btn-submit-register");
+        if (!btn) return;
+        var method = (document.querySelector('input[name="regMethod"]:checked') || {}).value || "latlng";
+        btn.textContent = method === "gmaps" ? "링크 등록" : "좌표 등록";
+      }
+
+      function setRegisterTarget(target) {
+        registerTarget = target === "candidate" ? "candidate" : "spot";
+        var title = document.getElementById("modal-register-title");
+        var hint = document.getElementById("reg-target-hint");
+        document.querySelectorAll(".target-toggle__btn").forEach(function (b) {
+          var on = b.getAttribute("data-target") === registerTarget;
+          b.classList.toggle("is-active", on);
+        });
+        if (title) title.textContent = registerTarget === "candidate" ? "후보스팟 등록" : "스팟 등록";
+        if (hint) {
+          hint.textContent = registerTarget === "candidate"
+            ? "미배정 후보스팟으로 등록합니다. 이후 「후보스팟에서 추가」로 Day에 붙일 수 있습니다."
+            : "Day 2 보드에 스팟으로 등록합니다.";
+        }
+        updateRegisterCta();
+      }
+
+      function setRegisterMethod(method) {
+        var latlng = document.getElementById("panel-latlng");
+        var gmaps = document.getElementById("panel-gmaps");
+        if (latlng) {
+          latlng.hidden = method !== "latlng";
+          latlng.classList.toggle("is-active", method === "latlng");
+        }
+        if (gmaps) {
+          gmaps.hidden = method !== "gmaps";
+          gmaps.classList.toggle("is-active", method === "gmaps");
+        }
+        updateRegisterCta();
+      }
+
+      function openRegister(target) {
+        setRegisterTarget(target || "spot");
+        var latRadio = document.getElementById("reg-method-latlng");
+        if (latRadio) latRadio.checked = true;
+        setRegisterMethod("latlng");
+        openModal("modal-register");
+      }
+
+      document.querySelectorAll("[data-register-target]").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          openRegister(btn.getAttribute("data-register-target"));
+        });
+      });
+
+      document.querySelectorAll(".target-toggle__btn").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          setRegisterTarget(btn.getAttribute("data-target"));
+        });
+      });
+
+      document.querySelectorAll('input[name="regMethod"]').forEach(function (r) {
+        r.addEventListener("change", function () {
+          setRegisterMethod(r.value);
+        });
+      });
+
+      var btnSubmitReg = document.getElementById("btn-submit-register");
+      if (btnSubmitReg) {
+        btnSubmitReg.addEventListener("click", function () {
+          var method = (document.querySelector('input[name="regMethod"]:checked') || {}).value || "latlng";
+          var form = document.getElementById("form-register");
+          var label = registerTarget === "candidate" ? "후보스팟" : "스팟";
+
+          var name = "";
+          if (method === "gmaps") {
+            var gName = form ? form.querySelector('[name="gName"]') : null;
+            name = gName && gName.value.trim() ? gName.value.trim() : "구글맵 장소";
+          } else {
+            var n = form ? form.querySelector('[name="name"]') : null;
+            name = n && n.value.trim() ? n.value.trim() : "새 장소";
+          }
+          showToast(name + " · " + label + " 등록됨 (데모)");
+          closeModal(btnSubmitReg);
+        });
+      }
+
       function openCandidates() {
         openModal("modal-candidates");
-      }
-      function openAddSpot() {
-        openModal("modal-add-spot");
       }
       var btnCand = document.getElementById("btn-open-candidates");
       var btnCandHint = document.getElementById("btn-open-candidates-hint");
       if (btnCand) btnCand.addEventListener("click", openCandidates);
       if (btnCandHint) btnCandHint.addEventListener("click", openCandidates);
-      var btnAddSpot = document.getElementById("btn-open-add-spot");
-      var btnAddSpotHint = document.getElementById("btn-open-add-spot-hint");
-      if (btnAddSpot) btnAddSpot.addEventListener("click", openAddSpot);
-      if (btnAddSpotHint) btnAddSpotHint.addEventListener("click", openAddSpot);
 
       function openBookingPicker() {
         openModal("modal-booking-link");
@@ -572,7 +779,6 @@
         var title = document.getElementById("modal-booking-detail-title");
         if (title && id) title.textContent = "예약 상세 · " + id;
       }
-      /* 연결됨 → 예약 상세 / 미연결 → 목록 선택 */
       document.querySelectorAll("[data-booking-detail]").forEach(function (btn) {
         btn.addEventListener("click", function (e) {
           e.stopPropagation();
@@ -599,19 +805,6 @@
         });
       });
 
-      var btnSubmitAddSpot = document.getElementById("btn-submit-add-spot");
-      if (btnSubmitAddSpot) {
-        btnSubmitAddSpot.addEventListener("click", function () {
-          var form = document.getElementById("form-add-spot");
-          var nameInput = form ? form.querySelector('[name="name"]') : null;
-          var name = nameInput && nameInput.value.trim() ? nameInput.value.trim() : "새 스팟";
-          showToast(name + " 스팟 추가됨 (데모)");
-          closeModal(btnSubmitAddSpot);
-          if (nameInput) nameInput.value = "";
-        });
-      }
-
-      /* Icon / image picker */
       document.querySelectorAll("[data-icon-pick]").forEach(function (thumb) {
         thumb.addEventListener("click", function (e) {
           e.stopPropagation();
@@ -649,7 +842,6 @@
         });
       }
 
-      /* Spot → 후보스팟 되돌리기 */
       document.querySelectorAll("[data-revert]").forEach(function (btn) {
         btn.addEventListener("click", function (e) {
           e.stopPropagation();
@@ -668,17 +860,6 @@
           showToast(name + " → 후보스팟으로 되돌림 (데모)");
         });
       });
-
-      function showToast(msg) {
-        var t = document.getElementById("toast");
-        if (!t) return;
-        t.textContent = msg;
-        t.hidden = false;
-        clearTimeout(showToast._timer);
-        showToast._timer = setTimeout(function () {
-          t.hidden = true;
-        }, 2200);
-      }
     })();
   </script>
 </body>
