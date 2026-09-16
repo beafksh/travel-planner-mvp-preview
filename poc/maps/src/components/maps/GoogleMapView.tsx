@@ -8,6 +8,7 @@ import {
 } from '@react-google-maps/api';
 import { getGoogleMapsApiKey, GOOGLE_MAPS_LIBRARIES } from '../../lib/googleMapsConfig';
 import { fetchGoogleDirections } from '../../lib/googleDirectionsRoute';
+import { findNearbyPlaceId } from '../../lib/resolveGooglePlace';
 import type { RouteResult } from '../../lib/routeTypes';
 import type { CandidateSpot, DaySpot } from '../../lib/types';
 
@@ -77,8 +78,14 @@ export function GoogleMapView({
 
   const mapRef = useRef<google.maps.Map | null>(null);
   const directionsServiceRef = useRef<google.maps.DirectionsService | null>(null);
+  const placesServiceRef = useRef<google.maps.places.PlacesService | null>(null);
+  const clickListenerRef = useRef<google.maps.MapsEventListener | null>(null);
+  const clickRequestRef = useRef(0);
+  const onMapClickRef = useRef(onMapClick);
   const [directionsResult, setDirectionsResult] = useState<google.maps.DirectionsResult | null>(null);
   const [fallbackPolyline, setFallbackPolyline] = useState<[number, number][]>([]);
+
+  onMapClickRef.current = onMapClick;
 
   const center = useMemo(() => {
     if (spots.length === 0) return { lat: 35.7148, lng: 139.7967 };
@@ -144,20 +151,79 @@ export function GoogleMapView({
     }
   }, [isLoaded, fitBounds]);
 
-  const handleMapClick = useCallback(
-    (e: google.maps.MapMouseEvent) => {
-      if (!e.latLng) return;
-      const lat = e.latLng.lat();
-      const lng = e.latLng.lng();
-      const placeId = (e as google.maps.IconMouseEvent).placeId;
-      if (placeId) {
-        e.stop();
-        onMapClick(lat, lng, placeId);
-      } else {
-        onMapClick(lat, lng);
+  const resolveClickWithoutPlaceId = useCallback(async (lat: number, lng: number) => {
+    const requestId = ++clickRequestRef.current;
+    const map = mapRef.current;
+
+    if (!map) {
+      onMapClickRef.current(lat, lng);
+      return;
+    }
+
+    if (!placesServiceRef.current) {
+      placesServiceRef.current = new google.maps.places.PlacesService(map);
+    }
+
+    const nearbyPlaceId = await findNearbyPlaceId(lat, lng, placesServiceRef.current);
+
+    if (clickRequestRef.current !== requestId) return;
+
+    if (nearbyPlaceId) {
+      onMapClickRef.current(lat, lng, nearbyPlaceId);
+    } else {
+      onMapClickRef.current(lat, lng);
+    }
+  }, []);
+
+  const attachNativeClickListener = useCallback(
+    (map: google.maps.Map) => {
+      if (clickListenerRef.current) {
+        google.maps.event.removeListener(clickListenerRef.current);
       }
+
+      clickListenerRef.current = map.addListener(
+        'click',
+        (e: google.maps.MapMouseEvent & google.maps.IconMouseEvent) => {
+          if (!e.latLng) return;
+
+          const lat = e.latLng.lat();
+          const lng = e.latLng.lng();
+          const placeId = e.placeId;
+
+          if (placeId) {
+            if (typeof e.stop === 'function') {
+              e.stop();
+            }
+            clickRequestRef.current += 1;
+            onMapClickRef.current(lat, lng, placeId);
+            return;
+          }
+
+          resolveClickWithoutPlaceId(lat, lng);
+        },
+      );
     },
-    [onMapClick],
+    [resolveClickWithoutPlaceId],
+  );
+
+  useEffect(() => {
+    return () => {
+      clickRequestRef.current += 1;
+      if (clickListenerRef.current) {
+        google.maps.event.removeListener(clickListenerRef.current);
+        clickListenerRef.current = null;
+      }
+    };
+  }, []);
+
+  const handleMapLoad = useCallback(
+    (map: google.maps.Map) => {
+      mapRef.current = map;
+      placesServiceRef.current = new google.maps.places.PlacesService(map);
+      attachNativeClickListener(map);
+      fitBounds();
+    },
+    [attachNativeClickListener, fitBounds],
   );
 
   if (loadError) {
@@ -184,11 +250,7 @@ export function GoogleMapView({
       mapContainerStyle={mapContainerStyle}
       center={center}
       zoom={14}
-      onClick={handleMapClick}
-      onLoad={(map) => {
-        mapRef.current = map;
-        fitBounds();
-      }}
+      onLoad={handleMapLoad}
       options={{
         clickableIcons: true,
         streetViewControl: false,

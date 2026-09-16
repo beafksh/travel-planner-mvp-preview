@@ -100,7 +100,7 @@ Google Maps 공유 목록 short link → **Import** → 지도에 추가
 |------|------|
 | **Google API 키** | 브라우저 키는 빌드 시 번들에 포함됨 (정상). 소스·PR·로그에 값 노출 금지 |
 | **Directions waypoint** | Google Directions는 중간 경유지 최대 23개. 초과 시 직선 Polyline |
-| **POI 클릭 (Google)** | `placeId`가 있는 POI만 Places 상세 패널 표시. `placeId` 없는 레이어·일부 POI는 빈 지도 클릭으로 처리됨. Places API 쿼터·리뷰는 최대 2건 샘플만 표시. 사진 attribution 필수 표시 |
+| **POI 클릭 (Google)** | 네이티브 `map.addListener('click')`로 `IconMouseEvent.placeId` 수신. `placeId` 없으면 50m 이내 `nearbySearch` 폴백. 빈 지도는 MapClickPanel. 리뷰 최대 2건·사진 attribution 필수 |
 | **Places API** | POI 상세 패널에 Places Details 사용. 키에 Places API 활성화·referrer 제한 필요. 조회 실패 시 패널에 오류 표시(크래시 없음) |
 | **short link 파싱** | CORS 프록시 의존, 불안정 |
 | **OSRM public** | 데모 서버 쿼터·가용성 제한 |
