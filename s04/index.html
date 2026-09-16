@@ -183,8 +183,10 @@
               <button type="button" class="btn btn--icon" disabled aria-label="센소지 위로">▲</button>
               <button type="button" class="btn btn--icon" aria-label="센소지 아래로">▼</button>
             </div>
-            <button type="button" class="btn btn--ghost btn--sm btn--edit-spot" data-edit-spot="1" data-spot-name="센소지 (浅草寺)" data-spot-lat="35.7148" data-spot-lng="139.7967" aria-haspopup="dialog" aria-controls="modal-register" title="스팟 수정" data-spot-url="https://maps.app.goo.gl/sensoji-demo">수정</button>
-            <button type="button" class="btn btn--revert" data-revert="1" title="후보스팟으로 되돌리기">되돌리기</button>
+            <div class="spot-card__actions" role="group" aria-label="스팟 액션">
+              <button type="button" class="btn btn--ghost btn--sm btn--edit-spot" data-edit-spot="1" data-spot-name="센소지 (浅草寺)" data-spot-lat="35.7148" data-spot-lng="139.7967" aria-haspopup="dialog" aria-controls="modal-register" title="스팟 수정" data-spot-url="https://maps.app.goo.gl/sensoji-demo">수정</button>
+              <button type="button" class="btn btn--revert" data-revert="1" title="후보스팟으로">후보스팟으로</button>
+            </div>
           </article>
 
           <article class="spot-card" data-spot="2" id="card-2">
@@ -206,8 +208,10 @@
               <button type="button" class="btn btn--icon" aria-label="나카미세 위로">▲</button>
               <button type="button" class="btn btn--icon" aria-label="나카미세 아래로">▼</button>
             </div>
-            <button type="button" class="btn btn--ghost btn--sm btn--edit-spot" data-edit-spot="2" data-spot-name="나카미세 거리" data-spot-lat="35.7117" data-spot-lng="139.7948" aria-haspopup="dialog" aria-controls="modal-register" title="스팟 수정" data-spot-url="https://maps.app.goo.gl/nakamise-demo">수정</button>
-            <button type="button" class="btn btn--revert" data-revert="2" title="후보스팟으로 되돌리기">되돌리기</button>
+            <div class="spot-card__actions" role="group" aria-label="스팟 액션">
+              <button type="button" class="btn btn--ghost btn--sm btn--edit-spot" data-edit-spot="2" data-spot-name="나카미세 거리" data-spot-lat="35.7117" data-spot-lng="139.7948" aria-haspopup="dialog" aria-controls="modal-register" title="스팟 수정" data-spot-url="https://maps.app.goo.gl/nakamise-demo">수정</button>
+              <button type="button" class="btn btn--revert" data-revert="2" title="후보스팟으로">후보스팟으로</button>
+            </div>
           </article>
 
           <article class="spot-card is-selected" data-spot="3" id="card-3" aria-current="true">
@@ -230,8 +234,10 @@
               <button type="button" class="btn btn--icon" aria-label="우에노 공원 위로">▲</button>
               <button type="button" class="btn btn--icon" aria-label="우에노 공원 아래로">▼</button>
             </div>
-            <button type="button" class="btn btn--ghost btn--sm btn--edit-spot" data-edit-spot="3" data-spot-name="우에노 공원 · 단풍" data-spot-lat="35.7146" data-spot-lng="139.7745" aria-haspopup="dialog" aria-controls="modal-register" title="스팟 수정" data-spot-url="https://maps.app.goo.gl/ueno-demo">수정</button>
-            <button type="button" class="btn btn--revert" data-revert="3" title="후보스팟으로 되돌리기">되돌리기</button>
+            <div class="spot-card__actions" role="group" aria-label="스팟 액션">
+              <button type="button" class="btn btn--ghost btn--sm btn--edit-spot" data-edit-spot="3" data-spot-name="우에노 공원 · 단풍" data-spot-lat="35.7146" data-spot-lng="139.7745" aria-haspopup="dialog" aria-controls="modal-register" title="스팟 수정" data-spot-url="https://maps.app.goo.gl/ueno-demo">수정</button>
+              <button type="button" class="btn btn--revert" data-revert="3" title="후보스팟으로">후보스팟으로</button>
+            </div>
           </article>
 
           <article class="spot-card" data-spot="4" id="card-4">
@@ -252,8 +258,10 @@
               <button type="button" class="btn btn--icon" aria-label="아메요코 위로">▲</button>
               <button type="button" class="btn btn--icon" disabled aria-label="아메요코 아래로">▼</button>
             </div>
-            <button type="button" class="btn btn--ghost btn--sm btn--edit-spot" data-edit-spot="4" data-spot-name="아메요코 시장" data-spot-lat="35.7096" data-spot-lng="139.7745" aria-haspopup="dialog" aria-controls="modal-register" title="스팟 수정" data-spot-url="https://maps.app.goo.gl/ameyoko-demo">수정</button>
-            <button type="button" class="btn btn--revert" data-revert="4" title="후보스팟으로 되돌리기">되돌리기</button>
+            <div class="spot-card__actions" role="group" aria-label="스팟 액션">
+              <button type="button" class="btn btn--ghost btn--sm btn--edit-spot" data-edit-spot="4" data-spot-name="아메요코 시장" data-spot-lat="35.7096" data-spot-lng="139.7745" aria-haspopup="dialog" aria-controls="modal-register" title="스팟 수정" data-spot-url="https://maps.app.goo.gl/ameyoko-demo">수정</button>
+              <button type="button" class="btn btn--revert" data-revert="4" title="후보스팟으로">후보스팟으로</button>
+            </div>
           </article>
 
           <!-- 빈 상태 샘플: board-scroll에 is-empty 붙이면 카드 숨기고 이 블록 표시 -->
@@ -326,8 +334,8 @@
             <strong class="import-resolve__name">도쿄 아사쿠사 저장목록</strong>
           </div>
           <div class="quota-status" id="import-quota-status" aria-live="polite">
-            <span class="quota-status__chip">선택수 <strong id="import-checked-count">0</strong></span>
-            <span class="quota-status__chip">잔여추가가능 <strong id="import-remain-n">21</strong></span>
+            <span class="quota-status__chip"><strong id="import-checked-count">0</strong> 선택수</span>
+            <span class="quota-status__chip"><strong id="import-remain-n">21</strong> 추가가능개수</span>
           </div>
           <div class="check-toolbar" role="group" aria-label="전체선택">
             <button type="button" class="btn btn--ghost btn--sm" id="btn-import-select-all">전체선택</button>
@@ -1389,7 +1397,7 @@
           }
           var pin = document.querySelector('.spot-pin[data-spot="' + id + '"]');
           if (pin) pin.style.display = "none";
-          showToast(name + " → 후보스팟으로 되돌림 (데모)");
+          showToast(name + " → 후보스팟으로 (데모)");
         });
       });
     })();

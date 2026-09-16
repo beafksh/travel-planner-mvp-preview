@@ -52,7 +52,7 @@
   --fs-title: 18px;
   --fs-h2: 17px;
   --target: 40px;
-  --board-card-h: 68px;
+  --board-card-h: 76px;
   --split-map: 60%;
   --split-board: 40%;
 }
@@ -665,7 +665,7 @@ button {
 
 .spot-card {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 7px;
   min-height: var(--board-card-h);
   height: auto;
@@ -1921,3 +1921,26 @@ body.spot-register-mode .map-stage {
   flex-wrap: wrap;
 }
 .quota-status__legend { display: none !important; }
+
+.spot-card__actions {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+  flex-shrink: 0;
+  align-self: center;
+  min-width: 76px;
+}
+.spot-card__actions .btn--edit-spot,
+.spot-card__actions .btn--revert {
+  width: 100%;
+  margin: 0;
+  font-size: 11.5px;
+  padding: 5px 8px;
+  min-height: 32px;
+  white-space: nowrap;
+}
+.btn--revert {
+  /* keep existing look; ensure fits vertical stack */
+  line-height: 1.2;
+}
