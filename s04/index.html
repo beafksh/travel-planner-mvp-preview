@@ -136,25 +136,18 @@
 
       <!-- BOARD 40% -->
       <section class="pane board-pane" aria-label="보드" id="board-pane">
-        <div class="pane-header pane-header--board">
-          <div class="pane-header__left">
-            <span class="pane-header__title">보드 · 스팟 순서</span>
-            <span class="pane-header__meta"><strong>4</strong>곳</span>
+        <div class="board-toolbar" aria-label="보드 도구">
+          <div class="board-toolbar__title-row">
+            <h2 class="board-toolbar__title">보드 · 스팟 순서</h2>
+            <span class="board-toolbar__count" id="board-spot-count" aria-live="polite"><strong>4</strong>/25곳</span>
+            <a class="board-link-muted board-toolbar__manage" href="#" title="S06 예약관리(내역)">예약관리(내역) →</a>
           </div>
-          <div class="pane-header__actions">
-            <a class="board-link-muted" href="#" title="S06 예약관리(내역)">예약관리(내역) →</a>
-            <button type="button" class="btn btn--ghost btn--sm" id="btn-open-import-list-board" aria-haspopup="dialog" aria-controls="modal-import-list">
-              장소목록가져오기
-            </button>
-            <button type="button" class="btn btn--ghost btn--sm" id="btn-open-register-spot" aria-haspopup="dialog" aria-controls="modal-register" data-register-target="spot">
-              스팟 등록
-            </button>
-            <button type="button" class="btn btn--ghost btn--sm" id="btn-open-register-candidate" aria-haspopup="dialog" aria-controls="modal-register" data-register-target="candidate">
-              후보스팟 등록
-            </button>
-            <button type="button" class="btn btn--primary btn--sm" id="btn-open-candidates" aria-haspopup="dialog" aria-controls="modal-candidates">
-              후보스팟에서 추가
-            </button>
+          <div class="board-toolbar__cta" role="toolbar" aria-label="보드 추가 액션">
+            <button type="button" class="btn btn--ghost btn--sm" id="btn-open-import-list-board" aria-haspopup="dialog" aria-controls="modal-import-list">장소목록</button>
+            <button type="button" class="btn btn--ghost btn--sm" id="btn-open-register-spot" aria-haspopup="dialog" aria-controls="modal-register" data-register-target="spot">스팟등록</button>
+            <button type="button" class="btn btn--ghost btn--sm" id="btn-open-register-candidate" aria-haspopup="dialog" aria-controls="modal-register" data-register-target="candidate">후보등록</button>
+            <button type="button" class="btn btn--primary btn--sm" id="btn-open-candidates" aria-haspopup="dialog" aria-controls="modal-candidates">후보에서추가</button>
+            <button type="button" class="btn btn--ghost btn--sm" id="btn-map-click-add" title="맵에서 위치 클릭 후 등록 (데모)">맵클릭</button>
           </div>
         </div>
 
@@ -247,14 +240,23 @@
             <button type="button" class="btn btn--revert" data-revert="4" title="후보스팟으로 되돌리기">되돌리기</button>
           </article>
 
+          <!-- 빈 상태 샘플: board-scroll에 is-empty 붙이면 카드 숨기고 이 블록 표시 -->
+          <div class="board-empty" id="board-empty" hidden>
+            <div class="board-empty__icon" aria-hidden="true">📍</div>
+            <p class="board-empty__title">이 Day에 스팟이 아직 없어요</p>
+            <p class="board-empty__desc">장소목록을 가져오거나, 스팟·후보스팟을 등록해 보세요.<br/>맵을 클릭해서도 추가할 수 있어요. (최대 25곳)</p>
+            <div class="board-empty__actions">
+              <button type="button" class="btn btn--primary btn--sm" data-empty-action="import">장소목록 가져오기</button>
+              <button type="button" class="btn btn--ghost btn--sm" data-empty-action="spot">스팟 등록</button>
+              <button type="button" class="btn btn--ghost btn--sm" data-empty-action="map">맵클릭</button>
+            </div>
+          </div>
           <div class="board-hint">
+            <span class="board-hint__label">빠른 추가</span>
             <button type="button" class="link-btn" id="btn-open-register-spot-hint" data-register-target="spot">스팟 등록</button>
-            ·
             <button type="button" class="link-btn" id="btn-open-register-candidate-hint" data-register-target="candidate">후보스팟 등록</button>
-            ·
-            <button type="button" class="link-btn" id="btn-open-candidates-hint">후보스팟에서 추가</button>
-            ·
-            <button type="button" class="link-btn" id="btn-open-import-list-hint">장소목록가져오기</button>
+            <button type="button" class="link-btn" id="btn-open-candidates-hint">후보에서 추가</button>
+            <button type="button" class="link-btn" id="btn-open-import-list-hint">장소목록</button>
           </div>
         </div>
 
@@ -318,7 +320,7 @@
       </header>
       <div class="modal__body">
         <div class="target-toggle" role="group" aria-label="등록 대상">
-          <button type="button" class="target-toggle__btn is-active" data-target="spot" id="reg-target-spot">스팟 (Day)</button>
+          <button type="button" class="target-toggle__btn is-active" data-target="spot" id="reg-target-spot">스팟 (Day 2)</button>
           <button type="button" class="target-toggle__btn" data-target="candidate" id="reg-target-candidate">후보스팟</button>
         </div>
         <p class="modal__hint" id="reg-target-hint">Day 2 보드에 스팟으로 등록합니다.</p>
@@ -766,6 +768,30 @@
       function openCandidates() {
         openModal("modal-candidates");
       }
+      
+      var mapClickBtn = document.getElementById("btn-map-click-add");
+      if (mapClickBtn) {
+        mapClickBtn.addEventListener("click", function () {
+          showToast("맵클릭 모드 (데모) · 맵에서 위치를 고른 뒤 스팟 등록으로 이어집니다");
+          var tabMap = document.getElementById("tab-map");
+          if (tabMap) tabMap.click();
+        });
+      }
+      document.querySelectorAll("[data-empty-action]").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          var a = btn.getAttribute("data-empty-action");
+          if (a === "import") {
+            var b = document.getElementById("btn-open-import-list-board");
+            if (b) b.click();
+          } else if (a === "spot") {
+            var s = document.getElementById("btn-open-register-spot");
+            if (s) s.click();
+          } else if (a === "map") {
+            if (mapClickBtn) mapClickBtn.click();
+          }
+        });
+      });
+
       var btnCand = document.getElementById("btn-open-candidates");
       var btnCandHint = document.getElementById("btn-open-candidates-hint");
       if (btnCand) btnCand.addEventListener("click", openCandidates);

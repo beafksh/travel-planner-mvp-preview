@@ -1376,3 +1376,109 @@ body.modal-open { overflow: hidden; }
   border-color: var(--color-border);
   color: var(--color-ink-muted);
 }
+
+
+/* —— Board toolbar (제목/카운터/CTA 분리) —— */
+.board-toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px 10px;
+  border-bottom: 1px solid var(--color-border);
+  background: linear-gradient(180deg, #FFFFFF 0%, #FAF8F5 100%);
+  flex-shrink: 0;
+}
+.board-toolbar__title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.board-toolbar__title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
+.board-toolbar__count {
+  font-size: 12px;
+  color: var(--color-ink-muted);
+  white-space: nowrap;
+}
+.board-toolbar__count strong {
+  color: var(--color-primary);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.board-toolbar__manage {
+  margin-left: auto;
+  font-size: 12px;
+}
+.board-toolbar__cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+}
+.board-toolbar__cta .btn--sm {
+  white-space: nowrap;
+}
+
+.board-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 36px 20px 28px;
+  margin: 8px 12px 4px;
+  border: 1px dashed var(--color-border);
+  border-radius: 12px;
+  background: #FBFaf7;
+  gap: 8px;
+}
+.board-empty[hidden] { display: none !important; }
+.board-scroll.is-empty .spot-card { display: none; }
+.board-scroll.is-empty .board-empty { display: flex !important; }
+.board-scroll.is-empty .board-hint { display: none; }
+.board-empty__icon { font-size: 28px; line-height: 1; opacity: 0.85; }
+.board-empty__title {
+  margin: 4px 0 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-ink);
+}
+.board-empty__desc {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--color-ink-muted);
+  max-width: 280px;
+}
+.board-empty__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 10px;
+}
+.board-hint {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
+  padding: 10px 4px 6px;
+  font-size: 12px;
+  color: var(--color-ink-muted);
+}
+.board-hint__label {
+  font-weight: 600;
+  color: var(--color-ink-muted);
+  margin-right: 2px;
+}
+
+@media (max-width: 520px) {
+  .board-toolbar__title-row { flex-wrap: wrap; }
+  .board-toolbar__manage { margin-left: 0; width: 100%; }
+}

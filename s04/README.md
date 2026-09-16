@@ -41,3 +41,10 @@ python3 -m http.server 8080
 
 ## 파일
 - `index.html` · `styles.css` · `shots/`
+
+## 보드 헤더 (레이아웃)
+- 제목 `보드 · 스팟 순서`는 한 줄 유지 (`nowrap`)
+- 카운터 `N/25곳`
+- CTA 줄: 장소목록 · 스팟등록 · 후보등록 · 후보에서추가 · 맵클릭
+- 빈 상태: `.board-scroll.is-empty` 시 빈 상태 블록 표시 (데모: 콘솔/`classList.add('is-empty')`)
+- 등록 대상 탭: `스팟 (Day N)` (선택 Day 반영)
