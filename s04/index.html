@@ -322,30 +322,33 @@
             <strong class="import-resolve__name">도쿄 아사쿠사 저장목록</strong>
             <span class="import-resolve__count" id="import-checked-count">0개 선택</span>
           </div>
-          <p class="quota-guide" id="import-quota-guide">Day 스팟 잔여 <strong id="import-remain-n">21</strong>/25 — 가져올 항목은 잔여 수만큼 앞에서 자동 체크됩니다</p>
-          <p class="quota-guide quota-guide--soft">잔여 쿼터 N곳까지 자동 선택됩니다 · 기본체크 = max(0, 25 − N)</p>
+          <div class="quota-status" id="import-quota-status" aria-live="polite">
+            <span class="quota-status__chip">잔여 <strong id="import-remain-n">21</strong>/25</span>
+            <span class="quota-status__legend"><i class="quota-dot quota-dot--auto" aria-hidden="true"></i>자동체크</span>
+            <span class="quota-status__legend"><i class="quota-dot quota-dot--manual" aria-hidden="true"></i>직접선택</span>
+          </div>
           <div class="check-toolbar" role="group" aria-label="전체선택">
             <button type="button" class="btn btn--ghost btn--sm" id="btn-import-select-all">전체선택</button>
             <button type="button" class="btn btn--ghost btn--sm" id="btn-import-deselect-all">전체해제</button>
           </div>
           <ul class="check-list" id="import-check-list" role="list">
             <li class="check-item">
-              <label><input type="checkbox" name="importPlace" value="sensoji" data-place="센소지" /><span class="check-item__body"><strong>센소지</strong><span class="check-item__meta">사찰 · 아사쿠사</span></span></label>
+              <label><input type="checkbox" name="importPlace" value="sensoji" data-place="센소지" /><span class="check-item__body"><strong>센소지</strong><span class="check-item__meta">사찰 · 아사쿠사</span><span class="check-item__badge" data-auto-badge hidden>자동</span></span></label>
             </li>
             <li class="check-item">
-              <label><input type="checkbox" name="importPlace" value="nakamise" data-place="나카미세 거리" /><span class="check-item__body"><strong>나카미세 거리</strong><span class="check-item__meta">쇼핑 · 아사쿠사</span></span></label>
+              <label><input type="checkbox" name="importPlace" value="nakamise" data-place="나카미세 거리" /><span class="check-item__body"><strong>나카미세 거리</strong><span class="check-item__meta">쇼핑 · 아사쿠사</span><span class="check-item__badge" data-auto-badge hidden>자동</span></span></label>
             </li>
             <li class="check-item">
-              <label><input type="checkbox" name="importPlace" value="ueno" data-place="우에노 공원" /><span class="check-item__body"><strong>우에노 공원</strong><span class="check-item__meta">공원 · 우에노</span></span></label>
+              <label><input type="checkbox" name="importPlace" value="ueno" data-place="우에노 공원" /><span class="check-item__body"><strong>우에노 공원</strong><span class="check-item__meta">공원 · 우에노</span><span class="check-item__badge" data-auto-badge hidden>자동</span></span></label>
             </li>
             <li class="check-item">
-              <label><input type="checkbox" name="importPlace" value="ameyoko" data-place="아메요코 시장" /><span class="check-item__body"><strong>아메요코 시장</strong><span class="check-item__meta">시장 · 우에노</span></span></label>
+              <label><input type="checkbox" name="importPlace" value="ameyoko" data-place="아메요코 시장" /><span class="check-item__body"><strong>아메요코 시장</strong><span class="check-item__meta">시장 · 우에노</span><span class="check-item__badge" data-auto-badge hidden>자동</span></span></label>
             </li>
             <li class="check-item">
-              <label><input type="checkbox" name="importPlace" value="skytree" data-place="도쿄 스카이트리" /><span class="check-item__body"><strong>도쿄 스카이트리</strong><span class="check-item__meta">전망 · 스미다</span></span></label>
+              <label><input type="checkbox" name="importPlace" value="skytree" data-place="도쿄 스카이트리" /><span class="check-item__body"><strong>도쿄 스카이트리</strong><span class="check-item__meta">전망 · 스미다</span><span class="check-item__badge" data-auto-badge hidden>자동</span></span></label>
             </li>
             <li class="check-item">
-              <label><input type="checkbox" name="importPlace" value="kappabashi" data-place="갓파바시 주방거리" /><span class="check-item__body"><strong>갓파바시 주방거리</strong><span class="check-item__meta">쇼핑 · 아사쿠사</span></span></label>
+              <label><input type="checkbox" name="importPlace" value="kappabashi" data-place="갓파바시 주방거리" /><span class="check-item__body"><strong>갓파바시 주방거리</strong><span class="check-item__meta">쇼핑 · 아사쿠사</span><span class="check-item__badge" data-auto-badge hidden>자동</span></span></label>
             </li>
           </ul>
         </div>
@@ -776,21 +779,52 @@
       }
 
       var importListCtl = wireCheckList("import-check-list", "import-checked-count");
+      (function () {
+        var list = document.getElementById("import-check-list");
+        if (!list) return;
+        list.addEventListener("change", function (e) {
+          var t = e.target;
+          if (!t || t.type !== "checkbox") return;
+          t.dataset.autoChecked = "0";
+          var item = t.closest(".check-item");
+          if (item) {
+            item.classList.remove("is-auto-checked");
+            var badge = item.querySelector("[data-auto-badge]");
+            if (badge) badge.hidden = true;
+          }
+        });
+      })();
+
       var candListCtl = wireCheckList("cand-check-list", "cand-checked-count");
 
-      function refreshImportQuotaGuide() {
+      function refreshImportQuotaChip() {
         var rem = remainingQuota();
         var remEl = document.getElementById("import-remain-n");
         if (remEl) remEl.textContent = String(rem);
-        var guide = document.getElementById("import-quota-guide");
-        if (guide) {
-          guide.innerHTML = "Day 스팟 잔여 <strong>" + rem + "</strong>/25 — 가져올 항목은 잔여 수만큼 앞에서 자동 체크됩니다";
+      }
+
+      function markImportAutoChecks(rem) {
+        var list = document.getElementById("import-check-list");
+        if (!list) return;
+        var boxes = list.querySelectorAll('input[type="checkbox"]');
+        var items = list.querySelectorAll(".check-item");
+        for (var i = 0; i < boxes.length; i++) {
+          var auto = i < rem && boxes[i].checked;
+          boxes[i].dataset.autoChecked = auto ? "1" : "0";
+          if (items[i]) {
+            items[i].classList.toggle("is-auto-checked", auto);
+            var badge = items[i].querySelector("[data-auto-badge]");
+            if (badge) badge.hidden = !auto;
+          }
         }
       }
 
       function prepareImportChecks() {
-        refreshImportQuotaGuide();
-        if (importListCtl) importListCtl.autoCheckFirst(remainingQuota());
+        var rem = remainingQuota();
+        refreshImportQuotaChip();
+        if (importListCtl) importListCtl.autoCheckFirst(rem);
+        markImportAutoChecks(rem);
+        showToast("잔여 " + rem + "/25 · 앞에서 " + rem + "곳 자동체크 (직접 변경 가능)");
       }
 
       /* —— 스팟목록 가져오기(Google) —— S04-25/26 —— */
@@ -811,8 +845,23 @@
       }
       var btnImpAll = document.getElementById("btn-import-select-all");
       var btnImpNone = document.getElementById("btn-import-deselect-all");
-      if (btnImpAll && importListCtl) btnImpAll.addEventListener("click", function () { importListCtl.selectAll(); });
-      if (btnImpNone && importListCtl) btnImpNone.addEventListener("click", function () { importListCtl.deselectAll(); });
+      if (btnImpAll && importListCtl) btnImpAll.addEventListener("click", function () {
+        importListCtl.selectAll();
+        markImportAutoChecks(0); // 전체선택은 직접선택으로 표시
+        document.querySelectorAll("#import-check-list .check-item").forEach(function (item) {
+          item.classList.remove("is-auto-checked");
+          var badge = item.querySelector("[data-auto-badge]");
+          if (badge) badge.hidden = true;
+        });
+      });
+      if (btnImpNone && importListCtl) btnImpNone.addEventListener("click", function () {
+        importListCtl.deselectAll();
+        document.querySelectorAll("#import-check-list .check-item").forEach(function (item) {
+          item.classList.remove("is-auto-checked");
+          var badge = item.querySelector("[data-auto-badge]");
+          if (badge) badge.hidden = true;
+        });
+      });
 
       var btnImport = document.getElementById("btn-submit-import-list");
       if (btnImport) {
