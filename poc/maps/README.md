@@ -43,10 +43,10 @@ cp .env.example .env
 2. API 활성화:
    - **Maps JavaScript API**
    - **Directions API** (Legacy)
-   - **Places API** (POI 클릭 이름 조회 — 선택)
+   - **Places API** (POI 클릭 상세 패널 — **필수**, Google 모드에서 POI 클릭 시 사용)
 3. API 키 생성 (브라우저 키) 후 제한:
    - **HTTP referrer:** `https://beafksh.github.io/travel-planner-mvp-preview/*`
-   - **API 제한:** Maps JavaScript API, Directions API (Legacy), Places API(선택)
+   - **API 제한:** Maps JavaScript API, Directions API (Legacy), **Places API**
 4. GitHub Actions secret 이름: `VITE_GOOGLE_MAPS_API_KEY`
 
 로컬 개발 시 referrer에 `http://localhost:*`도 추가하세요.
@@ -59,7 +59,7 @@ cp .env.example .env
 | **목록 링크 import** | ✅ | ✅ (공유 UI) |
 | **B) 일자별 마커 + 동선** | ✅ OSRM | ✅ DirectionsService + DirectionsRenderer |
 | **동선 실패 시** | ✅ 직선 Polyline | ✅ 직선 Polyline 폴백 |
-| **등록 경로 4) 맵 클릭** | ✅ Nominatim | ✅ Nominatim + POI Places |
+| **등록 경로 4) 맵 클릭** | ✅ Nominatim | ✅ 빈 지도: Nominatim · POI: Places 상세 패널 |
 | **Google 로그인** | — | ❌ 없음 |
 
 ## 사용법
@@ -83,9 +83,16 @@ Google Maps 공유 목록 short link → **Import** → 지도에 추가
 
 ### 등록 경로 4) 맵 클릭으로 스팟 등록
 
-1. 지도에서 원하는 위치 **클릭** (Google 모드: POI 클릭 시 기본 상세 대신 등록 패널)
-2. 우측 패널에서 이름 확인·수정
+**OSM 모드**
+1. 지도에서 원하는 위치 **클릭**
+2. 우측 등록 패널에서 이름 확인·수정 (Nominatim 역지오코딩)
 3. **Day 동선에 스팟 추가** 또는 **후보스팟으로 추가**
+
+**Google 모드**
+1. **POI(장소) 클릭** → 좌측 지도 + **우측 상세 패널** (Places API: 이름·주소·평점·리뷰·사진)
+   - **Day 스팟 추가** / **후보스팟 추가** CTA
+2. **빈 지도 클릭** → 기존 좌표 등록 패널 (Nominatim 역지오코딩)
+3. POI 클릭 시 Google 기본 정보창은 `stop()`으로 차단 — 좌표 등록 패널이 열리지 않음
 
 ## 한계
 
@@ -93,7 +100,8 @@ Google Maps 공유 목록 short link → **Import** → 지도에 추가
 |------|------|
 | **Google API 키** | 브라우저 키는 빌드 시 번들에 포함됨 (정상). 소스·PR·로그에 값 노출 금지 |
 | **Directions waypoint** | Google Directions는 중간 경유지 최대 23개. 초과 시 직선 Polyline |
-| **POI 클릭 (Google)** | `placeId`가 있는 POI만 Places 이름 조회. 빈 지도 클릭과 구분하려 `stop()` 사용. 일부 POI·레이어는 Google 기본 UI와 충돌 가능 |
+| **POI 클릭 (Google)** | `placeId`가 있는 POI만 Places 상세 패널 표시. `placeId` 없는 레이어·일부 POI는 빈 지도 클릭으로 처리됨. Places API 쿼터·리뷰는 최대 2건 샘플만 표시. 사진 attribution 필수 표시 |
+| **Places API** | POI 상세 패널에 Places Details 사용. 키에 Places API 활성화·referrer 제한 필요. 조회 실패 시 패널에 오류 표시(크래시 없음) |
 | **short link 파싱** | CORS 프록시 의존, 불안정 |
 | **OSRM public** | 데모 서버 쿼터·가용성 제한 |
 | **역지오코딩** | Nominatim 정책(약 1 req/sec). Google POI는 Places API 사용 |
@@ -127,7 +135,7 @@ npm run build
 poc/maps/
 ├── src/
 │   ├── components/
-│   │   ├── maps/           # OsmMapView, GoogleMapView, MapClickPanel
+│   │   ├── maps/           # OsmMapView, GoogleMapView, MapClickPanel, PlaceDetailPanel
 │   │   ├── DayRouteMap.tsx # 모드 토글 + 공유 상태
 │   │   └── ...
 │   └── lib/
