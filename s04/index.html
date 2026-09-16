@@ -999,6 +999,20 @@
         });
       });
 
+      document.querySelectorAll(".spot-card__name a").forEach(function (a) {
+        a.addEventListener("click", function (e) {
+          e.preventDefault();
+        });
+        a.addEventListener("dblclick", function (e) {
+          e.preventDefault();
+          var card = a.closest(".spot-card");
+          var editBtn = card ? card.querySelector("[data-edit-spot]") : null;
+          if (editBtn) openEditSpot(editBtn);
+        });
+        a.setAttribute("title", "더블클릭하여 스팟 수정");
+        a.setAttribute("aria-label", (a.textContent || "").trim() + " (더블클릭 수정)");
+      });
+
       document.querySelectorAll(".target-toggle__btn").forEach(function (btn) {
         btn.addEventListener("click", function () {
           setRegisterTarget(btn.getAttribute("data-target"));
