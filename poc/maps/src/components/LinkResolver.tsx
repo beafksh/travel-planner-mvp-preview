@@ -76,8 +76,9 @@ export function LinkResolver({ onAddSpot }: LinkResolverProps) {
       <h2 id="resolver-heading">A) Google Maps 공유 링크 → 위치</h2>
       <p className="muted">
         펼쳐진 <code>google.com/maps/place/…/@lat,lng</code> URL은 브라우저에서 즉시 파싱합니다.
-        short link(<code>maps.app.goo.gl</code>)는 CORS 프록시로 시도하며, 실패 시 수동 좌표 입력 폼을
-        사용합니다. <strong>Google Maps API 키·빌링 불필요.</strong>
+        short link(<code>maps.app.goo.gl</code>)는 백엔드(<code>VITE_RESOLVE_API_BASE</code>) 또는 공개
+        프록시로 시도하며, 실패 시 펼쳐진 URL 붙여넣기·수동 좌표 입력을 사용합니다.
+        <strong>Google Maps API 키·빌링 불필요.</strong>
       </p>
 
       <div className="resolver-form">
