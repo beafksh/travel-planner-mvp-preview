@@ -178,9 +178,168 @@ body {
 }
 
 .leaflet-map-wrap {
+  position: relative;
   border-radius: 8px;
   overflow: hidden;
   border: 1px solid #dde2e8;
+}
+
+.map-click-hint {
+  margin: 0 0 12px;
+}
+
+.click-panel {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 1000;
+  width: min(320px, calc(100% - 24px));
+  background: #fff;
+  border: 1px solid #dde2e8;
+  border-radius: 10px;
+  padding: 14px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+}
+
+.click-panel h3 {
+  margin: 0 0 10px;
+  font-size: 0.95rem;
+}
+
+.click-panel-fields {
+  margin: 0 0 10px;
+  display: grid;
+  gap: 8px;
+  font-size: 0.88rem;
+}
+
+.click-panel-fields > div {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 8px;
+  align-items: center;
+}
+
+.click-panel-fields dt {
+  font-weight: 600;
+  color: #3c4043;
+}
+
+.click-panel-fields dd {
+  margin: 0;
+}
+
+.name-input {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid #c4c9d0;
+  border-radius: 6px;
+  font-size: 0.88rem;
+}
+
+.click-panel-note {
+  margin: 0 0 8px;
+  font-size: 0.8rem;
+}
+
+.click-panel-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.btn-compact {
+  margin-top: 0;
+  padding: 6px 12px;
+  font-size: 0.82rem;
+}
+
+.btn-ghost {
+  padding: 6px 12px;
+  background: transparent;
+  color: #5f6368;
+  border: 1px solid #c4c9d0;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.82rem;
+}
+
+.temp-click-marker {
+  background: none !important;
+  border: none !important;
+}
+
+.temp-click-marker span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: #ea4335;
+  color: #fff;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  font-size: 1.1rem;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+.candidate-marker-icon {
+  background: none !important;
+  border: none !important;
+}
+
+.candidate-marker-icon span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  background: #f9ab00;
+  color: #fff;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  font-size: 0.7rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+}
+
+.candidate-heading {
+  margin: 20px 0 8px;
+  font-size: 1rem;
+}
+
+.candidate-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.candidate-list li {
+  display: grid;
+  grid-template-columns: 24px 1fr auto;
+  gap: 4px 10px;
+  align-items: center;
+  padding: 8px 10px;
+  background: #fff8e1;
+  border: 1px solid #ffe082;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+.candidate-marker {
+  color: #f9ab00;
+  font-size: 1rem;
+}
+
+.candidate-actions {
+  grid-column: 2 / 4;
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
 }
 
 .leaflet-map {

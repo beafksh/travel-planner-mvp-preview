@@ -2,10 +2,18 @@ export type ResolveMethod =
   | 'client-parser-expanded'
   | 'cors-proxy-redirect'
   | 'manual'
+  | 'map-click'
   | 'resolve-api'
   | 'entitylist-getlist'
   | 'cors-proxy-entitylist'
   | 'fixture-fallback';
+
+export interface CandidateSpot {
+  id: string;
+  name: string;
+  lat: number;
+  lng: number;
+}
 
 export interface ResolvedListPlace {
   name?: string;
