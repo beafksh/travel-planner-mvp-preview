@@ -1692,6 +1692,45 @@ body.spot-register-mode .map-stage {
   color: var(--color-primary);
   white-space: nowrap;
 }
+
+/* 스팟목록 가져오기: outer(모달 body) 스크롤 제거 · 목록만 스크롤 */
+#modal-import-list .modal__dialog {
+  max-height: min(86vh, 720px);
+}
+#modal-import-list .modal__body {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* outer scroll off */
+  min-height: 0;
+  padding-bottom: 10px;
+}
+#modal-import-list #form-import-list {
+  flex-shrink: 0;
+}
+#modal-import-list .import-resolve {
+  flex: 1 1 auto;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  margin-top: 12px;
+  padding-top: 10px;
+}
+#modal-import-list .import-resolve__head,
+#modal-import-list .quota-status,
+#modal-import-list .check-toolbar {
+  flex-shrink: 0;
+}
+#modal-import-list #import-check-list {
+  flex: 1 1 auto;
+  min-height: 120px;
+  max-height: none; /* flex가 높이 담당 */
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  padding-right: 2px;
+  margin-top: 4px;
+}
+
 .quota-guide {
   font-size: 12.5px;
   color: var(--color-ink);
