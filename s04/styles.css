@@ -1503,3 +1503,100 @@ body.modal-open { overflow: hidden; }
   min-height: 28px;
   border-radius: 8px;
 }
+
+/* CTA 2줄 + 스팟등록모드 토글 */
+.board-toolbar__cta {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+}
+.board-toolbar__cta-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+.board-toolbar__cta-row .btn {
+  width: 100%;
+  justify-content: center;
+  white-space: normal;
+  line-height: 1.25;
+  min-height: 40px;
+  padding: 8px 10px;
+}
+.board-toolbar__cta-row--mode {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  grid-template-columns: none;
+  padding-top: 2px;
+}
+.spot-mode-label {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--color-ink);
+  white-space: nowrap;
+}
+.spot-mode-hint {
+  font-size: 11px;
+  color: var(--color-ink-muted);
+  line-height: 1.35;
+}
+.spot-mode-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  min-height: 44px;
+}
+.spot-mode-toggle__track {
+  width: 44px;
+  height: 26px;
+  border-radius: 999px;
+  background: #D8D2C8;
+  position: relative;
+  transition: background 0.15s ease;
+  flex-shrink: 0;
+}
+.spot-mode-toggle__knob {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,.2);
+  transition: transform 0.15s ease;
+}
+.spot-mode-toggle.is-on .spot-mode-toggle__track,
+.spot-mode-toggle[aria-checked="true"] .spot-mode-toggle__track {
+  background: var(--color-primary);
+}
+.spot-mode-toggle.is-on .spot-mode-toggle__knob,
+.spot-mode-toggle[aria-checked="true"] .spot-mode-toggle__knob {
+  transform: translateX(18px);
+}
+.spot-mode-toggle__text {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-ink-muted);
+  min-width: 28px;
+}
+.spot-mode-toggle.is-on .spot-mode-toggle__text,
+.spot-mode-toggle[aria-checked="true"] .spot-mode-toggle__text {
+  color: var(--color-primary);
+}
+body.spot-register-mode .map-stage {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
+}
+@media (max-width: 520px) {
+  .board-toolbar__cta-row--mode {
+    flex-wrap: wrap;
+  }
+  .spot-mode-hint { width: 100%; }
+}
