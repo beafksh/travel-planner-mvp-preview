@@ -1,6 +1,6 @@
 # Travel Planner — Maps POC (`poc/maps/`)
 
-Google Maps API **키·빌링 없이** OpenStreetMap + Leaflet으로 동작하는 최소 스파이크입니다.  
+OpenStreetMap(Leaflet)과 **Google Maps JavaScript API**를 토글로 전환하는 지도 스파이크입니다.  
 `wireframes/`, `s04/`, 루트 `index.html` 등 기존 기획·퍼블 산출물은 **수정하지 않습니다**.
 
 ## 공개 URL (GitHub Pages)
@@ -11,78 +11,100 @@ https://beafksh.github.io/travel-planner-mvp-preview/maps-poc/
 
 > PR 브랜치에서는 위 URL이 아직 갱신되지 않을 수 있습니다. 로컬 또는 PR 머지 후 확인하세요.
 
+## 지도 모드
+
+| 모드 | 설명 | API 키 |
+|------|------|--------|
+| **OSM (Leaflet)** | 기본 · OpenStreetMap 타일 + OSRM public 동선 | 불필요 |
+| **Google Maps** | Maps JavaScript API + DirectionsService 동선 | `VITE_GOOGLE_MAPS_API_KEY` 필요 |
+
+지도 상단 **OSM / Google Maps** 토글로 전환합니다. 모드·스팟·후보스팟·동선 상태는 전환 후에도 유지됩니다.
+
+키가 없거나 Google Maps 로드에 실패하면 안내 배너가 표시되며 **OSM 모드로 전환**할 수 있습니다. 크래시 없이 OSM만으로도 전체 기능이 동작합니다.
+
+## 환경 변수
+
+`.env.example`을 복사해 `.env`를 만듭니다 (`.env`는 커밋하지 않음):
+
+```bash
+cp .env.example .env
+```
+
+| 변수 | 필수 | 설명 |
+|------|------|------|
+| `VITE_GOOGLE_MAPS_API_KEY` | Google 모드만 | 브라우저용 Google Maps API 키 |
+| `VITE_RESOLVE_API_BASE` | 선택 | 백엔드 resolve 프록시 base URL |
+
+> **보안:** 브라우저 키는 오직 `VITE_GOOGLE_MAPS_API_KEY`에서만 읽습니다. 서버 키(`GOOGLE_MAPS_SERVER_API_KEY`)는 FE·빌드·Actions에 넣지 않습니다.
+
+### Google Cloud 설정 (Google 모드 사용 시)
+
+1. [Google Cloud Console](https://console.cloud.google.com/)에서 프로젝트 생성 및 **빌링 활성화**
+2. API 활성화:
+   - **Maps JavaScript API**
+   - **Directions API** (Legacy)
+   - **Places API** (POI 클릭 이름 조회 — 선택)
+3. API 키 생성 (브라우저 키) 후 제한:
+   - **HTTP referrer:** `https://beafksh.github.io/travel-planner-mvp-preview/*`
+   - **API 제한:** Maps JavaScript API, Directions API (Legacy), Places API(선택)
+4. GitHub Actions secret 이름: `VITE_GOOGLE_MAPS_API_KEY`
+
+로컬 개발 시 referrer에 `http://localhost:*`도 추가하세요.
+
 ## 가능 / 불가 요약
 
-| 항목 | 결과 | 비고 |
-|------|------|------|
-| **A) 펼쳐진 Maps URL → 좌표·이름** | ✅ 가능 | 브라우저 정규식 파서 (`client-parser-expanded`) |
-| **A) short link (`maps.app.goo.gl`)** | ⚠️ 제한적 | CORS 프록시 시도, **실패율 높음** → 수동 좌표 폴백 필수 |
-| **A) Place ID 확정** | ⚠️ URL에 포함된 경우만 | 유료 Google API 미사용 |
-| **목록 링크 import** | ⚠️ 제한적 | 비공식 `entitylist/getlist` · CORS 프록시 · 예제 URL은 fixture 폴백 |
-| **B) 일자별 마커 + 동선** | ✅ 가능 | Leaflet + OSM 타일 + OSRM public |
-| **B) OSRM 실패 시** | ✅ 직선 Polyline 폴백 | 쿼터·가용성 이슈 시 자동 전환 |
-| **등록 경로 4) 맵 클릭 스팟** | ✅ 가능 (Experimental) | Nominatim 역지오코딩 · 후보스팟 지원 |
-| **Google API 키** | ❌ 불필요 | 완전 제거 |
+| 항목 | OSM | Google |
+|------|-----|--------|
+| **A) 펼쳐진 Maps URL → 좌표·이름** | ✅ | ✅ (공유 UI) |
+| **목록 링크 import** | ✅ | ✅ (공유 UI) |
+| **B) 일자별 마커 + 동선** | ✅ OSRM | ✅ DirectionsService + DirectionsRenderer |
+| **동선 실패 시** | ✅ 직선 Polyline | ✅ 직선 Polyline 폴백 |
+| **등록 경로 4) 맵 클릭** | ✅ Nominatim | ✅ Nominatim + POI Places |
+| **Google 로그인** | — | ❌ 없음 |
 
 ## 사용법
 
 ### A) 링크 → 위치
 
 1. **펼쳐진 URL** — 샘플 「펼쳐진 URL (센소지)」 클릭 → **Resolve**
-   - `resolveMethod: client-parser-expanded`, lat/lng/name 표시
-2. **short link** — `maps.app.goo.gl/...` 붙여넣기 → **Resolve**
-   - CORS 프록시(`allorigins`, `corsproxy.io`)로 redirect follow 시도
-   - 실패 시 오류 메시지 + **수동 좌표 입력 폼** 표시
-3. **수동 폴백** — 장소명(선택) + lat/lng 입력 → **스팟 목록에 추가**
-4. resolve 성공 후 **스팟 목록에 추가** 버튼으로 B) 지도에 반영
+2. **short link** — CORS 프록시 시도, 실패 시 수동 좌표 폴백
+3. **수동 폴백** — 장소명 + lat/lng 입력
+4. resolve 성공 후 **스팟 목록에 추가**
 
 ### 목록 링크 import
 
-1. Google Maps **공유 목록** short link (`maps.app.goo.gl/...`) 입력 → **Import**
-2. resolve 우선순위:
-   - `VITE_RESOLVE_API_BASE` 설정 시 `POST {base}/api/maps/resolve-list-link`
-   - 없으면 CORS 프록시로 redirect + `entitylist/getlist` 시도
-   - 예제 URL(`maps.app.goo.gl/ZKGW1AaMWT2eePtd6`) 또는 listId `wkR0T1lyzscvuOSJnXq3qg`는 **fixture 폴백** (삿포로 65곳)
-3. 제목 + N곳 확인 후 **지도에 추가** → 기존 스팟에 merge
+Google Maps 공유 목록 short link → **Import** → 지도에 추가
 
 ### B) S04형 지도 · 동선
 
 - 초기: Day 2 도쿄 4스팟 (센소지 → 나카미세 → 우에노 → 아메요코)
-- 번호 마커 + OSRM 도보 경로 (실패 시 점선 직선)
-- A)에서 추가한 스팟도 목록·지도에 반영
+- 번호 마커 + 동선 (OSM: OSRM 도보 / Google: Directions 도보)
+- **OSM / Google Maps** 토글로 지도 제공자 전환
 
-### 등록 경로 4) 맵 클릭으로 스팟 등록 (Experimental)
+### 등록 경로 4) 맵 클릭으로 스팟 등록
 
-1. B) 지도에서 원하는 위치를 **클릭**
-2. 빨간 `+` 임시 마커와 우측 패널 표시
-   - 좌표 자동 표시
-   - 이름: 역지오코딩 결과 (수정 가능). 우선순위:
-     1. `VITE_RESOLVE_API_BASE` 설정 시 `GET {base}/api/maps/reverse-geocode?lat=&lng=` (백엔드 Nominatim 프록시)
-     2. 없으면 Nominatim 직접 호출
-     3. 실패 시 `클릭 지점 (lat, lng)` 폴백 — 좌표만으로도 등록 가능
-3. **Day 동선에 스팟 추가** — 번호 마커·OSRM/직선 동선에 merge
-4. **후보스팟으로 추가** — 지도에 ★ 마커, 하단 후보 리스트에 표시
-5. 후보 리스트에서 **동선에 추가** → Day 스팟으로 이동 · **삭제**로 제거
-6. A) 링크 resolve · 목록 import UI는 기존과 동일하게 유지
+1. 지도에서 원하는 위치 **클릭** (Google 모드: POI 클릭 시 기본 상세 대신 등록 패널)
+2. 우측 패널에서 이름 확인·수정
+3. **Day 동선에 스팟 추가** 또는 **후보스팟으로 추가**
 
 ## 한계
 
 | 항목 | 설명 |
 |------|------|
-| **short link 파싱** | 브라우저 CORS + 공개 프록시 의존. 불안정·느림·프록시 다운 시 실패. **펼쳐진 URL 또는 수동 입력 권장** |
-| **OSRM public** | `router.project-osrm.org`는 데모 서버. 쿼터·속도 제한·간헐적 429/5xx. 실패 시 직선 Polyline |
-| **CORS 프록시** | 제3자 서비스(allorigins, corsproxy.io). 가용성·정책 변경 가능 |
-| **Place ID** | URL에 없으면 확정 불가 (Google Places API 미사용) |
-| **목록 getlist API** | Google 비공식 내부 엔드포인트. 변경·차단·ToS 위반 가능성. 비공개 목록 실패 |
-| **역지오코딩** | 백엔드 프록시(`GET /api/maps/reverse-geocode`) 우선 · 없으면 Nominatim 직접 (**Experimental**) · [Nominatim 정책](https://operations.osmfoundation.org/policies/nominatim/): 약 1 req/sec, 인메모리 캐시. 브라우저 직접 호출 시 User-Agent 헤더 설정 불가. 이름 부정확·POI 미매칭 가능. 실패 시 좌표만으로 등록 |
-| **맵 클릭 지점** | 클릭 위치가 POI가 아닐 수 있음 (도로·공원 한가운데 등). 역지오코딩 이름은 참고용 |
-| **프로덕션** | 자체 OSRM/백엔드 프록시 또는 Nominatim 등 검토 필요 |
+| **Google API 키** | 브라우저 키는 빌드 시 번들에 포함됨 (정상). 소스·PR·로그에 값 노출 금지 |
+| **Directions waypoint** | Google Directions는 중간 경유지 최대 23개. 초과 시 직선 Polyline |
+| **POI 클릭 (Google)** | `placeId`가 있는 POI만 Places 이름 조회. 빈 지도 클릭과 구분하려 `stop()` 사용. 일부 POI·레이어는 Google 기본 UI와 충돌 가능 |
+| **short link 파싱** | CORS 프록시 의존, 불안정 |
+| **OSRM public** | 데모 서버 쿼터·가용성 제한 |
+| **역지오코딩** | Nominatim 정책(약 1 req/sec). Google POI는 Places API 사용 |
+| **목록 getlist API** | Google 비공식 엔드포인트, 변경·차단 가능 |
 
 ## 로컬 실행
 
 ```bash
 cd poc/maps
 npm install
+cp .env.example .env   # Google 모드 테스트 시 키 입력
 npm run dev
 # → http://localhost:5173/travel-planner-mvp-preview/maps-poc/
 ```
@@ -96,17 +118,25 @@ npm run build
 ```
 
 - Vite `base`: `/travel-planner-mvp-preview/maps-poc/`
-- `maps-poc/` 디렉터리를 main에 커밋하면 GitHub Pages가 자동 서빙
+- GitHub Actions (`.github/workflows/maps-poc.yml`)가 main push 시 빌드·배포
+- secret `VITE_GOOGLE_MAPS_API_KEY`가 없어도 빌드는 성공하고 OSM 모드가 동작합니다
 
 ## 프로젝트 구조
 
 ```
 poc/maps/
 ├── src/
-│   ├── components/     # LinkResolver, ListLinkImporter, DayRouteMap, CandidateSpotList
-│   ├── data/           # Day 2 샘플 스팟, 삿포로 목록 fixture
-│   └── lib/            # URL 파서, resolve, 목록 resolve, OSRM, reverseGeocode (Nominatim)
-├── vite.config.ts      # base + outDir → ../../maps-poc
+│   ├── components/
+│   │   ├── maps/           # OsmMapView, GoogleMapView, MapClickPanel
+│   │   ├── DayRouteMap.tsx # 모드 토글 + 공유 상태
+│   │   └── ...
+│   └── lib/
+│       ├── googleMapsConfig.ts
+│       ├── googleDirectionsRoute.ts
+│       ├── mapMode.ts
+│       └── ...
+├── .env.example
+├── vite.config.ts
 └── README.md
 
 maps-poc/               # 빌드 산출물 (GitHub Pages)
@@ -114,15 +144,6 @@ maps-poc/               # 빌드 산출물 (GitHub Pages)
 
 ## 기술 스택
 
-- **지도**: Leaflet + OpenStreetMap 타일
-- **동선**: OSRM public (`router.project-osrm.org/route/v1/foot/...`)
+- **OSM**: Leaflet + OpenStreetMap + OSRM public
+- **Google**: `@react-google-maps/api` + DirectionsService/DirectionsRenderer
 - **링크 파싱**: 클라이언트 정규식 (Google Maps URL 형식)
-- **short link**: 공개 CORS 프록시 (선택·폴백)
-
-## 대략 공수 (인일, 프로덕션)
-
-| 구분 | 추정 |
-|------|------|
-| 프론트 (Leaflet UI, 마커·동선) | 1.5–2 |
-| 백엔드 (short link 프록시, 자체 OSRM) | 2–3 |
-| 공통 (에러 처리, E2E) | 0.5–1 |
